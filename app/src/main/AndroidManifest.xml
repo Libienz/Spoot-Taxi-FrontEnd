@@ -12,8 +12,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SpootTaxiFront"
         tools:targetApi="31">
+
+        <!-- SplashActivity를 시작 액티비티로 설정합니다. -->
         <activity
-            android:name=".MainActivity"
+            android:name=".SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,6 +23,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".MainActivity">
+            <!-- 메인 액티비티에 대한 설정 등을 추가할 수 있습니다. -->
+        </activity>
+
     </application>
 
 </manifest>
