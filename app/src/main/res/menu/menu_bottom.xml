@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/homeFragment"
+        android:icon="@drawable/ic_launcher_foreground"
+        android:title="home"
+        android:enabled="true"/>
+
+    <item android:id="@+id/chattingFragment"
+        android:icon="@drawable/ic_launcher_foreground"
+        android:title="chatting"
+        android:enabled="true"/>
+
+    <item android:id="@+id/settingFragment"
+        android:icon="@drawable/ic_launcher_foreground"
+        android:title="setting"
+        android:enabled="true"/>
+</menu>
