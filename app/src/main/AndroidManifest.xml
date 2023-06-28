@@ -22,9 +22,20 @@
         <activity
             android:name=".LocationActivity"
             android:exported="false" />
+
         <activity
-            android:name=".MainActivity"
-            android:exported="true" >
+            android:name=".VerificationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".JoinActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LoginActivity"
+            android:exported="false" /> <!-- SplashActivity를 시작 액티비티로 설정합니다. -->
+        <activity
+            android:name=".SplashActivity"
+            android:exported="true">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -35,6 +46,10 @@
         <meta-data
             android:name="com.kakao.sdk.AppKey"
             android:value="d67cfed1f361de5d31ed67e259efa497" />
+        <activity android:name=".MainActivity">
+
+            <!-- 메인 액티비티에 대한 설정 등을 추가할 수 있습니다. -->
+        </activity>
     </application>
 
 </manifest>
