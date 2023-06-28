@@ -2,6 +2,7 @@ package com.example.spoot_taxi_front;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import android.os.Bundle;
@@ -31,6 +32,7 @@ public class LoginActivity extends AppCompatActivity {
         registerButton = findViewById(R.id.register);
         lostPWButton = findViewById(R.id.lost_pw);
 
+        //로그인 클릭
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -42,18 +44,22 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        //계정 만들기 클릭
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // 회원 가입 화면으로 이동 코드 부분
-                Toast.makeText(LoginActivity.this, "계정 만들기 버튼이 클릭되었습니다.", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getApplicationContext(), JoinActivity.class);
+                startActivity(intent);
+
             }
         });
 
+        //비밀번호 찾기 클릭
         lostPWButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // 비밀번호 찾기 화면으로 이동 코드 부분
+                Intent intent = new Intent(getApplicationContext(), JoinActivity.class);
+                startActivity(intent);
                 Toast.makeText(LoginActivity.this, "비밀번호를 잊으셨나요? 버튼이 클릭되었습니다.", Toast.LENGTH_SHORT).show();
             }
         });

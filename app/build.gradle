@@ -6,6 +6,9 @@ android {
     namespace 'com.example.spoot_taxi_front'
     compileSdk 33
 
+    dataBinding {
+        enabled = true
+    }
     defaultConfig {
         applicationId "com.example.spoot_taxi_front"
         minSdk 24
