@@ -71,7 +71,7 @@
                         android:layout_width="300dp"
                         android:layout_height="wrap_content"
                         android:background="@drawable/edit"
-                        android:hint=" 이메일 주소를 입력해 주세요."
+                        android:hint="상명대학교이메일@sangmyung.kr"
                         android:inputType="textEmailAddress"
                         android:padding="10dp"
                         android:textSize="15dp" />
