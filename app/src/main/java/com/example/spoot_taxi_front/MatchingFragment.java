@@ -15,12 +15,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import android.content.Context;
 
 
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import net.daum.mf.map.api.CameraUpdateFactory;
@@ -80,7 +82,8 @@ public class MatchingFragment extends Fragment implements CurrentLocationEventLi
             public void onClick(View v) {
                 // 버튼 클릭 이벤트 처리
                 if (curLaitude != 0.0 && curLongitude != 0.0) {
-                    // 팝업 띄우고 빙글빙글 매칭중 ...
+                    // 매칭 버튼 클릭 시 팝업 표시
+                    showMatchingPopup();
 
                     //서버에 매칭 요성 by api
 
@@ -99,6 +102,34 @@ public class MatchingFragment extends Fragment implements CurrentLocationEventLi
         return view;
     }
 
+
+
+    private void showMatchingPopup() {
+        // 팝업 레이아웃 인플레이션
+        LayoutInflater inflater = LayoutInflater.from(requireContext());
+        View popupView = inflater.inflate(R.layout.matching_popup, null);
+
+        // 팝업 생성 및 설정
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        builder.setView(popupView);
+        builder.setCancelable(false); // 팝업 외부 클릭 시 닫히지 않도록 설정
+
+        // 팝업 내부의 뷰 요소 가져오기
+        TextView statusTextView = popupView.findViewById(R.id.statusTextView);
+        Button cancelButton = popupView.findViewById(R.id.cancelButton);
+
+        // 팝업 표시
+        final AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+
+        // 취소 버튼 클릭 시 팝업 닫기
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+    }
 
 
 
