@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -32,6 +33,7 @@ public class LoginActivity extends AppCompatActivity {
         registerButton = findViewById(R.id.register);
         lostPWButton = findViewById(R.id.lost_pw);
 
+
         //로그인 클릭
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -41,6 +43,10 @@ public class LoginActivity extends AppCompatActivity {
                 // 로그인 기능 구현
                 // api 요청 부분
                 Toast.makeText(LoginActivity.this, "로그인 버튼이 클릭되었습니다.", Toast.LENGTH_SHORT).show();
+
+                //메인 화면 전환
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
             }
         });
 

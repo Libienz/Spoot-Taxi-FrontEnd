@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/homeFragment"
+        android:title="집회정보"
+        android:icon="@drawable/ic_rally"/>
+
+    <item
+        android:id="@+id/matchingFragment"
+        android:title="택시팟매칭"
+        android:icon="@drawable/ic_taxi"/>
+
+    <item
+        android:id="@+id/chatFragment"
+        android:title="채팅목록"
+        android:icon="@drawable/ic_chat"/>
+
+    <item
+        android:id="@+id/settingsFragment"
+        android:title="설정"
+        android:icon="@drawable/ic_settings"/>
+
+
+
+
+</menu>

@@ -23,7 +23,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="8dp"
                 android:gravity="center"
-                android:text="프로젝트 이름, 로고 들어갈 자리"
+                android:text="단 한번의 클릭으로 택시 파티 구하기!\n SPOOT TAXI"
                 android:textColor="#000000"
                 android:textSize="20dp" />
 

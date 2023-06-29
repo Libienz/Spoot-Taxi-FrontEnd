@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RallyFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+
+    <TextView
+         android:fontFamily="@font/bmjua_ttf"
+         android:id="@+id/textBox"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:layout_centerHorizontal="true"
+         android:layout_alignParentTop="true"
+         android:text="Spoot Taxi"
+         android:gravity="center"
+         android:textSize="24sp"
+         android:padding="16dp" />
+
+
+    <ImageView
+     android:id="@+id/imageView"
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:contentDescription="Image"
+     android:src="@drawable/rallies" />
+
+
+
+
+
+</FrameLayout>

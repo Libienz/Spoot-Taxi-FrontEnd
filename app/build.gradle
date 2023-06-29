@@ -9,6 +9,11 @@ android {
     dataBinding {
         enabled = true
     }
+
+    viewBinding {
+        enabled true
+    }
+
     defaultConfig {
         applicationId "com.example.spoot_taxi_front"
         minSdk 24
