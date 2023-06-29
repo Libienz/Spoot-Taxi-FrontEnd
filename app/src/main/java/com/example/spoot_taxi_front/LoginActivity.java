@@ -64,9 +64,9 @@ public class LoginActivity extends AppCompatActivity {
         lostPWButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), JoinActivity.class);
+                Intent intent = new Intent(getApplicationContext(), FindPasswordActivity.class);
                 startActivity(intent);
-                Toast.makeText(LoginActivity.this, "비밀번호를 잊으셨나요? 버튼이 클릭되었습니다.", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(LoginActivity.this, "비밀번호를 잊으셨나요? 버튼이 클릭되었습니다.", Toast.LENGTH_SHORT).show();
             }
         });
     }

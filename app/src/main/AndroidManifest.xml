@@ -19,7 +19,12 @@
         android:theme="@style/Theme.SpootTaxiFront"
         android:usesCleartextTraffic="true"
         tools:targetApi="28">
-
+        <activity
+            android:name=".PasswordResetActivity"
+            android:exported="false" />
+        <activity
+            android:name=".FindPasswordActivity"
+            android:exported="false" />
         <activity
             android:name=".VerificationActivity"
             android:exported="false" />
