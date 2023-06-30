@@ -1,5 +1,4 @@
 
-
     <!-- item_message.xml -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -10,34 +9,51 @@
         android:id="@+id/receivedMessageLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="horizontal">
 
         <!-- TextView 및 기타 내용들 -->
 
-        <TextView
-            android:id="@+id/textViewSenderName"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#000000"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:padding="4dp"
-            android:gravity="start" />
-        <TextView
-            android:id="@+id/textViewRecivedMessage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#000000"
-            android:textSize="14sp"
-            android:padding="4dp"
-            android:gravity="start" />
+            android:orientation="vertical">
 
+            <TextView
+                android:fontFamily="@font/bmjua_ttf"
+                android:layout_marginTop="10dp"
+                android:id="@+id/textViewSenderName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:textColor="#000000"
+                android:text="Libienz"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:padding="4dp"
+                android:gravity="start" />
+            <TextView
+                android:fontFamily="@font/bmjua_ttf"
+                android:id="@+id/textViewRecivedMessage"
+                android:background="@drawable/bubble_left_background"
+                android:layout_marginStart="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="hihiihihihiihihiih"
+                android:textColor="#000000"
+                android:textSize="20sp"
+                android:padding="12dp"
+                android:gravity="start" />
+        </LinearLayout>
         <TextView
+            android:fontFamily="@font/bmjua_ttf"
+            android:layout_marginTop="50dp"
             android:id="@+id/textViewRecivedTime"
             android:layout_width="wrap_content"
+            android:layout_marginStart="5dp"
+            android:text="오후 10시 10분"
             android:layout_height="wrap_content"
             android:textColor="#000000"
-            android:textSize="10sp"
+            android:textSize="15sp"
             android:padding="4dp"
             android:gravity="" />
 
@@ -48,27 +64,39 @@
         android:id="@+id/sentMessageLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:layout_alignParentEnd="true"> <!-- 오른쪽에 붙도록 설정 -->
 
         <!-- TextView 및 기타 내용들 -->
         <TextView
-            android:id="@+id/textViewMyMessage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#000000"
-            android:textSize="14sp"
-            android:padding="4dp"
-            android:gravity="start" />
-
-        <TextView
+            android:fontFamily="@font/bmjua_ttf"
+            android:layout_marginTop="40dp"
             android:id="@+id/textViewSentTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#000000"
-            android:textSize="10sp"
+            android:layout_marginEnd="5dp"
+            android:text=" 10시 10분"
+            android:textSize="15sp"
             android:padding="4dp"
             android:gravity="" />
+
+        <TextView
+            android:id="@+id/textViewMyMessage"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/bubble_right_background"
+            android:fontFamily="@font/bmjua_ttf"
+            android:layout_marginEnd="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:text="hihihihihiihi"
+
+            android:textColor="#000000"
+            android:textSize="20sp"
+            android:padding="12dp"
+            android:gravity="start" />
+
 
 
     </LinearLayout>

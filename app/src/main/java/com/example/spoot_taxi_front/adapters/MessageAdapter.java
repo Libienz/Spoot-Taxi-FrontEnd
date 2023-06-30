@@ -85,11 +85,20 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                 // 내가 보낸 메시지인 경우, 왼쪽
                 textViewMyMessage.setText(chatMessage.getMessage());
                 textViewSentTime.setText(chatMessage.getSentTime()+"");
+
+                //숨김
+                textViewRecivedMessage.setVisibility(View.INVISIBLE);
+                textViewSenderName.setVisibility(View.INVISIBLE);
+                textViewRecivedTime.setVisibility(View.INVISIBLE);
             } else {
                 // 상대방이 보낸 메시지인 경우, 오른쪽
                 textViewSenderName.setText(chatMessage.getSenderName());
                 textViewRecivedMessage.setText(chatMessage.getMessage());
                 textViewRecivedTime.setText(chatMessage.getSentTime() +"");
+
+                //숨김
+                textViewMyMessage.setVisibility(View.INVISIBLE);
+                textViewSentTime.setVisibility(View.INVISIBLE);
 
             }
 
