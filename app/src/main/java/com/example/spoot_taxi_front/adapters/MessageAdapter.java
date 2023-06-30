@@ -1,8 +1,11 @@
 package com.example.spoot_taxi_front.adapters;
 
+import android.content.Context;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -10,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.spoot_taxi_front.dto.ChatMessage;
 import com.example.spoot_taxi_front.R;
+import com.example.spoot_taxi_front.dto.User;
+import com.example.spoot_taxi_front.utils.CurrentUserHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,21 +53,45 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
     public class MessageViewHolder extends RecyclerView.ViewHolder {
         //아이템 레이아웃 요소들 선언
+
+        //수신한 메시지인 경우 사용할 tv들
         private TextView textViewSenderName;
-        private TextView textViewMessage;
+        private TextView textViewRecivedMessage;
+        private TextView textViewRecivedTime;
+
+        //보내는 메시지인 경우 사용할 tv들
+        private TextView textViewMyMessage;
+        private TextView textViewSentTime;
 
 
+        public void setLayoutGravity(int gravity) {
+//            itemView.setGravity(gravity);
+        }
         public MessageViewHolder(@NonNull View itemView) {
             super(itemView);
             // 아이템 뷰의 뷰 요소 초기화
-            textViewMessage = itemView.findViewById(R.id.textViewMessage);
             textViewSenderName = itemView.findViewById(R.id.textViewSenderName);
+            textViewRecivedMessage = itemView.findViewById(R.id.textViewRecivedMessage);
+            textViewRecivedTime = itemView.findViewById(R.id.textViewRecivedTime);
+            textViewMyMessage = itemView.findViewById(R.id.textViewMyMessage);
+            textViewSentTime = itemView.findViewById(R.id.textViewSentTime);
+
         }
 
         public void bind(ChatMessage chatMessage) {
             // 채팅 메시지를 해당 뷰 요소에 설정
-            textViewMessage.setText(chatMessage.getMessage());
-            textViewSenderName.setText(chatMessage.getSenderName());
+            User currentUser = CurrentUserHandler.getInstance().getCurrentUser();
+            if (chatMessage.getSenderId().equals(currentUser.getEmail())) {
+                // 내가 보낸 메시지인 경우, 왼쪽
+                textViewMyMessage.setText(chatMessage.getMessage());
+                textViewSentTime.setText(chatMessage.getSentTime()+"");
+            } else {
+                // 상대방이 보낸 메시지인 경우, 오른쪽
+                textViewSenderName.setText(chatMessage.getSenderName());
+                textViewRecivedMessage.setText(chatMessage.getMessage());
+                textViewRecivedTime.setText(chatMessage.getSentTime() +"");
+
+            }
 
         }
     }

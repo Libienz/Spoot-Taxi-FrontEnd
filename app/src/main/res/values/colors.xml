@@ -10,5 +10,5 @@
     <color name="inputColor">#DADADA</color>
     <color name="buttonColor">#99B4E3</color>
     <color name="mainColor">#FF8BB2</color>
-
+    <color name="light_black">#8A000000</color>
 </resources>

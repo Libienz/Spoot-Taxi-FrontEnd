@@ -1,25 +1,76 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- item_message.xml -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+
+    <!-- item_message.xml -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/textViewSenderName"
+    <!-- 받은 메시지 -->
+    <LinearLayout
+        android:id="@+id/receivedMessageLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#000000"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:padding="4dp" />
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/textViewMessage"
+        <!-- TextView 및 기타 내용들 -->
+
+        <TextView
+            android:id="@+id/textViewSenderName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:padding="4dp"
+            android:gravity="start" />
+        <TextView
+            android:id="@+id/textViewRecivedMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#000000"
+            android:textSize="14sp"
+            android:padding="4dp"
+            android:gravity="start" />
+
+        <TextView
+            android:id="@+id/textViewRecivedTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#000000"
+            android:textSize="10sp"
+            android:padding="4dp"
+            android:gravity="" />
+
+    </LinearLayout>
+
+    <!-- 보내는 메시지 -->
+    <LinearLayout
+        android:id="@+id/sentMessageLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#000000"
-        android:textSize="14sp"
-        android:padding="4dp" />
+        android:orientation="vertical"
+        android:layout_alignParentEnd="true"> <!-- 오른쪽에 붙도록 설정 -->
 
-</LinearLayout>
+        <!-- TextView 및 기타 내용들 -->
+        <TextView
+            android:id="@+id/textViewMyMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#000000"
+            android:textSize="14sp"
+            android:padding="4dp"
+            android:gravity="start" />
+
+        <TextView
+            android:id="@+id/textViewSentTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#000000"
+            android:textSize="10sp"
+            android:padding="4dp"
+            android:gravity="" />
+
+
+    </LinearLayout>
+
+</RelativeLayout>

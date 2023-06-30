@@ -7,6 +7,30 @@
     android:orientation="vertical">
 
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:orientation="horizontal"
+        android:background="@drawable/top_bar">
+        <ImageView
+            android:layout_marginTop="15dp"
+            android:layout_marginStart="80dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_taxi" />
+        <TextView
+            android:fontFamily="@font/bmjua_ttf"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="10dp"
+            android:textSize="30dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SPOOT TAXI"/>
+
+
+    </LinearLayout>
+
+
     <FrameLayout
         android:id="@+id/mainFrameLayout"
         android:layout_width="match_parent"

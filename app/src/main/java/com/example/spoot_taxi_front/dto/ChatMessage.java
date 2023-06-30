@@ -4,13 +4,35 @@ public class ChatMessage {
     private String messageId;
     private String senderName;
     private String message;
+
+    private String senderId;
     private long sentTime;
 
-    public ChatMessage(String messageId, String senderName, String message, Long sentTime) {
+    @Override
+    public String toString() {
+        return "ChatMessage{" +
+                "messageId='" + messageId + '\'' +
+                ", senderName='" + senderName + '\'' +
+                ", message='" + message + '\'' +
+                ", senderId='" + senderId + '\'' +
+                ", sentTime=" + sentTime +
+                '}';
+    }
+
+    public ChatMessage(String messageId, String senderName, String senderId, String message, Long sentTime) {
         this.messageId = messageId;
         this.senderName = senderName;
+        this.senderId = senderId;
         this.message = message;
         this.sentTime = sentTime;
+    }
+
+    public String getSenderId() {
+        return senderId;
+    }
+
+    public void setSenderId(String senderId) {
+        this.senderId = senderId;
     }
 
     public String getMessageId() {

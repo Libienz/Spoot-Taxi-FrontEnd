@@ -7,12 +7,34 @@
     tools:context=".fragments.MatchingFragment">
 
     <!-- TODO: Update blank fragment layout -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:orientation="horizontal"
+        android:background="@drawable/top_bar">
+
+        <ImageView
+            android:layout_marginTop="15dp"
+            android:layout_marginStart="80dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_taxi" />
+        <TextView
+            android:fontFamily="@font/bmjua_ttf"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="10dp"
+            android:textSize="30dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SPOOT TAXI"/>
+
+    </LinearLayout>
 
     <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
 
         android:layout_width="match_parent"
-        android:layout_height="500dp"
-        android:layout_marginTop="16dp"
+        android:layout_height="400dp"
+        android:layout_marginTop="90dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:backgroundTint="@color/buttonColor"
@@ -29,11 +51,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="180dp"
+        android:layout_marginTop="150dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:fontFamily="@font/bmjua_ttf"
-        android:text="원클릭 매칭으로 현 위치 주변에서 같이 학교로 갈 슴우를 찾아보세요"
+        android:text="내 주변 상명대학교행 택시팟 구하기!"
         android:textColor="#000000"
         android:textSize="21dp" />
 
@@ -44,7 +66,7 @@
         android:layout_height="40dp"
         android:background="@drawable/button"
         android:layout_gravity="center_horizontal|bottom"
-        android:layout_marginBottom="100dp"
+        android:layout_marginBottom="150dp"
         android:text="원클릭 매칭"
         android:textColor="#FFFFFF"
         android:textSize="16dp" />

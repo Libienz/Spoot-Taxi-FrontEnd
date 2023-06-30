@@ -11,6 +11,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.spoot_taxi_front.R;
+import com.example.spoot_taxi_front.dto.Gender;
+import com.example.spoot_taxi_front.dto.User;
+import com.example.spoot_taxi_front.utils.CurrentUserHandler;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -42,7 +45,11 @@ public class LoginActivity extends AppCompatActivity {
                 // api 요청 부분
                 Toast.makeText(LoginActivity.this, "로그인 버튼이 클릭되었습니다.", Toast.LENGTH_SHORT).show();
 
-                //메인 화면 전환
+                //로그인 성공 currentUser를 앱 전역 범위의 싱글톤 객체에 저장하고 메인 화면 전환
+
+                //테스트 유저 생성
+                User testuser = new User("202010891@sangmyung.kr", "1234", null, Gender.MALE);
+                CurrentUserHandler.getInstance().setCurrentUser(testuser); //api에서 반환받은 유저정보 넣어야 하는데 일단 테스트 유저 정보를 넣자
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
             }
