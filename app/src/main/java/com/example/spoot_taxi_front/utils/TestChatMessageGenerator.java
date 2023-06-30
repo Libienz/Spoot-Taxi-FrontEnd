@@ -1,4 +1,6 @@
-package com.example.spoot_taxi_front;
+package com.example.spoot_taxi_front.utils;
+
+import com.example.spoot_taxi_front.dto.ChatMessage;
 
 import java.util.ArrayList;
 import java.util.List;

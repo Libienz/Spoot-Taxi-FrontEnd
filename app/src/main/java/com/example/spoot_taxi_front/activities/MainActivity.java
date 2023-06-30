@@ -1,4 +1,4 @@
-package com.example.spoot_taxi_front;
+package com.example.spoot_taxi_front.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -11,6 +11,11 @@ import android.widget.Button;
 
 
 import com.example.spoot_taxi_front.databinding.ActivityMainBinding;
+import com.example.spoot_taxi_front.fragments.ChatFragment;
+import com.example.spoot_taxi_front.fragments.MatchingFragment;
+import com.example.spoot_taxi_front.R;
+import com.example.spoot_taxi_front.fragments.RallyFragment;
+import com.example.spoot_taxi_front.fragments.SettingsFragment;
 
 
 import com.kakao.util.maps.helper.Utility;

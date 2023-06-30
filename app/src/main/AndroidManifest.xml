@@ -20,25 +20,25 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="28">
         <activity
-            android:name=".ChatRoomActivity"
+            android:name=".activities.ChatRoomActivity"
             android:exported="false" />
         <activity
-            android:name=".PasswordResetActivity"
+            android:name=".activities.PasswordResetActivity"
             android:exported="false" />
         <activity
-            android:name=".FindPasswordActivity"
+            android:name=".activities.FindPasswordActivity"
             android:exported="false" />
         <activity
-            android:name=".VerificationActivity"
+            android:name=".activities.VerificationActivity"
             android:exported="false" />
         <activity
-            android:name=".JoinActivity"
+            android:name=".activities.JoinActivity"
             android:exported="false" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".activities.LoginActivity"
             android:exported="false" /> <!-- SplashActivity를 시작 액티비티로 설정합니다. -->
         <activity
-            android:name=".SplashActivity"
+            android:name=".activities.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -51,7 +51,7 @@
             android:name="com.kakao.sdk.AppKey"
             android:value="5fc7a866ed3c80056062b4e7e6692441" />
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".activities.MainActivity">
 
             <!-- 메인 액티비티에 대한 설정 등을 추가할 수 있습니다. -->
         </activity>

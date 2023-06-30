@@ -1,6 +1,8 @@
-package com.example.spoot_taxi_front;
+package com.example.spoot_taxi_front.utils;
 
 
+import com.example.spoot_taxi_front.dto.ChatRoom;
+import com.example.spoot_taxi_front.dto.User;
 import com.example.spoot_taxi_front.dto.Gender;
 
 import java.util.ArrayList;

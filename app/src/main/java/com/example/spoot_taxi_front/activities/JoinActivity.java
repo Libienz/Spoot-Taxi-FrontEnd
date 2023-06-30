@@ -1,4 +1,4 @@
-package com.example.spoot_taxi_front;
+package com.example.spoot_taxi_front.activities;
 
 
 
@@ -8,16 +8,16 @@ import android.os.Bundle;
 
 import androidx.databinding.DataBindingUtil;
 
+import com.example.spoot_taxi_front.utils.InputChecker;
+import com.example.spoot_taxi_front.R;
 import com.example.spoot_taxi_front.databinding.ActivityJoinBinding;
 import com.example.spoot_taxi_front.dto.Gender;
 import com.example.spoot_taxi_front.dto.UserDto;
 
 import android.content.Intent;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.TextView;
 
 /**
  * authController에 noreply 재학생 인증 api 추가 필요

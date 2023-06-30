@@ -1,4 +1,4 @@
-package com.example.spoot_taxi_front;
+package com.example.spoot_taxi_front.dto;
 
 import java.util.List;
 

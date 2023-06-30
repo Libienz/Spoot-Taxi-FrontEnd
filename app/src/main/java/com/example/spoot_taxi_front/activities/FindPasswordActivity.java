@@ -1,4 +1,4 @@
-package com.example.spoot_taxi_front;
+package com.example.spoot_taxi_front.activities;
 
 
 
@@ -8,6 +8,8 @@ import androidx.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.view.View;
 
+import com.example.spoot_taxi_front.utils.InputChecker;
+import com.example.spoot_taxi_front.R;
 import com.example.spoot_taxi_front.databinding.ActivityFindPasswordBinding;
 
 

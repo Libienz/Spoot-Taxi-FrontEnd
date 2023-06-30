@@ -1,4 +1,4 @@
-package com.example.spoot_taxi_front;
+package com.example.spoot_taxi_front.adapters;
 
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -8,6 +8,10 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.spoot_taxi_front.dto.ChatRoom;
+import com.example.spoot_taxi_front.R;
+import com.example.spoot_taxi_front.activities.ChatRoomActivity;
 
 import java.util.List;
 
@@ -25,7 +29,7 @@ public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.ChatVi
     @Override
     public ChatViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // 아이템 뷰를 생성하여 뷰홀더에 바인딩
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_room_item, parent, false);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_chat_room, parent, false);
         return new ChatViewHolder(itemView);
     }
 

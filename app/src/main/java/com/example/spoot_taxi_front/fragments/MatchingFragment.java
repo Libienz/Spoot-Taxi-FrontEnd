@@ -1,32 +1,25 @@
-package com.example.spoot_taxi_front;
+package com.example.spoot_taxi_front.fragments;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
-import android.content.Context;
 
 
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.spoot_taxi_front.R;
+
 import net.daum.mf.map.api.CameraUpdateFactory;
-import net.daum.mf.map.api.MapPOIItem;
 import net.daum.mf.map.api.MapPoint;
 import net.daum.mf.map.api.MapView;
 import net.daum.mf.map.api.MapView.CurrentLocationEventListener;
@@ -107,7 +100,7 @@ public class MatchingFragment extends Fragment implements CurrentLocationEventLi
     private void showMatchingPopup() {
         // 팝업 레이아웃 인플레이션
         LayoutInflater inflater = LayoutInflater.from(requireContext());
-        View popupView = inflater.inflate(R.layout.matching_popup, null);
+        View popupView = inflater.inflate(R.layout.popup_matching, null);
 
         // 팝업 생성 및 설정
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());

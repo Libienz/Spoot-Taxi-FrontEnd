@@ -1,4 +1,4 @@
-package com.example.spoot_taxi_front;
+package com.example.spoot_taxi_front.fragments;
 
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
@@ -7,6 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.spoot_taxi_front.R;
+import com.example.spoot_taxi_front.utils.TestChatRoomGenerator;
+import com.example.spoot_taxi_front.adapters.ChatRoomAdapter;
 
 public class ChatFragment extends Fragment {
 

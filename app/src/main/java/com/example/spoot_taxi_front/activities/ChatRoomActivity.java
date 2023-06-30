@@ -1,4 +1,4 @@
-package com.example.spoot_taxi_front;
+package com.example.spoot_taxi_front.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -9,7 +9,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import java.util.ArrayList;
+import com.example.spoot_taxi_front.dto.ChatMessage;
+import com.example.spoot_taxi_front.adapters.MessageAdapter;
+import com.example.spoot_taxi_front.R;
+import com.example.spoot_taxi_front.utils.TestChatMessageGenerator;
+
 import java.util.List;
 
 public class ChatRoomActivity extends AppCompatActivity {

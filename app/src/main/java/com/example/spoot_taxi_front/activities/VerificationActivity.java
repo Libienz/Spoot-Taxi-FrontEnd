@@ -1,4 +1,4 @@
-package com.example.spoot_taxi_front;
+package com.example.spoot_taxi_front.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.spoot_taxi_front.R;
 import com.example.spoot_taxi_front.dto.UserDto;
 
 public class VerificationActivity extends AppCompatActivity {

@@ -1,4 +1,4 @@
-package com.example.spoot_taxi_front;
+package com.example.spoot_taxi_front.utils;
 
 import android.graphics.Color;
 import android.util.Patterns;
