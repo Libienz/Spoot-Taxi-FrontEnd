@@ -14,9 +14,9 @@ public class TestChatRoomGenerator {
         List<ChatRoom> chatRooms = new ArrayList<>();
 
         // Create users
-        User user1 = new User("user1@example.com", "password1", "profile1.jpg", Gender.FEMALE);
-        User user2 = new User("user2@example.com", "password2", "profile2.jpg", Gender.MALE);
-        User user3 = new User("user3@example.com", "password3", "profile3.jpg", Gender.ETC);
+        User user1 = new User("user1@example.com", "password1", "profile1", Gender.FEMALE);
+        User user2 = new User("user2@example.com", "password2", "profile2", Gender.MALE);
+        User user3 = new User("user3@example.com", "password3", "profile3", Gender.ETC);
 
         // Create chat rooms
         ChatRoom chatRoom1 = new ChatRoom("room1", "Chat Room 1", List.of(user1, user2), "Last message 1", "10:30 AM");

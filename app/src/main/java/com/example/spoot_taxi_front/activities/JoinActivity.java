@@ -4,10 +4,17 @@ package com.example.spoot_taxi_front.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 
+import android.Manifest;
+
+import com.example.spoot_taxi_front.dto.User;
 import com.example.spoot_taxi_front.utils.InputChecker;
 import com.example.spoot_taxi_front.R;
 import com.example.spoot_taxi_front.databinding.ActivityJoinBinding;
@@ -15,6 +22,7 @@ import com.example.spoot_taxi_front.dto.Gender;
 import com.example.spoot_taxi_front.dto.UserDto;
 
 import android.content.Intent;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -27,14 +35,40 @@ import android.widget.RadioGroup;
 public class JoinActivity extends AppCompatActivity {
 
 
-
     private ActivityJoinBinding binding;
+    private static final int ALBUM_PERMISSION_REQUEST_CODE = 1; // 앨범 접근 권한 요청 코드
+    private static final int ALBUM_REQUEST_CODE = 2; // 앨범 액티비티 호출 요청 코드
+
+
+    String email;
+    String password;
+    String nickname;
+    String imageUri;
+    Gender gen;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_join);
+
+        //프로필 이미지 클릭
+        binding.profileImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                // 앨범 접근 권한 확인
+                if (ContextCompat.checkSelfPermission(JoinActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    // 권한이 없는 경우 권한 요청
+                    ActivityCompat.requestPermissions(JoinActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, ALBUM_PERMISSION_REQUEST_CODE);
+                } else {
+                    // 이미 권한이 있는 경우 앨범 액티비티 호출
+                    Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    startActivityForResult(intent, ALBUM_REQUEST_CODE);
+                }
+            }
+        });
+
 
 
         // 회원가입 버튼 클릭
@@ -67,11 +101,10 @@ public class JoinActivity extends AppCompatActivity {
                 }
 
                 //모든 체크 사항 통과
-                //UserDto 초기화
-                String email = binding.inputEmail.getText().toString();
-                String password = binding.inputPassword.getText().toString();
-                String nickname = binding.inputNickname.getText().toString();
-                Gender gen;
+                //User 초기화
+                email = binding.inputEmail.getText().toString();
+                password = binding.inputPassword.getText().toString();
+                nickname = binding.inputNickname.getText().toString();
 
                 RadioGroup radioGroup = binding.inputGender;
                 int selectedId = radioGroup.getCheckedRadioButtonId();
@@ -88,12 +121,11 @@ public class JoinActivity extends AppCompatActivity {
                 }
 
 
-                //재학생 인증 activity에 userDto넘기면서 인텐트 전환
-                UserDto userDto = new UserDto(email, password, nickname, gen);
+                //재학생 인증 activity에 user넘기면서 인텐트 전환
+                User user = new User(email, password, nickname, gen);
                 Intent intent = new Intent(getApplicationContext(), VerificationActivity.class);
-                intent.putExtra("userDto", userDto);
+                intent.putExtra("user", user);
                 startActivity(intent);
-
 
             }
         });
@@ -108,5 +140,22 @@ public class JoinActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == ALBUM_REQUEST_CODE && resultCode == RESULT_OK) {
+            // 앨범 액티비티로부터 이미지 선택 결과를 받아온 경우
+            if (data != null) {
+                Uri selectedImageUri = data.getData();
+                // 선택한 이미지를 처리하는 로직
+                imageUri = selectedImageUri.toString();
+                binding.profileImageView.setImageURI(selectedImageUri);
+            }
+        }
     }
 }
