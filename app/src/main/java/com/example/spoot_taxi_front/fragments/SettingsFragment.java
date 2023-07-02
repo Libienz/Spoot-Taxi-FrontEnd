@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.example.spoot_taxi_front.R;
 import com.example.spoot_taxi_front.activities.LoginActivity;
+import com.example.spoot_taxi_front.activities.UpdateActivity;
 import com.example.spoot_taxi_front.utils.SessionManager;
 
 /**
@@ -62,7 +63,8 @@ public class SettingsFragment extends Fragment {
         userUpdateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent = new Intent(requireContext(), UpdateActivity.class);
+                startActivity(intent);
             }
         });
 

@@ -28,6 +28,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        //레이아웃 요소 바인딩
         enterID = findViewById(R.id.enter_ID);
         enterPW = findViewById(R.id.enter_PW);
         loginButton = findViewById(R.id.login);
@@ -48,7 +49,7 @@ public class LoginActivity extends AppCompatActivity {
                 //로그인 성공 currentUser를 앱 전역 범위의 싱글톤 객체에 저장하고 메인 화면 전환
 
                 //테스트 유저 생성
-                User testuser = new User("202010891@sangmyung.kr", "1234", null, Gender.MALE);
+                User testuser = new User("202010891@sangmyung.kr", "1234", "libienz", Gender.MALE);
                 SessionManager.getInstance().setCurrentUser(testuser); //api에서 반환받은 유저정보 넣어야 하는데 일단 테스트 유저 정보를 넣자
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);

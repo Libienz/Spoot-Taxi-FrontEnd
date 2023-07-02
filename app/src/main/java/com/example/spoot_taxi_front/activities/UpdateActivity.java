@@ -1,41 +1,31 @@
 package com.example.spoot_taxi_front.activities;
 
-
-
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.pm.PackageManager;
-import android.net.Uri;
-import android.os.Bundle;
-
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 
 import android.Manifest;
-
-import com.example.spoot_taxi_front.dto.User;
-import com.example.spoot_taxi_front.utils.InputChecker;
-import com.example.spoot_taxi_front.R;
-import com.example.spoot_taxi_front.databinding.ActivityJoinBinding;
-import com.example.spoot_taxi_front.dto.Gender;
-import com.example.spoot_taxi_front.dto.UserDto;
-
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
-/**
- * authController에 noreply 재학생 인증 api 추가 필요
- * authController에 이미 존재하는 아이디인지 확인하는 api 추가 필요
- * entity 속성 정립 해야 함 -> 근데 하면서 하게 될 듯
- */
-public class JoinActivity extends AppCompatActivity {
+import com.example.spoot_taxi_front.R;
+import com.example.spoot_taxi_front.databinding.ActivityJoinBinding;
+import com.example.spoot_taxi_front.databinding.ActivityUpdateBinding;
+import com.example.spoot_taxi_front.dto.Gender;
+import com.example.spoot_taxi_front.dto.User;
+import com.example.spoot_taxi_front.utils.InputChecker;
+import com.example.spoot_taxi_front.utils.SessionManager;
 
+public class UpdateActivity extends AppCompatActivity {
 
-    private ActivityJoinBinding binding;
+    private ActivityUpdateBinding binding;
     private static final int ALBUM_PERMISSION_REQUEST_CODE = 1; // 앨범 접근 권한 요청 코드
     private static final int ALBUM_REQUEST_CODE = 2; // 앨범 액티비티 호출 요청 코드
 
@@ -45,12 +35,28 @@ public class JoinActivity extends AppCompatActivity {
     private String nickname;
     private String imageUri;
     private Gender gen;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_join);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_update);
+
+        //현재 유저정보로 Edit Text 채워놓기
+        User currentUser = SessionManager.getInstance().getCurrentUser();
+
+        binding.inputEmail.setText(currentUser.getEmail());
+        binding.profileImageView.setImageURI(Uri.parse(currentUser.getImgUri()));
+        binding.inputPassword.setText(currentUser.getPassword());
+        binding.inputPwck.setText(currentUser.getPassword());
+        binding.inputNickname.setText(currentUser.getNickname());
+        RadioGroup inputGender = binding.inputGender;
+        Gender gender = currentUser.getGender();
+        if (gender == Gender.FEMALE) {
+            inputGender.check(R.id.gender_female);
+        } else if (gender == Gender.MALE) {
+            inputGender.check(R.id.gender_male);
+        } else if (gender == Gender.ETC) {
+            inputGender.check(R.id.gender_etc);
+        }
 
         //프로필 이미지 클릭
         binding.profileImageView.setOnClickListener(new View.OnClickListener() {
@@ -58,9 +64,9 @@ public class JoinActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 // 앨범 접근 권한 확인
-                if (ContextCompat.checkSelfPermission(JoinActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                if (ContextCompat.checkSelfPermission(UpdateActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                     // 권한이 없는 경우 권한 요청
-                    ActivityCompat.requestPermissions(JoinActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, ALBUM_PERMISSION_REQUEST_CODE);
+                    ActivityCompat.requestPermissions(UpdateActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, ALBUM_PERMISSION_REQUEST_CODE);
                 } else {
                     // 이미 권한이 있는 경우 앨범 액티비티 호출
                     Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -70,9 +76,8 @@ public class JoinActivity extends AppCompatActivity {
         });
 
 
-
         // 회원가입 버튼 클릭
-        binding.joinButton.setOnClickListener(new View.OnClickListener() {
+        binding.updateButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
@@ -101,11 +106,10 @@ public class JoinActivity extends AppCompatActivity {
                 }
 
                 //모든 체크 사항 통과
-                //User 초기화
+                //User 초기화 및 업데이트 요청
                 email = binding.inputEmail.getText().toString();
                 password = binding.inputPassword.getText().toString();
                 nickname = binding.inputNickname.getText().toString();
-
                 RadioGroup radioGroup = binding.inputGender;
                 int selectedId = radioGroup.getCheckedRadioButtonId();
 
@@ -121,11 +125,10 @@ public class JoinActivity extends AppCompatActivity {
                 }
 
 
-                //재학생 인증 activity에 user넘기면서 인텐트 전환
+                //유저 초기화
                 User user = new User(email, password, nickname, gen);
-                Intent intent = new Intent(getApplicationContext(), VerificationActivity.class);
-                intent.putExtra("user", user);
-                startActivity(intent);
+                //update user api
+
 
             }
         });
@@ -134,10 +137,7 @@ public class JoinActivity extends AppCompatActivity {
         binding.cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                //로그인 화면으로 이동
-                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                startActivity(intent);
+                onBackPressed();
             }
         });
 
@@ -158,4 +158,5 @@ public class JoinActivity extends AppCompatActivity {
             }
         }
     }
+
 }
