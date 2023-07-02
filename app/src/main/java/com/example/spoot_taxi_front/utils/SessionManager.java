@@ -2,19 +2,19 @@ package com.example.spoot_taxi_front.utils;
 
 import com.example.spoot_taxi_front.dto.User;
 
-public class CurrentUserHandler {
-    private static CurrentUserHandler instance;
+public class SessionManager {
+    private static SessionManager instance;
     private User currentUser;
 
-    private CurrentUserHandler() {
+    private SessionManager() {
         // Private constructor to prevent instantiation from outside the class
     }
 
-    public static CurrentUserHandler getInstance() {
+    public static SessionManager getInstance() {
         if (instance == null) {
-            synchronized (CurrentUserHandler.class) {
+            synchronized (SessionManager.class) {
                 if (instance == null) {
-                    instance = new CurrentUserHandler();
+                    instance = new SessionManager();
                 }
             }
         }
@@ -27,5 +27,9 @@ public class CurrentUserHandler {
 
     public User getCurrentUser() {
         return currentUser;
+    }
+
+    public void logout() {
+        currentUser = null;
     }
 }

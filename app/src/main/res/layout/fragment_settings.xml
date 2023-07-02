@@ -3,31 +3,94 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.SettingsFragment">
+    tools:context=".fragments.SettingsFragment"
+    android:orientation="vertical">
 
     <!-- TODO: Update blank fragment layout -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:orientation="horizontal"
-        android:background="@drawable/bg_top_bar">
-        <ImageView
-            android:layout_marginTop="15dp"
-            android:layout_marginStart="80dp"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/ic_taxi_white" />
-        <TextView
-            android:fontFamily="@font/bmjua_ttf"
-            android:layout_marginTop="20dp"
-            android:layout_marginStart="10dp"
-            android:textSize="30dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:text="SPOOT TAXI"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:orientation="horizontal"
+            android:background="@drawable/bg_top_bar">
+            <ImageView
+                android:layout_marginTop="15dp"
+                android:layout_marginStart="80dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/ic_taxi_white" />
+            <TextView
+                android:fontFamily="@font/bmjua_ttf"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="10dp"
+                android:textSize="30dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:text="SPOOT TAXI"/>
+        </LinearLayout>
 
+        <LinearLayout
+            android:layout_marginTop="30dp"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:orientation="horizontal"
+            android:clickable="true"
+            android:id="@+id/userUpdateButton">
+
+            <ImageView
+                android:layout_marginStart="30dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/img_default_profile"/>
+            <TextView
+                android:layout_marginTop="4dp"
+                android:fontFamily="@font/bmjua_ttf"
+                android:layout_marginStart="30dp"
+                android:layout_width="230dp"
+                android:textSize="25sp"
+                android:layout_height="wrap_content"
+                android:text="개인정보 수정" />
+            <ImageView
+                android:layout_marginTop="7dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/img_arrow_right" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:orientation="horizontal"
+            android:clickable="true"
+            android:id="@+id/logOutButton">
+
+            <ImageView
+                android:layout_marginStart="30dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/img_logout"/>
+            <TextView
+                android:layout_marginTop="4dp"
+                android:fontFamily="@font/bmjua_ttf"
+                android:layout_marginStart="30dp"
+                android:layout_width="230dp"
+                android:textSize="25sp"
+                android:layout_height="wrap_content"
+                android:text="로그아웃" />
+            <ImageView
+                android:layout_marginTop="7dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/img_arrow_right" />
+        </LinearLayout>
     </LinearLayout>
+
+
 
 
 

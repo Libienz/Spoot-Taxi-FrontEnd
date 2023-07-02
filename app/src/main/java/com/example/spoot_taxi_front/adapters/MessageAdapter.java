@@ -1,12 +1,9 @@
 package com.example.spoot_taxi_front.adapters;
 
-import android.content.Context;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.spoot_taxi_front.dto.ChatMessage;
 import com.example.spoot_taxi_front.R;
 import com.example.spoot_taxi_front.dto.User;
-import com.example.spoot_taxi_front.utils.CurrentUserHandler;
+import com.example.spoot_taxi_front.utils.SessionManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,7 +80,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
         public void bind(ChatMessage chatMessage) {
             // 채팅 메시지를 해당 뷰 요소에 설정
-            User currentUser = CurrentUserHandler.getInstance().getCurrentUser();
+            User currentUser = SessionManager.getInstance().getCurrentUser();
             if (chatMessage.getSenderId().equals(currentUser.getEmail())) {
                 // 내가 보낸 메시지인 경우, 왼쪽
                 textViewMyMessage.setText(chatMessage.getMessage());

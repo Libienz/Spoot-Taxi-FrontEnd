@@ -7,6 +7,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -161,17 +162,12 @@ public class MatchingFragment extends Fragment implements CurrentLocationEventLi
         toChatRoom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // ChatFragment로 이동
-                ChatFragment chatFragment = new ChatFragment();
-                FragmentManager fragmentManager = getParentFragmentManager();
-                fragmentManager.beginTransaction()
-                        .replace(R.id.mainFrameLayout, chatFragment)
-                        .commit();
 
-                // BottomNavigationView에서 채팅방 아이템을 선택한 상태로 표시
+                // ChatFragment로 이동: 클릭 발생시키기
                 BottomNavigationView bottomNavigationView = requireActivity().findViewById(R.id.navigationView);
-                bottomNavigationView.setSelectedItemId(R.id.chatFragment); // nav_chat는 채팅방 아이템의 ID입니다.
-
+                MenuItem chatItem = bottomNavigationView.getMenu().findItem(R.id.chatFragment);
+                chatItem.setChecked(true); // 아이템을 선택한 상태로 설정
+                bottomNavigationView.setSelectedItemId(chatItem.getItemId()); // 클릭 이벤트 발생
                 alertDialog.dismiss();
             }
         });
