@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.spoot_taxi_front.R;
+import com.example.spoot_taxi_front.dto.User;
 import com.example.spoot_taxi_front.dto.UserDto;
 
 public class VerificationActivity extends AppCompatActivity {
@@ -32,10 +33,10 @@ public class VerificationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_verification);
 
         // Retrieve the UserDto object from the Intent
-        UserDto userDto = (UserDto) getIntent().getSerializableExtra("userDto");
+        User user = (User) getIntent().getSerializableExtra("user");
 
         TextView tv = findViewById(R.id.emailTv);
-        tv.setText(userDto.getEmail());
+        tv.setText(user.getEmail());
 
         vButton = findViewById(R.id.verificationBtn);
         prevButton = findViewById(R.id.prevBtn);
@@ -45,11 +46,11 @@ public class VerificationActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                callVerificationApi(userDto);
+//                callVerificationApi(user);
                 //api 반응에 따라 분기
 
                 //인증 성공
-                callJoinApi(userDto);
+//                callJoinApi(user);
                 //인증 실패 (예외처리)
 
             }
