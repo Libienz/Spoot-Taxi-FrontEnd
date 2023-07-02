@@ -2,6 +2,9 @@ package com.example.spoot_taxi_front.activities;
 
 
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.pm.PackageManager;
@@ -45,13 +48,26 @@ public class JoinActivity extends AppCompatActivity {
     private String nickname;
     private String imageUri;
     private Gender gen;
-
+    private ActivityResultLauncher<String> galleryLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_join);
 
+        // ActivityResultLauncher 초기화
+        galleryLauncher = registerForActivityResult(new ActivityResultContracts.GetContent(),
+                new ActivityResultCallback<Uri>() {
+                    @Override
+                    public void onActivityResult(Uri result) {
+                        if (result != null) {
+                            // 선택한 이미지 URI 처리
+                            imageUri = result.toString();
+                            // 선택한 이미지 처리
+                            // ...
+                        }
+                    }
+                });
         //프로필 이미지 클릭
         binding.profileImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,8 +79,7 @@ public class JoinActivity extends AppCompatActivity {
                     ActivityCompat.requestPermissions(JoinActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, ALBUM_PERMISSION_REQUEST_CODE);
                 } else {
                     // 이미 권한이 있는 경우 앨범 액티비티 호출
-                    Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    startActivityForResult(intent, ALBUM_REQUEST_CODE);
+                    galleryLauncher.launch("image/*");
                 }
             }
         });
