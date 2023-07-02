@@ -29,8 +29,8 @@
                 android:id="@+id/profileImageView1"
                 android:layout_width="28dp"
                 android:layout_height="28dp"
-                android:src="@drawable/default_profile_image"
-                android:background="@drawable/rounded_background"
+                android:src="@drawable/img_default_profile"
+                android:background="@drawable/bg_rounded"
                 android:scaleType="centerCrop" />
 
             <ImageView
@@ -38,8 +38,8 @@
                 android:layout_width="28dp"
                 android:layout_height="28dp"
                 android:layout_marginStart="3dp"
-                android:src="@drawable/default_profile_image"
-                android:background="@drawable/rounded_background"
+                android:src="@drawable/img_default_profile"
+                android:background="@drawable/bg_rounded"
                 android:scaleType="centerCrop" />
         </LinearLayout>
 
@@ -53,8 +53,8 @@
                 android:id="@+id/profileImageView3"
                 android:layout_width="28dp"
                 android:layout_height="28dp"
-                android:background="@drawable/rounded_background"
-                android:src="@drawable/default_profile_image"
+                android:background="@drawable/bg_rounded"
+                android:src="@drawable/img_default_profile"
                 android:scaleType="centerCrop" />
 
             <ImageView
@@ -62,8 +62,8 @@
                 android:layout_width="28dp"
                 android:layout_marginStart="3dp"
                 android:layout_height="28dp"
-                android:src="@drawable/default_profile_image"
-                android:background="@drawable/rounded_background"
+                android:src="@drawable/img_default_profile"
+                android:background="@drawable/bg_rounded"
                 android:scaleType="centerCrop" />
         </LinearLayout>
 

@@ -12,7 +12,7 @@
         android:layout_width="200dp"
         android:layout_height="120dp"
         android:layout_marginTop="10dp"
-        android:src="@drawable/ic_taxi" />
+        android:src="@drawable/ic_taxi_blue" />
 
     <TextView
         android:fontFamily="@font/bmjua_ttf"
@@ -37,7 +37,7 @@
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:background="@drawable/edit"
+        android:background="@drawable/bg_edit"
         android:hint="Email@sangmyung.kr"
         android:inputType="textEmailAddress"
         android:padding="10dp"
@@ -49,7 +49,7 @@
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:background="@drawable/edit"
+        android:background="@drawable/bg_edit"
         android:hint="Password"
         android:inputType="textPassword"
         android:padding="10dp"
@@ -68,7 +68,7 @@
 
     <android.widget.Button
         android:fontFamily="@font/bmjua_ttf"
-        android:background="@drawable/button"
+        android:background="@drawable/bg_button"
         android:id="@+id/login"
         android:layout_width="300dp"
         android:layout_height="40dp"
@@ -104,7 +104,7 @@
 
     <android.widget.Button
         android:fontFamily="@font/bmjua_ttf"
-        android:background="@drawable/button"
+        android:background="@drawable/bg_button"
         android:id="@+id/register"
         android:layout_width="300dp"
         android:layout_height="40dp"

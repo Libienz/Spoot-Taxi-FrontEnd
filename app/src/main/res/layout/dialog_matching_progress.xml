@@ -2,9 +2,11 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:background="@drawable/bg_popup"
     android:padding="16dp">
 
     <TextView
+        android:fontFamily="@font/bmjua_ttf"
         android:id="@+id/statusTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -12,15 +14,25 @@
         android:textSize="18sp"
         android:textStyle="bold"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="16dp" />
+        android:layout_marginBottom="16dp"/>
+
+    <ImageView
+        android:layout_gravity="center"
+        android:id="@+id/gifImageView"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        android:src="@raw/progress" />
+
 
     <android.widget.Button
         android:id="@+id/cancelButton"
-        android:layout_width="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/bmjua_ttf"
         android:text="매칭 취소"
         android:textColor="@android:color/white"
-        android:background="@drawable/button"
+        android:background="@drawable/bg_button"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
         android:layout_gravity="center_horizontal" />

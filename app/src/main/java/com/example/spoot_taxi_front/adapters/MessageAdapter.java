@@ -5,6 +5,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -62,6 +63,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         //보내는 메시지인 경우 사용할 tv들
         private TextView textViewMyMessage;
         private TextView textViewSentTime;
+        private ImageView profileImgView;
 
 
         public void setLayoutGravity(int gravity) {
@@ -75,6 +77,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             textViewRecivedTime = itemView.findViewById(R.id.textViewRecivedTime);
             textViewMyMessage = itemView.findViewById(R.id.textViewMyMessage);
             textViewSentTime = itemView.findViewById(R.id.textViewSentTime);
+            profileImgView = itemView.findViewById(R.id.profileImageView);
 
         }
 
@@ -90,6 +93,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                 textViewRecivedMessage.setVisibility(View.INVISIBLE);
                 textViewSenderName.setVisibility(View.INVISIBLE);
                 textViewRecivedTime.setVisibility(View.INVISIBLE);
+                profileImgView.setVisibility(View.INVISIBLE);
             } else {
                 // 상대방이 보낸 메시지인 경우, 오른쪽
                 textViewSenderName.setText(chatMessage.getSenderName());

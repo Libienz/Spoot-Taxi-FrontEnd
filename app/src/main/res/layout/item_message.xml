@@ -10,6 +10,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+        <ImageView
+            android:id="@+id/profileImageView"
+            android:layout_marginTop="30dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/img_default_profile"
+            android:background="@drawable/bg_rounded"
+            android:scaleType="centerCrop" />
+
 
         <!-- TextView 및 기타 내용들 -->
 
@@ -34,11 +43,12 @@
             <TextView
                 android:fontFamily="@font/bmjua_ttf"
                 android:id="@+id/textViewRecivedMessage"
-                android:background="@drawable/bubble_left_background"
+                android:background="@drawable/bg_bubble_left"
                 android:layout_marginStart="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="hihiihihihiihihiih"
+                android:text="hihiihihiihihiih"
+                android:maxWidth="200dp"
                 android:textColor="#000000"
                 android:textSize="20sp"
                 android:padding="12dp"
@@ -84,9 +94,10 @@
         <TextView
             android:id="@+id/textViewMyMessage"
             android:layout_marginTop="40dp"
-            android:background="@drawable/bubble_right_background"
+            android:background="@drawable/bg_bubble_right"
             android:fontFamily="@font/bmjua_ttf"
             android:layout_marginEnd="5dp"
+            android:maxWidth="200dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 

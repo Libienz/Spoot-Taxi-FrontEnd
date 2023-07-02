@@ -18,20 +18,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
                 android:orientation="horizontal"
-                android:background="@drawable/top_bar">
+                android:background="@drawable/bg_top_bar">
 
                 <ImageView
                     android:layout_marginTop="15dp"
                     android:layout_marginStart="80dp"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:src="@drawable/ic_taxi" />
+                    android:src="@drawable/ic_taxi_white" />
                 <TextView
                     android:fontFamily="@font/bmjua_ttf"
                     android:layout_marginTop="20dp"
                     android:layout_marginStart="10dp"
                     android:textSize="30dp"
                     android:layout_width="wrap_content"
+                    android:textColor="@color/white"
                     android:layout_height="wrap_content"
                     android:text="SPOOT TAXI"/>
 
@@ -42,7 +43,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingTop="10dp">
+                android:paddingTop="40dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -82,7 +83,7 @@
                         android:id="@+id/inputEmail"
                         android:layout_width="300dp"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/edit"
+                        android:background="@drawable/bg_edit"
                         android:hint="상명대학교이메일@sangmyung.kr"
                         android:inputType="textEmailAddress"
                         android:padding="10dp"
@@ -125,7 +126,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginBottom="5dp"
-                    android:background="@drawable/edit"
+                    android:background="@drawable/bg_edit"
                     android:hint=" 영문 + 숫자 + 특수문자 8 ~ 16자"
                     android:inputType="textPassword"
                     android:padding="10dp"
@@ -165,7 +166,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginBottom="3dp"
-                    android:background="@drawable/edit"
+                    android:background="@drawable/bg_edit"
                     android:hint=" 패스워드를 다시 입력해 주세요."
                     android:inputType="textPassword"
                     android:padding="10dp"
@@ -206,7 +207,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginBottom="3dp"
-                    android:background="@drawable/edit"
+                    android:background="@drawable/bg_edit"
                     android:hint=" 닉네임을 입력해 주세요."
                     android:inputType="textEmailAddress"
                     android:padding="10dp"
@@ -286,7 +287,7 @@
                 android:layout_height="40dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="15dp"
-                android:background="@drawable/button"
+                android:background="@drawable/bg_button"
                 android:text="계정 만들기"
                 android:textColor="#FFFFFF"
                 android:textSize="16dp" />
@@ -298,7 +299,7 @@
                 android:layout_height="40dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="15dp"
-                android:background="@drawable/button"
+                android:background="@drawable/bg_button"
                 android:text="취소"
                 android:textColor="#FFFFFF"
                 android:textSize="16dp" />

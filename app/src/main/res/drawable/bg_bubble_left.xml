@@ -8,7 +8,7 @@
         android:topRightRadius="250dp"
         android:topLeftRadius="250dp"/>
 
-    <solid android:color="@color/bubbleColor" />
+    <solid android:color="@color/white" />
 
     <padding
         android:left="12dp"

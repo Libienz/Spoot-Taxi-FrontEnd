@@ -2,6 +2,8 @@ package com.example.spoot_taxi_front.fragments;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,13 +13,17 @@ import android.view.ViewGroup;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 
+import android.view.Window;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.spoot_taxi_front.R;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import net.daum.mf.map.api.CameraUpdateFactory;
 import net.daum.mf.map.api.MapPoint;
@@ -76,16 +82,13 @@ public class MatchingFragment extends Fragment implements CurrentLocationEventLi
                 // 버튼 클릭 이벤트 처리
                 if (curLaitude != 0.0 && curLongitude != 0.0) {
                     // 매칭 버튼 클릭 시 팝업 표시
-                    showMatchingPopup();
+                    showMatchingProgressPopup();
 
                     //서버에 매칭 요성 by api
 
                 } else {
                     Toast.makeText(requireContext(), "위치를 계산중입니다. 잠시 후에 다시 시도해주세요", Toast.LENGTH_SHORT).show();
                 }
-
-
-
 
             }
         });
@@ -97,10 +100,10 @@ public class MatchingFragment extends Fragment implements CurrentLocationEventLi
 
 
 
-    private void showMatchingPopup() {
+    private void showMatchingProgressPopup() {
         // 팝업 레이아웃 인플레이션
         LayoutInflater inflater = LayoutInflater.from(requireContext());
-        View popupView = inflater.inflate(R.layout.popup_matching, null);
+        View popupView = inflater.inflate(R.layout.dialog_matching_progress, null);
 
         // 팝업 생성 및 설정
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
@@ -108,20 +111,72 @@ public class MatchingFragment extends Fragment implements CurrentLocationEventLi
         builder.setCancelable(false); // 팝업 외부 클릭 시 닫히지 않도록 설정
 
         // 팝업 내부의 뷰 요소 가져오기
-        TextView statusTextView = popupView.findViewById(R.id.statusTextView);
+        ImageView gifImageView = popupView.findViewById(R.id.gifImageView);
+        Glide.with(this).asGif().load(R.raw.progress).into(gifImageView);
+
         Button cancelButton = popupView.findViewById(R.id.cancelButton);
 
         // 팝업 표시
         final AlertDialog alertDialog = builder.create();
+        alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         alertDialog.show();
 
-        // 취소 버튼 클릭 시 팝업 닫기
+        // 매칭 취소 버튼 클릭 시 팝업 닫기
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                showMatchingSuccessPopup();
+                alertDialog.dismiss();
+                //수정지점: 취소누르면 매칭 성공 액티비티 띄우기
+
+            }
+        });
+    }
+
+
+
+    private void showMatchingSuccessPopup() {
+        // 팝업 레이아웃 인플레이션
+        LayoutInflater inflater = LayoutInflater.from(requireContext());
+        View popupView = inflater.inflate(R.layout.dialog_matching_success, null);
+
+        // 팝업 생성 및 설정
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        builder.setView(popupView);
+        builder.setCancelable(false); // 팝업 외부 클릭 시 닫히지 않도록 설정
+
+        // 팝업 내부의 뷰 요소 가져오기
+        Button toChatRoom = popupView.findViewById(R.id.toChatRoomButton);
+        ImageView gifImageView = popupView.findViewById(R.id.gifImageView);
+        Glide.with(this).asGif().load(R.raw.hello).into(gifImageView);
+
+        // 팝업 표시
+        final AlertDialog alertDialog = builder.create();
+        alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        alertDialog.show();
+
+        // 채팅방으로 이동 버튼 클릭 시 채팅방 목록 Fragment로 이동
+        toChatRoom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // ChatFragment로 이동
+                ChatFragment chatFragment = new ChatFragment();
+                FragmentManager fragmentManager = getParentFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.mainFrameLayout, chatFragment)
+                        .commit();
+
+                // BottomNavigationView에서 채팅방 아이템을 선택한 상태로 표시
+                BottomNavigationView bottomNavigationView = requireActivity().findViewById(R.id.navigationView);
+                bottomNavigationView.setSelectedItemId(R.id.chatFragment); // nav_chat는 채팅방 아이템의 ID입니다.
+
                 alertDialog.dismiss();
             }
         });
+
+
     }
 
 
@@ -145,6 +200,7 @@ public class MatchingFragment extends Fragment implements CurrentLocationEventLi
         super.onPause();
         // 현위치 추적 정지
         mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOff);
+
     }
 
     @Override

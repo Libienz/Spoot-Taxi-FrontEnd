@@ -19,6 +19,7 @@
         android:theme="@style/Theme.SpootTaxiFront"
         android:usesCleartextTraffic="true"
         tools:targetApi="28">
+
         <activity
             android:name=".activities.ChatRoomActivity"
             android:exported="false" />
