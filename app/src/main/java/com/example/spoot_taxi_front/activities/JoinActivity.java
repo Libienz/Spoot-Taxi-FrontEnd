@@ -64,7 +64,7 @@ public class JoinActivity extends AppCompatActivity {
                             // 선택한 이미지 URI 처리
                             imageUri = result.toString();
                             // 선택한 이미지 처리
-                            // ...
+                            binding.profileImageView.setImageURI(Uri.parse(imageUri));
                         }
                     }
                 });
@@ -159,18 +159,5 @@ public class JoinActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == ALBUM_REQUEST_CODE && resultCode == RESULT_OK) {
-            // 앨범 액티비티로부터 이미지 선택 결과를 받아온 경우
-            if (data != null) {
-                Uri selectedImageUri = data.getData();
-                // 선택한 이미지를 처리하는 로직
-                imageUri = selectedImageUri.toString();
-                binding.profileImageView.setImageURI(selectedImageUri);
-            }
-        }
-    }
 }
