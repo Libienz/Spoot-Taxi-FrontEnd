@@ -17,15 +17,13 @@ import androidx.databinding.DataBindingUtil;
 
 import android.Manifest;
 
-import com.example.spoot_taxi_front.dto.User;
+import com.example.spoot_taxi_front.models.User;
 import com.example.spoot_taxi_front.utils.InputChecker;
 import com.example.spoot_taxi_front.R;
 import com.example.spoot_taxi_front.databinding.ActivityJoinBinding;
-import com.example.spoot_taxi_front.dto.Gender;
-import com.example.spoot_taxi_front.dto.UserDto;
+import com.example.spoot_taxi_front.models.Gender;
 
 import android.content.Intent;
-import android.provider.MediaStore;
 import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;

@@ -2,15 +2,14 @@ package com.example.spoot_taxi_front.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.spoot_taxi_front.R;
-import com.example.spoot_taxi_front.dto.User;
-import com.example.spoot_taxi_front.dto.UserDto;
+import com.example.spoot_taxi_front.models.User;
+import com.example.spoot_taxi_front.network.dto.UserDto;
 
 public class VerificationActivity extends AppCompatActivity {
 

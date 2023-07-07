@@ -16,10 +16,9 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.example.spoot_taxi_front.R;
-import com.example.spoot_taxi_front.databinding.ActivityJoinBinding;
 import com.example.spoot_taxi_front.databinding.ActivityUpdateBinding;
-import com.example.spoot_taxi_front.dto.Gender;
-import com.example.spoot_taxi_front.dto.User;
+import com.example.spoot_taxi_front.models.Gender;
+import com.example.spoot_taxi_front.models.User;
 import com.example.spoot_taxi_front.utils.InputChecker;
 import com.example.spoot_taxi_front.utils.SessionManager;
 

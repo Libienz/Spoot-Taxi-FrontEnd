@@ -3,4 +3,5 @@
     <domain-config cleartextTrafficPermitted="true">
         <domain includeSubdomains="true">maps.daum-img.net</domain>
     </domain-config>
+    <base-config cleartextTrafficPermitted="true" /> <!-- 전체 도메인에 대해 클리어텍스트 통신 허용 -->
 </network-security-config>

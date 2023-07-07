@@ -9,7 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.spoot_taxi_front.dto.ChatRoom;
+import com.example.spoot_taxi_front.models.ChatRoom;
 import com.example.spoot_taxi_front.R;
 import com.example.spoot_taxi_front.activities.ChatRoomActivity;
 

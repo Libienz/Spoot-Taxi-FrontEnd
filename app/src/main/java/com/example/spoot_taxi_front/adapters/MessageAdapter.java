@@ -9,9 +9,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.spoot_taxi_front.dto.ChatMessage;
+import com.example.spoot_taxi_front.models.ChatMessage;
 import com.example.spoot_taxi_front.R;
-import com.example.spoot_taxi_front.dto.User;
+import com.example.spoot_taxi_front.models.User;
 import com.example.spoot_taxi_front.utils.SessionManager;
 
 import java.util.ArrayList;

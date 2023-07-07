@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.example.spoot_taxi_front.dto.ChatMessage;
+import com.example.spoot_taxi_front.models.ChatMessage;
 import com.example.spoot_taxi_front.adapters.MessageAdapter;
 import com.example.spoot_taxi_front.R;
 import com.example.spoot_taxi_front.utils.TestChatMessageGenerator;

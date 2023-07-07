@@ -1,4 +1,4 @@
-package com.example.spoot_taxi_front.dto;
+package com.example.spoot_taxi_front.models;
 
 public class ChatMessage {
     private String messageId;
