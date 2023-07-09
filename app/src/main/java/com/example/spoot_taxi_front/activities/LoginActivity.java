@@ -13,11 +13,11 @@ import android.widget.Toast;
 
 import com.example.spoot_taxi_front.R;
 import com.example.spoot_taxi_front.models.User;
+import com.example.spoot_taxi_front.network.retrofit.ApiManager;
 import com.example.spoot_taxi_front.network.api.AuthApi;
 import com.example.spoot_taxi_front.network.dto.UserDto;
 import com.example.spoot_taxi_front.network.dto.requests.LoginRequest;
 import com.example.spoot_taxi_front.network.dto.responses.LoginResponse;
-import com.example.spoot_taxi_front.network.retrofit.ApiClient;
 import com.example.spoot_taxi_front.utils.SessionManager;
 
 import retrofit2.Call;
@@ -45,7 +45,7 @@ public class LoginActivity extends AppCompatActivity {
         lostPWButton = findViewById(R.id.lost_pw);
 
         //Api Client 생성
-        AuthApi authApi = ApiClient.createAuthApi();
+        AuthApi authApi = ApiManager.getInstance().getAuthApi();
 
         //로그인 클릭
         loginButton.setOnClickListener(new View.OnClickListener() {
