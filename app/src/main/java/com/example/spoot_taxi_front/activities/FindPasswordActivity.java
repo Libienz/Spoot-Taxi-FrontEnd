@@ -155,7 +155,9 @@ public class FindPasswordActivity extends AppCompatActivity {
                 if (code.equals(inputCode)) {
                     binding.verifyTv.setText("");
                     Toast.makeText(getApplicationContext(), "이메일 인증 성공!", Toast.LENGTH_SHORT).show();
+                    //email넘기면서 intent전환
                     Intent intent = new Intent(getApplicationContext(), PasswordResetActivity.class);
+                    intent.putExtra("email", email); // Add the email as an extra
                     startActivity(intent);
 
                 }

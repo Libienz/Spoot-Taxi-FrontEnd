@@ -1,13 +1,16 @@
 package com.example.spoot_taxi_front.network.api;
 
+import com.example.spoot_taxi_front.network.dto.UserDto;
 import com.example.spoot_taxi_front.network.dto.requests.LoginRequest;
 import com.example.spoot_taxi_front.network.dto.responses.LoginResponse;
+import com.example.spoot_taxi_front.network.dto.responses.UserSaveResponse;
 import com.example.spoot_taxi_front.network.dto.responses.VerificationResponse;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -20,7 +23,12 @@ public interface AuthApi {
     //회원가입
 
     //유저정보수정
+    @PUT("api/auth/users/{email}")
+    Call<UserSaveResponse> updateUser(@Path("email") String email, @Body UserDto updateDto);
 
+    //유저 비밀번호 수정
+    @PUT("api/auth/users/{email}/password")
+    Call<UserSaveResponse> updateUserPassword(@Path("email") String email, @Body UserDto updateDto);
     //이메일 중복 확인
     @GET("/api/auth/check-duplicate/{email}")
     Call<Boolean> checkDuplicateEmail(@Path("email") String email);
