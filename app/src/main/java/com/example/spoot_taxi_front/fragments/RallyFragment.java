@@ -158,27 +158,42 @@ public class RallyFragment extends Fragment {
     }
 
     private void setRallyInfo(RallyInfoDto responseBody) {
+        TableLayout tableLayout =getView().findViewById(R.id.rallyTL);
+        removeCurrentRally(tableLayout);
+
         TextView date =getView().findViewById(R.id.rallyDateTv);
         date.setText(responseBody.getDate().getMonthValue()+"월"+ responseBody.getDate().getDayOfMonth()+"일");
-        TableLayout tableLayout =getView().findViewById(R.id.rallyTL);
+
         List<RallyInfoDto.RallyDetailsDto> rallyDetailsList = responseBody.getRallyDetailsList();
         for (RallyInfoDto.RallyDetailsDto details : rallyDetailsList) {
-            addTableRow(tableLayout,String.valueOf(details.getStartTime().getHour()),String.valueOf(details.getEndTime().getHour()),details.getLocation());
+            String time =details.getStartTime().getHour()+"시"+details.getStartTime().getMinute()+"분"+" ~ "+details.getEndTime().getHour()+"시"+details.getEndTime().getMinute()+"분";
+            addTableRow(tableLayout,time,details.getLocation(),details.getRallyAttendance(),details.getPoliceStation());
+        }
+    }
+
+    private static void removeCurrentRally(TableLayout tableLayout) {
+        int childCount = tableLayout.getChildCount();
+        if(childCount>3){
+            for(int i =childCount-1; i>=3; i--){
+                tableLayout.removeViewAt(i);
+            }
         }
     }
 
     // Fragment 내에서 동적으로 TableRow를 추가하는 메소드
-    private void addTableRow(TableLayout tableLayout, String startTime, String endTime, String location) {
+    private void addTableRow(TableLayout tableLayout, String time, String location,String rallyAttendance,String policeStation) {
         TableRow tableRow = new TableRow(getContext());
 
-        TextView textViewStartTime = createTextView(startTime);
-        TextView textViewEndTime = createTextView(endTime);
+        TextView textViewTime = createTextView(time);
         TextView textViewLocation = createTextView(location);
+        TextView textViewRallyAttendance = createTextView(rallyAttendance);
+        TextView textViewPoliceStation = createTextView(policeStation);
 
         // TableRow에 TextView 추가
-        tableRow.addView(textViewStartTime);
-        tableRow.addView(textViewEndTime);
+        tableRow.addView(textViewTime);
         tableRow.addView(textViewLocation);
+        tableRow.addView(textViewRallyAttendance);
+        tableRow.addView(textViewPoliceStation);
 
         // TableLayout에 TableRow 추가
         tableLayout.addView(tableRow);
@@ -186,7 +201,7 @@ public class RallyFragment extends Fragment {
     // TextView를 생성하고 스타일을 적용하는 메소드
     private TextView createTextView(String text) {
         TextView textView = new TextView(getContext());
-        textView.setLayoutParams(new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1));
+        textView.setLayoutParams(new TableRow.LayoutParams(0, TableRow.LayoutParams.MATCH_PARENT, 1));
         textView.setText(text);
         textView.setGravity(Gravity.CENTER);
         textView.setPadding(10, 10, 10, 10);

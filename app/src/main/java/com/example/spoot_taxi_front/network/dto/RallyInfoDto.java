@@ -8,7 +8,7 @@ public class RallyInfoDto {
 
     private LocalDateTime date;
 
-    private List<RallyDetailsDto> rallyDetailsList;
+    private List<RallyDetailsDto> rallyDetailsDtoList;
 
 
     public static class RallyDetailsDto {
@@ -16,6 +16,8 @@ public class RallyInfoDto {
 
         private LocalDateTime endTime;
         private String location;
+        private String rallyAttendance;
+        private String policeStation;
 
         public LocalDateTime getStartTime() {
             return startTime;
@@ -28,6 +30,13 @@ public class RallyInfoDto {
         public String getLocation() {
             return location;
         }
+        public String getRallyAttendance() {
+            return rallyAttendance;
+        }
+
+        public String getPoliceStation() {
+            return policeStation;
+        }
     }
 
     public LocalDateTime getDate() {
@@ -35,6 +44,6 @@ public class RallyInfoDto {
     }
 
     public List<RallyDetailsDto> getRallyDetailsList() {
-        return rallyDetailsList;
+        return rallyDetailsDtoList;
     }
 }
