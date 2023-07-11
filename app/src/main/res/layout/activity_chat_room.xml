@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- activity_chat_room.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#D7EBFB"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:orientation="horizontal"
+        android:background="@drawable/bg_top_bar">
+
+        <ImageView
+            android:layout_marginTop="15dp"
+            android:layout_marginStart="80dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_taxi_white" />
+        <TextView
+            android:fontFamily="@font/bmjua_ttf"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="10dp"
+            android:textSize="30dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:text="SPOOT TAXI"/>
+
+
+    </LinearLayout>
+    <!-- 채팅 내역을 표시할 RecyclerView -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewChat"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <!-- 메시지 입력창과 전송 버튼을 갖는 레이아웃 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp">
+
+        <!-- 메시지 입력을 위한 EditText -->
+        <EditText
+            android:id="@+id/editTextMessage"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="20dp"
+            android:fontFamily="@font/bmjua_ttf"
+            android:background="@drawable/bg_rounded"
+            android:hint="메시지 입력" />
+
+        <!-- 메시지 전송 버튼 -->
+        <android.widget.Button
+            android:id="@+id/buttonSend"
+            android:fontFamily="@font/bmjua_ttf"
+            android:background="@drawable/bg_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:textColor="@color/white"
+            android:text="전송" />
+
+    </LinearLayout>
+
+</LinearLayout>

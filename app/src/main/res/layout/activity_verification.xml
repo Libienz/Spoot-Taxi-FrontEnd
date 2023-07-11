@@ -22,7 +22,7 @@
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:layout_gravity="center"
-                android:src="@drawable/smu_logo"/>
+                android:src="@drawable/img_smu_logo"/>
 
             <TextView
                 android:layout_margin="30dp"
@@ -67,7 +67,7 @@
                 android:layout_width="300dp"
                 android:layout_height="40dp"
                 android:layout_gravity="center"
-                android:background="@drawable/button"
+                android:background="@drawable/bg_button"
                 android:layout_marginBottom="19dp"
                 android:text="이메일 인증 요청"
                 android:textColor="#FFFFFF"
@@ -79,7 +79,7 @@
                 android:layout_width="300dp"
                 android:layout_height="40dp"
                 android:layout_gravity="center"
-                android:background="@drawable/button"
+                android:background="@drawable/bg_button"
                 android:layout_marginBottom="40dp"
                 android:text="이전"
                 android:textColor="#FFFFFF"

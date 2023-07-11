@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragments.MatchingFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:orientation="horizontal"
+        android:background="@drawable/bg_top_bar">
+
+        <ImageView
+            android:layout_marginTop="15dp"
+            android:layout_marginStart="80dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_taxi_white" />
+        <TextView
+            android:fontFamily="@font/bmjua_ttf"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="10dp"
+            android:textSize="30dp"
+            android:layout_width="wrap_content"
+            android:textColor="@color/white"
+            android:layout_height="wrap_content"
+            android:text="SPOOT TAXI"/>
+
+    </LinearLayout>
+
+    <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:layout_marginTop="90dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:backgroundTint="@color/buttonColor"
+        app:cardCornerRadius="70dp">
+
+        <FrameLayout
+            android:id="@+id/mapViewContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/emailTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="150dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:fontFamily="@font/bmjua_ttf"
+        android:text="내 주변 상명대학교행 택시팟 구하기!"
+        android:textColor="#000000"
+        android:textSize="21dp" />
+
+    <android.widget.Button
+        android:fontFamily="@font/bmjua_ttf"
+        android:id="@+id/matchingButton"
+        android:layout_width="300dp"
+        android:layout_height="40dp"
+        android:background="@drawable/bg_button"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_marginBottom="150dp"
+        android:text="원클릭 매칭"
+        android:textColor="#FFFFFF"
+        android:textSize="16dp" />
+
+</FrameLayout>
