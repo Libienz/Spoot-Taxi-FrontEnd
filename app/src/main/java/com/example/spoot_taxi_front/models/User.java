@@ -7,24 +7,26 @@ import java.io.Serializable;
 public class User implements Serializable {
     private String email;
     private String password;
-    private String imgUri;
+    private String imgUrl;
     private String nickname;
     private Gender gender;
 
-    public User(String email, String password, String nickname, Gender gender) {
+    public User(String email, String password, String nickname, String imgUrl, Gender gender) {
         this.email = email;
         this.password = password;
-
-        // img_default_profile의 리소스 ID 가져오기
-        int defaultProfileResId = R.drawable.img_default_profile;
-        // 리소스 ID를 통해 URI 생성
-        String defaultProfileUri = "android.resource://" + "com.example.spoot_taxi_front" + "/" + defaultProfileResId;
-        this.imgUri = defaultProfileUri; //기본 이미지로 설정
+        this.imgUrl = imgUrl; //기본 이미지로 설정
         this.nickname = nickname;
         this.gender = gender;
     }
 
-// Getter and Setter methods
+    public User(String email, String password, String nickname, Gender gender) {
+        this.email = email;
+        this.password = password;
+        this.nickname = nickname;
+        this.imgUrl = "http://192.168.219.109:8080/images/default-profile-image";
+        this.gender = gender;
+    }
+    // Getter and Setter methods
 
 
     public String getNickname() {
@@ -51,12 +53,12 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public String getImgUri() {
-        return imgUri;
+    public String getImgUrl() {
+        return imgUrl;
     }
 
-    public void setImgUri(String imgUri) {
-        this.imgUri = imgUri;
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
     }
 
     public Gender getGender() {

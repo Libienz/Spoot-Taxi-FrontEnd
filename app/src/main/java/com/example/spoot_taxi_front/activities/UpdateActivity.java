@@ -32,7 +32,7 @@ public class UpdateActivity extends AppCompatActivity {
     private String email;
     private String password;
     private String nickname;
-    private String imageUri;
+    private String imgUrl;
     private Gender gen;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +43,8 @@ public class UpdateActivity extends AppCompatActivity {
         User currentUser = SessionManager.getInstance().getCurrentUser();
 
         binding.inputEmail.setText(currentUser.getEmail());
-        binding.profileImageView.setImageURI(Uri.parse(currentUser.getImgUri()));
+        //임시 주석: img 처리 완료하고 수정할 것
+//        binding.profileImageView.setImageURI(Uri.parse(currentUser.getImgUrl()));
         binding.inputPassword.setText(currentUser.getPassword());
         binding.inputPwck.setText(currentUser.getPassword());
         binding.inputNickname.setText(currentUser.getNickname());
@@ -75,7 +76,7 @@ public class UpdateActivity extends AppCompatActivity {
         });
 
 
-        // 회원가입 버튼 클릭
+        // 수정하기 버튼 클릭
         binding.updateButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -125,7 +126,7 @@ public class UpdateActivity extends AppCompatActivity {
 
 
                 //유저 초기화
-                User user = new User(email, password, nickname, gen);
+                User user = new User(email, password, nickname, imgUrl, gen);
                 //update user api
 
 
@@ -152,7 +153,7 @@ public class UpdateActivity extends AppCompatActivity {
             if (data != null) {
                 Uri selectedImageUri = data.getData();
                 // 선택한 이미지를 처리하는 로직
-                imageUri = selectedImageUri.toString();
+                imgUrl = selectedImageUri.toString();
                 binding.profileImageView.setImageURI(selectedImageUri);
             }
         }

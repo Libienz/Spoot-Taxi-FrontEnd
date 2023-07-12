@@ -13,11 +13,11 @@ import android.widget.Toast;
 
 import com.example.spoot_taxi_front.R;
 import com.example.spoot_taxi_front.models.User;
+import com.example.spoot_taxi_front.network.retrofit.ApiManager;
 import com.example.spoot_taxi_front.network.api.AuthApi;
 import com.example.spoot_taxi_front.network.dto.UserDto;
 import com.example.spoot_taxi_front.network.dto.requests.LoginRequest;
 import com.example.spoot_taxi_front.network.dto.responses.LoginResponse;
-import com.example.spoot_taxi_front.network.retrofit.ApiClient;
 import com.example.spoot_taxi_front.utils.SessionManager;
 
 import retrofit2.Call;
@@ -45,7 +45,7 @@ public class LoginActivity extends AppCompatActivity {
         lostPWButton = findViewById(R.id.lost_pw);
 
         //Api Client 생성
-        AuthApi authApi = ApiClient.createAuthApi();
+        AuthApi authApi = ApiManager.getInstance().getAuthApi();
 
         //로그인 클릭
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -79,6 +79,10 @@ public class LoginActivity extends AppCompatActivity {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //테스트 : 아래 주석처리된 흐름이 맞는 흐름임
+//                Intent intent = new Intent(getApplicationContext(), VerificationActivity.class);
+//                startActivity(intent);
+
                 Intent intent = new Intent(getApplicationContext(), JoinActivity.class);
                 startActivity(intent);
 
@@ -118,7 +122,7 @@ public class LoginActivity extends AppCompatActivity {
         Log.e("Login Success", token);
 
         // SessionManager 현재 세션 관리
-        User user = new User(userDto.getEmail(), userDto.getPassword(), userDto.getName(), userDto.getGender());
+        User user = new User(userDto.getEmail(), userDto.getPassword(), userDto.getName(), null, userDto.getGender());
         SessionManager sessionManager = SessionManager.getInstance();
         sessionManager.setJwtToken(token);
         sessionManager.setCurrentUser(user);
