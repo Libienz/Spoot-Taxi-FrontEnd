@@ -9,22 +9,30 @@ public class UserDto implements Serializable {
     private String password;
     private String name;
     private Gender gender;
-    private String imgUri;
+    private String imgUrl;
 
-    public UserDto(String email, String password, String name, Gender gender, String imgUri) {
+    public UserDto(String email, String password, String name, Gender gender, String imgUrl) {
         this.email = email;
         this.password = password;
         this.name = name;
         this.gender = gender;
-        this.imgUri = imgUri;
+        this.imgUrl = imgUrl;
     }
 
-    public String getImgUri() {
-        return imgUri;
+    public UserDto(String email, String password, String name, Gender gender) {
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.imgUrl = "http://192.168.219.109:8080/api/images/profile-image/default-profile-image.jpg";
+        this.gender = gender;
     }
 
-    public void setImgUri(String imgUri) {
-        this.imgUri = imgUri;
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
     }
 
     public String getEmail() {
@@ -66,7 +74,7 @@ public class UserDto implements Serializable {
                 ", password='" + password + '\'' +
                 ", name='" + name + '\'' +
                 ", gender=" + gender +
-                ", imgUri='" + imgUri + '\'' +
+                ", imgUri='" + imgUrl + '\'' +
                 '}';
     }
 }
