@@ -79,12 +79,12 @@ public class LoginActivity extends AppCompatActivity {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //테스트 : 아래 주석처리된 흐름이 맞는 흐름임
-//                Intent intent = new Intent(getApplicationContext(), VerificationActivity.class);
-//                startActivity(intent);
-
-                Intent intent = new Intent(getApplicationContext(), JoinActivity.class);
+                // 올바른 흐름
+                Intent intent = new Intent(getApplicationContext(), VerificationActivity.class);
                 startActivity(intent);
+                // 테스트용 흐름
+//                Intent intent = new Intent(getApplicationContext(), JoinActivity.class);
+//                startActivity(intent);
 
             }
         });
