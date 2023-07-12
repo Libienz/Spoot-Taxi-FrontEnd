@@ -2,11 +2,11 @@ package com.example.spoot_taxi_front.network.dto.responses;
 
 
 public class VerificationResponse {
-    private Boolean emailChecked;
+    private Boolean sended;
     private Integer verificationCode;
 
-    public Boolean getEmailChecked() {
-        return emailChecked;
+    public Boolean getSended() {
+        return sended;
     }
 
     public Integer getVerificationCode() {

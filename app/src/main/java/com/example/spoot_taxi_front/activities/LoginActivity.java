@@ -79,6 +79,10 @@ public class LoginActivity extends AppCompatActivity {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //테스트 : 아래 주석처리된 흐름이 맞는 흐름임
+//                Intent intent = new Intent(getApplicationContext(), VerificationActivity.class);
+//                startActivity(intent);
+
                 Intent intent = new Intent(getApplicationContext(), JoinActivity.class);
                 startActivity(intent);
 
@@ -118,7 +122,7 @@ public class LoginActivity extends AppCompatActivity {
         Log.e("Login Success", token);
 
         // SessionManager 현재 세션 관리
-        User user = new User(userDto.getEmail(), userDto.getPassword(), userDto.getName(), userDto.getGender());
+        User user = new User(userDto.getEmail(), userDto.getPassword(), userDto.getName(), null, userDto.getGender());
         SessionManager sessionManager = SessionManager.getInstance();
         sessionManager.setJwtToken(token);
         sessionManager.setCurrentUser(user);

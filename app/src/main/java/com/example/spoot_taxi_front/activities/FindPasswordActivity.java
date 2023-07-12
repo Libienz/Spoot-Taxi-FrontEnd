@@ -47,7 +47,7 @@ public class FindPasswordActivity extends AppCompatActivity {
         //인증 창 안보이도록 설정: 인증 창은 이메일 입력되고 가입된 이메일인지 확인 후에 보이게 설정
         binding.verifyLayout.setVisibility(View.GONE);
 
-        //이메일 인증 클릭
+        //인증 메일 발송 클릭
         binding.sendVerificationBtn.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -68,17 +68,17 @@ public class FindPasswordActivity extends AppCompatActivity {
 
 
                 String email = binding.emailEdt.getText().toString();
-                Toast.makeText(getApplicationContext(), "인증메일 발송 중..", Toast.LENGTH_SHORT).show();
-                Call<VerificationResponse> verificationCall = authApi.sendVerificationEmail(email);
+                Call<VerificationResponse> verificationCall = authApi.sendVerificationEmailForUpdate(email);
 
                 //이메일 인증 요청
                 verificationCall.enqueue(new Callback<VerificationResponse>() {
                     @Override
                     public void onResponse(Call<VerificationResponse> call, Response<VerificationResponse> response) {
-                        Boolean emailConfirmed = response.body().getEmailChecked();
+                        Boolean sended = response.body().getSended();
                         Integer verificationCode = response.body().getVerificationCode();
-                        if (emailConfirmed != null && emailConfirmed) {
+                        if (sended != null && sended) {
                             // 가입된 이메일임 -> 인증 코드로 진행
+//                            Toast.makeText(getApplicationContext(), "인증메일 발송 완료!", Toast.LENGTH_SHORT).show();
                             processEmailverification(email, verificationCode);
 
                         } else {
@@ -150,6 +150,10 @@ public class FindPasswordActivity extends AppCompatActivity {
         binding.verificationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (binding.verifyCodeEdt.getText().toString().equals("")) {
+                    binding.verifyTv.setText("잘못된 인증번호 입니다");
+                    return;
+                }
                 Integer inputCode = Integer.parseInt(binding.verifyCodeEdt.getText().toString());
                 //인증 코드 올바르게 입력: 비밀번호 reset하는 액티비티로 이동
                 if (code.equals(inputCode)) {
