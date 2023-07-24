@@ -12,7 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.example.spoot_taxi_front.network.dto.responses.VerificationResponse;
+import com.example.spoot_taxi_front.network.dto.responses.EmailVerificationResponse;
 import com.example.spoot_taxi_front.network.retrofit.ApiManager;
 import com.example.spoot_taxi_front.network.api.AuthApi;
 import com.example.spoot_taxi_front.utils.InputChecker;
@@ -68,13 +68,13 @@ public class FindPasswordActivity extends AppCompatActivity {
 
 
                 String email = binding.emailEdt.getText().toString();
-                Call<VerificationResponse> verificationCall = authApi.sendVerificationEmailForUpdate(email);
+                Call<EmailVerificationResponse> verificationCall = authApi.sendVerificationEmailForUpdate(email);
 
                 //이메일 인증 요청
-                verificationCall.enqueue(new Callback<VerificationResponse>() {
+                verificationCall.enqueue(new Callback<EmailVerificationResponse>() {
                     @Override
-                    public void onResponse(Call<VerificationResponse> call, Response<VerificationResponse> response) {
-                        Boolean sended = response.body().getSended();
+                    public void onResponse(Call<EmailVerificationResponse> call, Response<EmailVerificationResponse> response) {
+                        Boolean sended = response.body().getSuccess();
                         Integer verificationCode = response.body().getVerificationCode();
                         if (sended != null && sended) {
                             // 가입된 이메일임 -> 인증 코드로 진행
@@ -89,7 +89,7 @@ public class FindPasswordActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onFailure(Call<VerificationResponse> call, Throwable t) {
+                    public void onFailure(Call<EmailVerificationResponse> call, Throwable t) {
                         // API 호출 실패 처리
                         Toast.makeText(getApplicationContext(), "서버로 요청에 실패하였습니다.", Toast.LENGTH_SHORT).show();
                         Log.e("API Failure", "API 호출에 실패하였습니다.", t);
