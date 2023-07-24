@@ -1,10 +1,10 @@
 package com.example.spoot_taxi_front.network.dto.responses;
 
-public class UploadImageResponse {
 
+public class EmailVerificationResponse {
     private Boolean success;
     private String message;
-    private String imageUrl;
+    private Integer verificationCode;
 
     public Boolean getSuccess() {
         return success;
@@ -14,8 +14,7 @@ public class UploadImageResponse {
         return message;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public Integer getVerificationCode() {
+        return verificationCode;
     }
-
 }
