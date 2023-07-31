@@ -64,7 +64,7 @@ public class VerificationActivity extends AppCompatActivity {
 
                 Toast.makeText(getApplicationContext(), "인증메일 발송 중..", Toast.LENGTH_SHORT).show();
 
-                Call<EmailVerificationResponse> sendVerificationEmailCall = authApi.sendVerificationEmailForJoin(email);
+                Call<EmailVerificationResponse> sendVerificationEmailCall = authApi.sendVerificationEmailForJoin(email, false);
                 sendVerificationEmailCall.enqueue(new Callback<EmailVerificationResponse>() {
                     @Override
                     public void onResponse(Call<EmailVerificationResponse> call, Response<EmailVerificationResponse> response) {

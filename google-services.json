@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1343309927",
+    "project_id": "spoot-taxi",
+    "storage_bucket": "spoot-taxi.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1343309927:android:0dbf0cb9aaf0272fb52cc2",
+        "android_client_info": {
+          "package_name": "com.example.spoot_taxi_front"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1343309927-a4uq1jfn78o5skn25fn2m37kfdqtddip.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBs5yWRLVQUtvw6OA2o9l9d2WG9f9pWnJo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1343309927-a4uq1jfn78o5skn25fn2m37kfdqtddip.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

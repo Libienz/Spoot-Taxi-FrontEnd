@@ -68,7 +68,7 @@ public class FindPasswordActivity extends AppCompatActivity {
 
 
                 String email = binding.emailEdt.getText().toString();
-                Call<EmailVerificationResponse> verificationCall = authApi.sendVerificationEmailForUpdate(email);
+                Call<EmailVerificationResponse> verificationCall = authApi.sendVerificationEmailForJoin(email, true);
 
                 //이메일 인증 요청
                 verificationCall.enqueue(new Callback<EmailVerificationResponse>() {

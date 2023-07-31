@@ -41,12 +41,9 @@ public interface AuthApi {
     Call<Boolean> checkDuplicateEmail(@Path("email") String email);
 
     //이메일 인증 for Join: 가입되어있지 않은 이메일이여도 인증메일 전송
-    @GET("/api/auth/join/email-verification")
-    Call<EmailVerificationResponse> sendVerificationEmailForJoin(@Query("email") String email);
+    @GET("/api/auth/send/verification-email")
+    Call<EmailVerificationResponse> sendVerificationEmailForJoin(@Query("email") String email, @Query("foundThenSend") boolean foundThenSend);
 
-    //이메일 인증 for update: 가입되어 있는 이메일만 인증메일 전송
-    @GET("/api/auth/update/email-verification")
-    Call<EmailVerificationResponse> sendVerificationEmailForUpdate(@Query("email") String email);
 
     //프로필 이미지 업로드
     @Multipart
