@@ -107,7 +107,7 @@ public class LoginActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
                 break;
-            case 401:
+            default:
                 processLoginFail(responseBody);
                 break;
 

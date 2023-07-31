@@ -32,8 +32,8 @@ public class FindPasswordActivity extends AppCompatActivity {
     private CountDownTimer countDownTimer;
     private final long TTIMER_DURATION = 5 * 60 * 1000; //5분 밀리초로 변환
     private ActivityFindPasswordBinding binding;
-    InputChecker ic;
-    AuthApi authApi;
+    private InputChecker ic;
+    private AuthApi authApi;
 
 
     @Override
