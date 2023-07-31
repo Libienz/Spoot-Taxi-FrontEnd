@@ -16,6 +16,7 @@ import com.example.spoot_taxi_front.network.api.AuthApi;
 import com.example.spoot_taxi_front.network.dto.responses.EmailVerificationResponse;
 import com.example.spoot_taxi_front.network.retrofit.ApiManager;
 import com.example.spoot_taxi_front.utils.InputChecker;
+import com.example.spoot_taxi_front.utils.SessionManager;
 
 import java.util.Locale;
 
@@ -38,7 +39,7 @@ public class VerificationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verification);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_verification);
-        authApi = ApiManager.getInstance().getAuthApi();
+        authApi = ApiManager.getInstance().createAuthApi(SessionManager.getInstance().getJwtToken());
         ic = new InputChecker();
 
         //인증 레이아웃 숨겨놓기
@@ -64,23 +65,11 @@ public class VerificationActivity extends AppCompatActivity {
 
                 Toast.makeText(getApplicationContext(), "인증메일 발송 중..", Toast.LENGTH_SHORT).show();
 
-                Call<EmailVerificationResponse> sendVerificationEmailCall = authApi.sendVerificationEmailForJoin(email);
+                Call<EmailVerificationResponse> sendVerificationEmailCall = authApi.sendVerificationEmailForJoin(email, false);
                 sendVerificationEmailCall.enqueue(new Callback<EmailVerificationResponse>() {
                     @Override
                     public void onResponse(Call<EmailVerificationResponse> call, Response<EmailVerificationResponse> response) {
-                        Boolean sended = response.body().getSuccess();
-                        if (sended != null && sended) {
-                            // 가입되어 있지 않은 이메일이어서 인증메일이 발송됨 -> 이메일 인증 후 회원 가입 프로세스 진행
-                            binding.emailTv.setText("");
-                            Integer verificationCode = response.body().getVerificationCode();
-                            processEmailverification(email, verificationCode);
-                            return;
-
-                        } else {
-                            // 가입된 이메일이라 전송되지 않음 -> 회원가입 할 필요 X
-                            binding.emailTv.setText("이미 가입되어 있는 이메일입니다");
-
-                        }
+                        handleSendVerificationEmailResponse(response, email);
 
                     }
 
@@ -103,6 +92,27 @@ public class VerificationActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
+
+    }
+
+    private void handleSendVerificationEmailResponse(Response<EmailVerificationResponse> response, String email) {
+        int statusCode = response.code();
+        switch (statusCode) {
+            case 200:
+                // 가입되어 있지 않은 이메일이어서 인증메일이 발송됨 -> 이메일 인증 후 회원 가입 프로세스 진행
+                binding.emailTv.setText("");
+                Integer verificationCode = response.body().getVerificationCode();
+                processEmailverification(email, verificationCode);
+                break;
+
+            case 409:
+                // 가입된 이메일이라 전송되지 않음 -> 회원가입 할 필요 X
+                binding.emailTv.setText("이미 가입되어 있는 이메일입니다");
+                break;
+            default:
+                break;
+
+        }
 
     }
 

@@ -9,6 +9,7 @@ import com.example.spoot_taxi_front.network.dto.responses.UserSaveResponse;
 import com.example.spoot_taxi_front.network.dto.responses.EmailVerificationResponse;
 
 import okhttp3.MultipartBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -29,11 +30,11 @@ public interface AuthApi {
     @POST("api/auth/join")
     Call<JoinResponse> join(@Body UserDto joinDto);
     //유저정보수정
-    @PUT("api/auth/users/{email}")
+    @PUT("api/update/users/{email}")
     Call<UserSaveResponse> updateUser(@Path("email") String email, @Body UserDto updateDto);
 
     //유저 비밀번호 수정
-    @PUT("api/auth/users/{email}/password")
+    @PUT("api/update/users/{email}/password")
     Call<UserSaveResponse> updateUserPassword(@Path("email") String email, @Body UserDto updateDto);
 
     //이메일 중복 확인 (가입된 이메일인지 확인)
@@ -41,17 +42,19 @@ public interface AuthApi {
     Call<Boolean> checkDuplicateEmail(@Path("email") String email);
 
     //이메일 인증 for Join: 가입되어있지 않은 이메일이여도 인증메일 전송
-    @GET("/api/auth/join/email-verification")
-    Call<EmailVerificationResponse> sendVerificationEmailForJoin(@Query("email") String email);
+    @GET("/api/auth/send/verification-email")
+    Call<EmailVerificationResponse> sendVerificationEmailForJoin(@Query("email") String email, @Query("foundThenSend") boolean foundThenSend);
 
-    //이메일 인증 for update: 가입되어 있는 이메일만 인증메일 전송
-    @GET("/api/auth/update/email-verification")
-    Call<EmailVerificationResponse> sendVerificationEmailForUpdate(@Query("email") String email);
 
     //프로필 이미지 업로드
     @Multipart
     @POST("/api/images/profile-image/upload")
     Call<UploadImageResponse> uploadImage(@Part MultipartBody.Part imagePart);
 
+
+    //프로필 이미지 GET
+    @Multipart
+    @GET("/api/images/profile-image/{fileName}")
+    Call<ResponseBody> getProfileImage(@Path("fileName") String fileName);
 
 }

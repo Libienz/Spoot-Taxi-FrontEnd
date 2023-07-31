@@ -4,8 +4,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 
-public class RallyInfoDto {
+public class RallyInformationDto {
 
+    private Boolean success;
+    private String message;
     private LocalDateTime date;
 
     private List<RallyDetailsDto> rallyDetailsDtoList;
@@ -16,8 +18,8 @@ public class RallyInfoDto {
 
         private LocalDateTime endTime;
         private String location;
-        private String rallyAttendance;
-        private String policeStation;
+        private String rallyScale;
+        private String jurisdiction;
 
         public LocalDateTime getStartTime() {
             return startTime;
@@ -30,12 +32,12 @@ public class RallyInfoDto {
         public String getLocation() {
             return location;
         }
-        public String getRallyAttendance() {
-            return rallyAttendance;
+        public String getRallyScale() {
+            return rallyScale;
         }
 
-        public String getPoliceStation() {
-            return policeStation;
+        public String getJurisdiction() {
+            return jurisdiction;
         }
     }
 
@@ -44,6 +46,18 @@ public class RallyInfoDto {
     }
 
     public List<RallyDetailsDto> getRallyDetailsList() {
+        return rallyDetailsDtoList;
+    }
+
+    public Boolean getSuccess() {
+        return success;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public List<RallyDetailsDto> getRallyDetailsDtoList() {
         return rallyDetailsDtoList;
     }
 }

@@ -16,6 +16,7 @@ import com.example.spoot_taxi_front.network.retrofit.ApiManager;
 import com.example.spoot_taxi_front.utils.InputChecker;
 import com.example.spoot_taxi_front.R;
 import com.example.spoot_taxi_front.databinding.ActivityPasswordResetBinding;
+import com.example.spoot_taxi_front.utils.SessionManager;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -25,6 +26,7 @@ public class PasswordResetActivity extends AppCompatActivity {
 
     private InputChecker ic;
     private ActivityPasswordResetBinding binding;
+    private AuthApi authApi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +36,7 @@ public class PasswordResetActivity extends AppCompatActivity {
         binding.emailTv.setText(email);
 
         //Api Client 생성
-        AuthApi authApi = ApiManager.getInstance().getAuthApi();
+        authApi = ApiManager.getInstance().createAuthApi(SessionManager.getInstance().getJwtToken());
 
         //비밀번호 변경 클릭
         binding.pwResetButton.setOnClickListener(new View.OnClickListener() {
@@ -64,19 +66,7 @@ public class PasswordResetActivity extends AppCompatActivity {
                 updatePasswordCall.enqueue(new Callback<UserSaveResponse>() {
                     @Override
                     public void onResponse(Call<UserSaveResponse> call, Response<UserSaveResponse> response) {
-                        //수정 성공
-                        if (response.body().getSuccess() == Boolean.TRUE) {
-                            //비밀번호 재설정이 완료되었습니다 Toastmsg -> 로그인 액티비티로 이동
-                            Toast.makeText(getApplicationContext(), "비밀번호 재설정이 완료되었습니다", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                            startActivity(intent);
-
-                        }
-                        //수정 실패
-                        else {
-                            //유저 정보 수정에 실패하였습니다.
-                            Toast.makeText(getApplicationContext(), "비밀번호 재설정에 실패하였습니다.", Toast.LENGTH_SHORT).show();
-                        }
+                        handleUpdatePasswordResponse(response);
                     }
 
                     @Override
@@ -98,5 +88,24 @@ public class PasswordResetActivity extends AppCompatActivity {
 
 
 
+    }
+
+    private void handleUpdatePasswordResponse(Response<UserSaveResponse> response) {
+        int statusCode = response.code();
+        //수정 성공
+        switch (statusCode) {
+            case 200:
+                //비밀번호 재설정이 완료되었습니다 Toastmsg -> 로그인 액티비티로 이동
+                Toast.makeText(getApplicationContext(), "비밀번호 재설정이 완료되었습니다", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(intent);
+                break;
+            default:
+                Toast.makeText(getApplicationContext(), "비밀번호 재설정에 실패하였습니다.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "비밀번호 재설정에 실패하였습니다." + statusCode, Toast.LENGTH_SHORT).show();
+
+                break;
+
+        }
     }
 }
