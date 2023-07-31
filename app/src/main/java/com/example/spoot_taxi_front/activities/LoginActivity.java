@@ -122,7 +122,7 @@ public class LoginActivity extends AppCompatActivity {
         Log.e("Login Success", token);
 
         // SessionManager 현재 세션 관리
-        User user = new User(userDto.getEmail(), userDto.getPassword(), userDto.getName(), null, userDto.getGender());
+        User user = new User(userDto.getEmail(), userDto.getPassword(), userDto.getName(), userDto.getImgUrl(), userDto.getGender());
         SessionManager sessionManager = SessionManager.getInstance();
         sessionManager.setJwtToken(token);
         sessionManager.setCurrentUser(user);
