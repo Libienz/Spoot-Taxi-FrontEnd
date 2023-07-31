@@ -18,6 +18,7 @@ import com.example.spoot_taxi_front.network.api.AuthApi;
 import com.example.spoot_taxi_front.utils.InputChecker;
 import com.example.spoot_taxi_front.R;
 import com.example.spoot_taxi_front.databinding.ActivityFindPasswordBinding;
+import com.example.spoot_taxi_front.utils.SessionManager;
 
 import java.util.Locale;
 
@@ -42,7 +43,7 @@ public class FindPasswordActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_find_password);
 
         //Api client 생성
-        authApi = ApiManager.getInstance().getAuthApi();
+        authApi = ApiManager.getInstance().createAuthApi(SessionManager.getInstance().getJwtToken());
 
         //인증 창 안보이도록 설정: 인증 창은 이메일 입력되고 가입된 이메일인지 확인 후에 보이게 설정
         binding.verifyLayout.setVisibility(View.GONE);

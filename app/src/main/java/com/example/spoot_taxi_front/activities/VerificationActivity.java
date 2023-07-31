@@ -16,6 +16,7 @@ import com.example.spoot_taxi_front.network.api.AuthApi;
 import com.example.spoot_taxi_front.network.dto.responses.EmailVerificationResponse;
 import com.example.spoot_taxi_front.network.retrofit.ApiManager;
 import com.example.spoot_taxi_front.utils.InputChecker;
+import com.example.spoot_taxi_front.utils.SessionManager;
 
 import java.util.Locale;
 
@@ -38,7 +39,7 @@ public class VerificationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verification);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_verification);
-        authApi = ApiManager.getInstance().getAuthApi();
+        authApi = ApiManager.getInstance().createAuthApi(SessionManager.getInstance().getJwtToken());
         ic = new InputChecker();
 
         //인증 레이아웃 숨겨놓기

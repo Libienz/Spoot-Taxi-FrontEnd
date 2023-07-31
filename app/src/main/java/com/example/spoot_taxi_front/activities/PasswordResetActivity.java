@@ -16,6 +16,7 @@ import com.example.spoot_taxi_front.network.retrofit.ApiManager;
 import com.example.spoot_taxi_front.utils.InputChecker;
 import com.example.spoot_taxi_front.R;
 import com.example.spoot_taxi_front.databinding.ActivityPasswordResetBinding;
+import com.example.spoot_taxi_front.utils.SessionManager;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -34,7 +35,7 @@ public class PasswordResetActivity extends AppCompatActivity {
         binding.emailTv.setText(email);
 
         //Api Client 생성
-        AuthApi authApi = ApiManager.getInstance().getAuthApi();
+        AuthApi authApi = ApiManager.getInstance().createAuthApi(SessionManager.getInstance().getJwtToken());
 
         //비밀번호 변경 클릭
         binding.pwResetButton.setOnClickListener(new View.OnClickListener() {
