@@ -17,7 +17,8 @@ import android.widget.Toast;
 
 import com.example.spoot_taxi_front.R;
 import com.example.spoot_taxi_front.network.api.RallyApi;
-import com.example.spoot_taxi_front.network.dto.RallyInfoDto;
+import com.example.spoot_taxi_front.network.dto.RallyInformationDto;
+import com.example.spoot_taxi_front.network.dto.responses.RallyResponse;
 import com.example.spoot_taxi_front.network.retrofit.ApiClient;
 import com.example.spoot_taxi_front.network.retrofit.ApiManager;
 import com.example.spoot_taxi_front.utils.SessionManager;
@@ -57,16 +58,16 @@ public class RallyFragment extends Fragment {
         //Api Client 생성
         rallyApi = ApiManager.getInstance().createRallyApi(SessionManager.getInstance().getJwtToken());
 
-        Call<RallyInfoDto> call = rallyApi.getRallyInfo();
+        Call<RallyResponse> call = rallyApi.getRallyInfo();
 
-        call.enqueue(new Callback<RallyInfoDto>() {
+        call.enqueue(new Callback<RallyResponse>() {
             @Override
-            public void onResponse(Call<RallyInfoDto> call, Response<RallyInfoDto> response) {
+            public void onResponse(Call<RallyResponse> call, Response<RallyResponse> response) {
                 handleRallyResponse(response.code(), response.body());
             }
 
             @Override
-            public void onFailure(Call<RallyInfoDto> call, Throwable t) {
+            public void onFailure(Call<RallyResponse> call, Throwable t) {
                 Toast.makeText(getContext(), "집회정보 요청에 실패하였습니다.", Toast.LENGTH_SHORT).show();
                 Log.e("API Failure", "API 호출에 실패하였습니다.", t);
             }
@@ -75,10 +76,12 @@ public class RallyFragment extends Fragment {
 
 
     }
-    private void handleRallyResponse(int statusCode, RallyInfoDto responseBody) {
+    private void handleRallyResponse(int statusCode, RallyResponse responseBody) {
         switch (statusCode) {
             case 200:
-                setRallyInfo(responseBody);
+                RallyInformationDto rallyInformationDto = responseBody.getRallyInformationDto();
+                setRallyInfo(rallyInformationDto);
+
                 break;
             default:
                 Toast.makeText(getContext(), "집회정보를 받아올수 없습니다.", Toast.LENGTH_SHORT).show();
@@ -87,18 +90,18 @@ public class RallyFragment extends Fragment {
         }
     }
 
-    private void setRallyInfo(RallyInfoDto responseBody) {
-
-        TableLayout tableLayout = getView().findViewById(R.id.rallyTL);
+    private void setRallyInfo(RallyInformationDto responseBody) {
+        TableLayout tableLayout =getView().findViewById(R.id.rallyTL);
         removeCurrentRally(tableLayout);
 
         TextView date = getView().findViewById(R.id.rallyDateTv);
         date.setText(responseBody.getDate().getMonthValue() + "월" + responseBody.getDate().getDayOfMonth() + "일");
 
-        List<RallyInfoDto.RallyDetailsDto> rallyDetailsList = responseBody.getRallyDetailsList();
-        for (RallyInfoDto.RallyDetailsDto details : rallyDetailsList) {
-            String time = details.getStartTime().getHour() + "시" + details.getStartTime().getMinute() + "분" + " ~ " + details.getEndTime().getHour() + "시" + details.getEndTime().getMinute() + "분";
-            addTableRow(tableLayout, time, details.getLocation(), details.getRallyAttendance(), details.getPoliceStation());
+        List<RallyInformationDto.RallyDetailsDto> rallyDetailsList = responseBody.getRallyDetailsList();
+        for (RallyInformationDto.RallyDetailsDto details : rallyDetailsList) {
+            String time =details.getStartTime().getHour()+"시"+details.getStartTime().getMinute()+"분"+" ~ "+details.getEndTime().getHour()+"시"+details.getEndTime().getMinute()+"분";
+            addTableRow(tableLayout,time,details.getLocation(),details.getRallyScale(),details.getJurisdiction());
+
         }
     }
 
