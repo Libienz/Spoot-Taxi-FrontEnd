@@ -12,12 +12,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.example.spoot_taxi_front.network.dto.responses.VerificationResponse;
+import com.example.spoot_taxi_front.network.dto.responses.EmailVerificationResponse;
 import com.example.spoot_taxi_front.network.retrofit.ApiManager;
 import com.example.spoot_taxi_front.network.api.AuthApi;
 import com.example.spoot_taxi_front.utils.InputChecker;
 import com.example.spoot_taxi_front.R;
 import com.example.spoot_taxi_front.databinding.ActivityFindPasswordBinding;
+import com.example.spoot_taxi_front.utils.SessionManager;
 
 import java.util.Locale;
 
@@ -31,8 +32,8 @@ public class FindPasswordActivity extends AppCompatActivity {
     private CountDownTimer countDownTimer;
     private final long TTIMER_DURATION = 5 * 60 * 1000; //5분 밀리초로 변환
     private ActivityFindPasswordBinding binding;
-    InputChecker ic;
-    AuthApi authApi;
+    private InputChecker ic;
+    private AuthApi authApi;
 
 
     @Override
@@ -42,7 +43,7 @@ public class FindPasswordActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_find_password);
 
         //Api client 생성
-        authApi = ApiManager.getInstance().getAuthApi();
+        authApi = ApiManager.getInstance().createAuthApi(SessionManager.getInstance().getJwtToken());
 
         //인증 창 안보이도록 설정: 인증 창은 이메일 입력되고 가입된 이메일인지 확인 후에 보이게 설정
         binding.verifyLayout.setVisibility(View.GONE);
@@ -68,13 +69,13 @@ public class FindPasswordActivity extends AppCompatActivity {
 
 
                 String email = binding.emailEdt.getText().toString();
-                Call<VerificationResponse> verificationCall = authApi.sendVerificationEmailForUpdate(email);
+                Call<EmailVerificationResponse> verificationCall = authApi.sendVerificationEmailForJoin(email, true);
 
                 //이메일 인증 요청
-                verificationCall.enqueue(new Callback<VerificationResponse>() {
+                verificationCall.enqueue(new Callback<EmailVerificationResponse>() {
                     @Override
-                    public void onResponse(Call<VerificationResponse> call, Response<VerificationResponse> response) {
-                        Boolean sended = response.body().getSended();
+                    public void onResponse(Call<EmailVerificationResponse> call, Response<EmailVerificationResponse> response) {
+                        Boolean sended = response.body().getSuccess();
                         Integer verificationCode = response.body().getVerificationCode();
                         if (sended != null && sended) {
                             // 가입된 이메일임 -> 인증 코드로 진행
@@ -89,7 +90,7 @@ public class FindPasswordActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onFailure(Call<VerificationResponse> call, Throwable t) {
+                    public void onFailure(Call<EmailVerificationResponse> call, Throwable t) {
                         // API 호출 실패 처리
                         Toast.makeText(getApplicationContext(), "서버로 요청에 실패하였습니다.", Toast.LENGTH_SHORT).show();
                         Log.e("API Failure", "API 호출에 실패하였습니다.", t);

@@ -45,7 +45,7 @@ public class LoginActivity extends AppCompatActivity {
         lostPWButton = findViewById(R.id.lost_pw);
 
         //Api Client 생성
-        AuthApi authApi = ApiManager.getInstance().getAuthApi();
+        AuthApi authApi = ApiManager.getInstance().createAuthApi(SessionManager.getInstance().getJwtToken());
 
         //로그인 클릭
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -107,7 +107,7 @@ public class LoginActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
                 break;
-            case 401:
+            default:
                 processLoginFail(responseBody);
                 break;
 

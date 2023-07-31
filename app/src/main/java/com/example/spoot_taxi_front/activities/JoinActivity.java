@@ -89,7 +89,7 @@ public class JoinActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_join);
-        authApi = ApiManager.getInstance().getAuthApi();
+        authApi = ApiManager.getInstance().createAuthApi(SessionManager.getInstance().getJwtToken());
         String email = getIntent().getStringExtra("email");
         binding.inputEmail.setText(email);
 
