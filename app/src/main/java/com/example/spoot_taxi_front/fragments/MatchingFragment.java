@@ -33,6 +33,7 @@ import com.example.spoot_taxi_front.network.retrofit.ApiManager;
 import com.example.spoot_taxi_front.utils.MatchingSuccessEvent;
 import com.example.spoot_taxi_front.utils.SessionManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.snackbar.Snackbar;
 
 import net.daum.mf.map.api.CameraUpdateFactory;
 import net.daum.mf.map.api.MapPoint;
@@ -96,13 +97,15 @@ public class MatchingFragment extends Fragment implements CurrentLocationEventLi
     @Subscribe
     public void onMatchingSuccess(MatchingSuccessEvent event) {
         Log.d("libienz", "onMatchingSuccess: eventBus");
-        showMatchingSuccessPopup();
+//        showMatchingSuccessPopup();
         // 매칭 성공 처리 코드
         //event.getChatRoomId -> 구독 신청
+
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_matching, container, false);
 
@@ -374,12 +377,6 @@ public class MatchingFragment extends Fragment implements CurrentLocationEventLi
     public void onMapViewMoveFinished(MapView mapView, MapPoint mapPoint) {
 
     }
-
-
-
-    // 다른 메소드들
-
-
 
 
 }
