@@ -52,18 +52,14 @@ public class MatchingFragment extends Fragment implements CurrentLocationEventLi
 
     private MapView mapView;
     private ViewGroup mapViewContainer;
-
-    private static final int REQUEST_LOCATION_PERMISSION = 1;
-
-    private LocationManager locationManager;
     private Button matchingButton;
-
     private double curLongitude;
     private double curLaitude;
-
     private MatchingApi matchingApi;
     Long waitingRoomId = 0L;
     Long waitingRoomUserId = 0L;
+
+    private AlertDialog alertDialog;
 
     public MatchingFragment() {
         // Required empty public constructor
@@ -97,9 +93,17 @@ public class MatchingFragment extends Fragment implements CurrentLocationEventLi
     @Subscribe
     public void onMatchingSuccess(MatchingSuccessEvent event) {
         Log.d("libienz", "onMatchingSuccess: eventBus");
-//        showMatchingSuccessPopup();
-        // 매칭 성공 처리 코드
-        //event.getChatRoomId -> 구독 신청
+        // 매칭 성공 이벤트가 발생하면 매칭 프로그레스 팝업을 닫음
+        if (alertDialog != null && alertDialog.isShowing()) {
+            alertDialog.dismiss();
+        }
+        // 메인 스레드에서 Glide 코드 실행
+        getView().post(new Runnable() {
+            @Override
+            public void run() {
+                showMatchingSuccessPopup();
+            }
+        });
 
     }
     @Override
@@ -173,12 +177,10 @@ public class MatchingFragment extends Fragment implements CurrentLocationEventLi
         Button cancelButton = popupView.findViewById(R.id.cancelButton);
 
         // 팝업 표시
-        final AlertDialog alertDialog = builder.create();
+        alertDialog = builder.create();
         alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         alertDialog.show();
-
-
 
         // 매칭 취소 버튼 클릭
         cancelButton.setOnClickListener(new View.OnClickListener() {
@@ -199,8 +201,6 @@ public class MatchingFragment extends Fragment implements CurrentLocationEventLi
                         Toast.makeText(requireContext(), "매칭 취소 요청에 실패하였습니다.", Toast.LENGTH_SHORT).show();
                     }
                 });
-                //수정지점: 취소누르면 매칭 성공 액티비티 띄우기
-
             }
         });
     }
@@ -223,7 +223,7 @@ public class MatchingFragment extends Fragment implements CurrentLocationEventLi
         Glide.with(this).asGif().load(R.raw.hello).into(gifImageView);
 
         // 팝업 표시
-        final AlertDialog alertDialog = builder.create();
+        alertDialog = builder.create();
         alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         alertDialog.show();
