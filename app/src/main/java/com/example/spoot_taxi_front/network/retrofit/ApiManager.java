@@ -12,6 +12,7 @@ import com.google.gson.JsonParseException;
 import java.lang.reflect.Type;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
@@ -38,6 +39,10 @@ public class ApiManager {
         // AuthInterceptor를 생성하여 토큰을 추가한 OkHttpClient를 생성
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(new AuthInterceptor(jwtToken));
+
+        httpClient.connectTimeout(30, TimeUnit.SECONDS); // 연결 타임아웃 설정
+        httpClient.readTimeout(30, TimeUnit.SECONDS); // 읽기 타임아웃 설정
+        httpClient.writeTimeout(30, TimeUnit.SECONDS); // 쓰기 타임아웃 설정
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
