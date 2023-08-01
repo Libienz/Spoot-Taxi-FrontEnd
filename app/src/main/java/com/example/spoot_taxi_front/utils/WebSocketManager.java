@@ -13,9 +13,13 @@ public class WebSocketManager {
     private StompClient stompClient;
 
     //원래는 ws://localhost:8080/ws/websocket 가 맞지만 안드로이드 에뮬레이터에서는 10.0.2.2 여야 하나봄. 실제폰으로는 아직 검증 안됨.
-    public void connectWebSocket() {
-        stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, "ws://10.0.2.2:8080/ws/websocket");
-        stompClient.connect();
+    public StompClient connectWebSocket() {
+        if (stompClient == null) {
+            stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, "ws://10.0.2.2:8080/ws/websocket");
+            stompClient.connect();
+        }
+
+        return stompClient;
     }
 
     public void subscribeToChannel(Long chatRoomId) {
@@ -29,6 +33,9 @@ public class WebSocketManager {
     }
 
     public void disconnectWebSocket() {
-        stompClient.disconnect();
+        if (stompClient != null && stompClient.isConnected()) {
+            stompClient.disconnect();
+            stompClient = null;
+        }
     }
 }

@@ -55,6 +55,7 @@ public class ChatFragment extends Fragment {
         // WebSocket 연결
         webSocketViewModel.connectWebSocket();
         // 특정 채널 구독
+        // 구독하려면 아마 localhost:8080/api/chat/user/chatRooms에서 List까보고 내부의 "chatRoomId"가져오면 될듯
         webSocketViewModel.subscribeToChannel(1L);
 
         return view;
