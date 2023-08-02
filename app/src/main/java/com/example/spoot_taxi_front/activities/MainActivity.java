@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 
 
@@ -104,6 +105,11 @@ public class MainActivity extends AppCompatActivity {
         } else if (tag.equals(TAG_CHAT)) {
             if (chat != null){
                 fragmentTransaction.show(chat);
+                //다른 fragment 다녀올때마다 채팅방 갱신
+                View view = chat.getView();
+                ChatFragment chatFragment = (ChatFragment) chat;
+                chatFragment.loadChatRoomList(view);
+
             }
         } else if (tag.equals(TAG_SETTINGS)) {
             if (settings != null) {

@@ -3,13 +3,13 @@ package com.example.spoot_taxi_front.models;
 import java.util.List;
 
 public class ChatRoom {
-    private String roomId;
+    private Long roomId;
     private String roomName;
     private List<User> participants;
     private String lastMessage;
     private String lastSentTime;
 
-    public ChatRoom(String roomId, String roomName, List<User> participants, String lastMessage, String lastSentTime) {
+    public ChatRoom(Long roomId, String roomName, List<User> participants, String lastMessage, String lastSentTime) {
         this.roomId = roomId;
         this.roomName = roomName;
         this.participants = participants;
@@ -25,11 +25,11 @@ public class ChatRoom {
         this.lastSentTime = lastSentTime;
     }
 
-    public String getRoomId() {
+    public Long getRoomId() {
         return roomId;
     }
 
-    public void setRoomId(String roomId) {
+    public void setRoomId(Long roomId) {
         this.roomId = roomId;
     }
 

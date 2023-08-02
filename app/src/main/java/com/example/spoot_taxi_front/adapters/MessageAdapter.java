@@ -82,7 +82,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         public void bind(ChatMessage chatMessage) {
             // 채팅 메시지를 해당 뷰 요소에 설정
             User currentUser = SessionManager.getInstance().getCurrentUser();
-            Log.d("유저채팅방",currentUser.getEmail());
+
             if (chatMessage.getSenderId().equals(currentUser.getEmail())) {
                 // 내가 보낸 메시지인 경우, 왼쪽
                 textViewMyMessage.setText(chatMessage.getMessage());

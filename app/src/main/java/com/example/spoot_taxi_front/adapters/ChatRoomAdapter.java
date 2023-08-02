@@ -9,19 +9,26 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.spoot_taxi_front.models.ChatMessage;
 import com.example.spoot_taxi_front.models.ChatRoom;
 import com.example.spoot_taxi_front.R;
 import com.example.spoot_taxi_front.activities.ChatRoomActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.ChatViewHolder> {
 
     private List<ChatRoom> chatRooms; // 채팅방 목록 데이터
 
-    // 생성자에서 채팅방 목록 데이터를 전달받음
-    public ChatRoomAdapter(List<ChatRoom> chatRooms) {
+
+    public ChatRoomAdapter() {
+        this.chatRooms = new ArrayList<>();
+    }
+    // 채팅방 목록 데이터 갱신 겸 set
+    public void setChatRoomAdapter(List<ChatRoom> chatRooms) {
         this.chatRooms = chatRooms;
+        notifyDataSetChanged(); //왜 갱신이 바로바로 안될까...특히 처음올때 화면과 채팅방에서 back해서 돌아올때 바로바로 왜 안바뀌는거지;;
     }
 
     // 아이템 뷰를 생성하고 뷰홀더를 반환하는 메서드
@@ -47,8 +54,8 @@ public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.ChatVi
                 // 아이템 클릭 시 동작할 코드 작성
                 // 채팅방으로 이동
                 Intent intent = new Intent(holder.itemView.getContext(), ChatRoomActivity.class);
+                intent.putExtra("chatRoomId", chatRoom.getRoomId());
                 holder.itemView.getContext().startActivity(intent);
-
 
             }
         });

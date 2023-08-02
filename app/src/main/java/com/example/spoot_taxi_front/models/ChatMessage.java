@@ -1,12 +1,12 @@
 package com.example.spoot_taxi_front.models;
 
 public class ChatMessage {
-    private String messageId;
+    private Long messageId;
     private String senderName;
     private String message;
 
     private String senderId;
-    private long sentTime;
+    private String sentTime;
 
     @Override
     public String toString() {
@@ -19,7 +19,7 @@ public class ChatMessage {
                 '}';
     }
 
-    public ChatMessage(String messageId, String senderName, String senderId, String message, Long sentTime) {
+    public ChatMessage(Long messageId, String senderName, String senderId, String message, String sentTime) {
         this.messageId = messageId;
         this.senderName = senderName;
         this.senderId = senderId;
@@ -35,11 +35,11 @@ public class ChatMessage {
         this.senderId = senderId;
     }
 
-    public String getMessageId() {
+    public Long getMessageId() {
         return messageId;
     }
 
-    public void setMessageId(String messageId) {
+    public void setMessageId(Long messageId) {
         this.messageId = messageId;
     }
 
@@ -59,11 +59,11 @@ public class ChatMessage {
         this.message = message;
     }
 
-    public long getSentTime() {
+    public String getSentTime() {
         return sentTime;
     }
 
-    public void setSentTime(long sentTime) {
+    public void setSentTime(String sentTime) {
         this.sentTime = sentTime;
     }
 }

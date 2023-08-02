@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel;
 import org.json.JSONObject;
 
 public class WebSocketViewModel extends ViewModel {
-    private WebSocketManager webSocketManager = new WebSocketManager();
+    private WebSocketManager webSocketManager = WebSocketManager.getInstance();
 
     public void connectWebSocket() {
         webSocketManager.connectWebSocket();
