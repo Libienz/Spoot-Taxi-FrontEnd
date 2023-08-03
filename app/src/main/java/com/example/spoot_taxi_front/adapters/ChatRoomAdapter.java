@@ -52,7 +52,7 @@ public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.ChatVi
             @Override
             public void onClick(View v) {
                 // 아이템 클릭 시 동작할 코드 작성
-                // 채팅방으로 이동
+                // 채팅방으로 이동하면서 채팅방id도 같이 보낸다.
                 Intent intent = new Intent(holder.itemView.getContext(), ChatRoomActivity.class);
                 intent.putExtra("chatRoomId", chatRoom.getRoomId());
                 holder.itemView.getContext().startActivity(intent);

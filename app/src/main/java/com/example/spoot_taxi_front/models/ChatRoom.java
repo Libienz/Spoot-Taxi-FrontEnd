@@ -17,6 +17,17 @@ public class ChatRoom {
         this.lastSentTime = lastSentTime;
     }
 
+    @Override
+    public String toString() {
+        return "ChatRoom{" +
+                "roomId=" + roomId +
+                ", roomName='" + roomName + '\'' +
+                ", participants=" + participants +
+                ", lastMessage='" + lastMessage + '\'' +
+                ", lastSentTime='" + lastSentTime + '\'' +
+                '}';
+    }
+
     public String getLastSentTime() {
         return lastSentTime;
     }

@@ -1,6 +1,7 @@
 package com.example.spoot_taxi_front.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -45,9 +46,10 @@ public class ChatRoomActivity extends AppCompatActivity {
     private MessageAdapter messageAdapter;
     private WebSocketViewModel webSocketViewModel;
     private Long chatRoomId;
-    private List<ChatMessage> chatMessageList= new ArrayList<>();
+    private List<ChatMessage> chatMessageList = new ArrayList<>();
 
     private ChatApi chatApi;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,10 +57,11 @@ public class ChatRoomActivity extends AppCompatActivity {
 
         // -1은 기본값
         chatRoomId = getIntent().getLongExtra("chatRoomId", -1);
-        Log.d("채팅방 id",chatRoomId.toString());
+        Log.d("채팅방 id", chatRoomId.toString());
 
         //웹소켓매니저 가져오기
-        webSocketViewModel = new ViewModelProvider(this).get(WebSocketViewModel.class);
+        //webSocketViewModel = new ViewModelProvider(this).get(WebSocketViewModel.class);
+        webSocketViewModel = WebSocketViewModel.getInstance();
 
         // 레이아웃 요소 초기화
         recyclerViewChat = findViewById(R.id.recyclerViewChat);
@@ -83,12 +86,12 @@ public class ChatRoomActivity extends AppCompatActivity {
         });
 
         // 채팅 데이터 가져오기 (서버와의 연동 필요)
-        chatApi= ApiClient.createChatApi();
+        chatApi = ApiClient.createChatApi();
         Call<ChatRoomMessageResponse> chatRoomMessages = chatApi.getChatRoomMessages(SessionManager.getInstance().getCurrentUser().getEmail(), chatRoomId);
         chatRoomMessages.enqueue(new Callback<ChatRoomMessageResponse>() {
             @Override
             public void onResponse(Call<ChatRoomMessageResponse> call, Response<ChatRoomMessageResponse> response) {
-                chatMessageList=handleChatRoomMessageResponse(response.code(), response.body());
+                chatMessageList = handleChatRoomMessageResponse(response.code(), response.body());
                 messageAdapter.setChatMessages(chatMessageList);// 어댑터를 여기서 set해야하는 이유는 밑에 주석부분에서 실행할시 비동기적으로 onCreate가 작동하기때문
             }
 
@@ -99,6 +102,21 @@ public class ChatRoomActivity extends AppCompatActivity {
             }
         });
 
+        // WebSocketViewModel의 LiveData를 관찰하여 UI를 업데이트
+        webSocketViewModel.getReceivedMessages().observe(this, new Observer<ChatMessage>() {
+            @Override
+            public void onChanged(ChatMessage chatMessage) {
+                if (chatMessage != null) {
+                    // LiveData에서 유효한 메시지를 받았을 때 처리하는 로직
+                    Log.d("라이브리스트확인", String.valueOf(chatMessage));
+                    chatMessageList.add(chatMessage);
+                    messageAdapter.setChatMessages(chatMessageList);
+                } else {
+                    // LiveData가 아직 메시지를 받지 않았거나 null 값을 가진 경우 처리하는 로직
+                    Log.d("라이브리스트확인", "No message received yet");
+                }
+            }
+        });
         //messageAdapter.setChatMessages(chatMessageList);
     }
 
@@ -128,7 +146,7 @@ public class ChatRoomActivity extends AppCompatActivity {
 
             Optional<LocalDateTime> optionalSentTime = Optional.ofNullable(messageDto.getSentTime());
             String sentTimeString = optionalSentTime.map(LocalDateTime::toString).orElse("");
-            ChatMessage chatMessage = new ChatMessage(messageId,senderName,senderId,message,sentTimeString);
+            ChatMessage chatMessage = new ChatMessage(messageId, senderName, senderId, message, sentTimeString);
             chatMessageApiResponseList.add(chatMessage);
         }
         return chatMessageApiResponseList;
@@ -166,7 +184,7 @@ public class ChatRoomActivity extends AppCompatActivity {
         }
         webSocketViewModel.sendMessage(data);
     }
-
+}
 /*    private List<ChatMessage> getChatMessages() {
         // 채팅 데이터 가져오기 (서버와의 연동 필요)
         // 서버로부터 채팅 데이터 받아오기
@@ -175,4 +193,4 @@ public class ChatRoomActivity extends AppCompatActivity {
         //우선은 테스트용 데이터 리턴
         return TestChatMessageGenerator.generateChatMessages(); // 예시로 빈 리스트 반환
     }*/
-}
+

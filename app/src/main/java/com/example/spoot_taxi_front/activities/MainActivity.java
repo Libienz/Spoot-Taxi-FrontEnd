@@ -27,6 +27,10 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG_CHAT = "ChatFragment";
     private static final String TAG_SETTINGS = "SettingsFragment";
     private static final String TAG_MATCHING = "MatchingFragment";
+    private RallyFragment rallyFragment;
+    private ChatFragment chatFragment;
+    private SettingsFragment settingsFragment;
+    private MatchingFragment matchingFragment;
 
     private ActivityMainBinding binding;
     Button matchingButton;
@@ -39,12 +43,18 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(binding.getRoot());
 
+
+        rallyFragment = new RallyFragment();
+        chatFragment = new ChatFragment();
+        settingsFragment = new SettingsFragment();
+        matchingFragment = new MatchingFragment();
+
         String keyHash = Utility.getKeyHash(this);
         Log.d("카카오키해시", keyHash);
 
 
 
-        setFragment(TAG_RALLY, new RallyFragment());
+        setFragment(TAG_RALLY, rallyFragment);
 
         binding.navigationView.setSelectedItemId(R.id.homeFragment);
 
@@ -53,16 +63,14 @@ public class MainActivity extends AppCompatActivity {
 
             Log.d("libienz", "libienz");
             if (itemId == R.id.homeFragment) {
-                setFragment(TAG_RALLY, new RallyFragment());
+                setFragment(TAG_RALLY, rallyFragment);
             } else if (itemId == R.id.chatFragment) {
-                setFragment(TAG_CHAT, new ChatFragment());
+                setFragment(TAG_CHAT, chatFragment);
             } else if (itemId == R.id.settingsFragment) {
-                setFragment(TAG_SETTINGS, new SettingsFragment());
+                setFragment(TAG_SETTINGS, settingsFragment);
             } else if (itemId == R.id.matchingFragment) {
-                setFragment(TAG_MATCHING, new MatchingFragment());
+                setFragment(TAG_MATCHING, matchingFragment);
         }
-
-
             return true;
         });
 
@@ -74,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         if (fragmentManager.findFragmentByTag(tag) == null) {
+            Log.d("프래그먼트 추가로그",fragment.toString());
             fragmentTransaction.add(R.id.mainFrameLayout, fragment, tag);
         }
 
@@ -104,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
             }
         } else if (tag.equals(TAG_CHAT)) {
             if (chat != null){
+                Log.d("채팅네비","채팅네비");
                 fragmentTransaction.show(chat);
                 //다른 fragment 다녀올때마다 채팅방 갱신
                 View view = chat.getView();

@@ -55,7 +55,8 @@ public class ChatFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chat, container, false);
 
-        webSocketViewModel = new ViewModelProvider(this).get(WebSocketViewModel.class);
+        //webSocketViewModel = new ViewModelProvider(this).get(WebSocketViewModel.class);
+        webSocketViewModel = WebSocketViewModel.getInstance();
 
         // WebSocket 연결
         webSocketViewModel.connectWebSocket();
@@ -68,10 +69,12 @@ public class ChatFragment extends Fragment {
 
     public void onResume() {
         super.onResume();
+        Log.d("onResume","onResume실행");
         View view = getView();
         loadChatRoomList(view);
     }
     public void loadChatRoomList(View view) {
+        Log.d("loadChatRoomList실행","loadChatRoomList실행중");
         Call<UserJoinedChatRoomResponse> call = chatApi.getUserChatRooms(SessionManager.getInstance().getCurrentUser().getEmail());
 
         // RecyclerView 초기화
@@ -130,6 +133,7 @@ public class ChatFragment extends Fragment {
             String lastSentTimeString = optionalLastSentTime.map(LocalDateTime::toString).orElse("");
 
             ChatRoom chatRoom = new ChatRoom(chatRoomId,chatRoomName,userList,lastMessage,lastSentTimeString);
+            Log.d("채팅방 목록",chatRoom.toString());
             chatRoomApiResponseList.add(chatRoom);
             // 특정 채널 구독
             webSocketViewModel.subscribeToChannel(chatRoomId);
