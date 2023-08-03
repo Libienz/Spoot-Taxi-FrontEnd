@@ -1,5 +1,6 @@
 package com.example.spoot_taxi_front.models;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class ChatRoom {
@@ -28,6 +29,12 @@ public class ChatRoom {
                 '}';
     }
 
+    // 현재 시간을 기준으로 정렬된 LocalDateTime 객체 반환
+    public LocalDateTime getLastSentTimeToLocalDateTime() {
+        // 여기서 LocalDateTime으로 변환하는 로직을 구현
+        // 예시로는 아래와 같이 반환하도록 가정합니다.
+        return LocalDateTime.parse(lastSentTime);
+    }
     public String getLastSentTime() {
         return lastSentTime;
     }

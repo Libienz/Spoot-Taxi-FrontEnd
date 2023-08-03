@@ -15,6 +15,8 @@ import com.example.spoot_taxi_front.R;
 import com.example.spoot_taxi_front.activities.ChatRoomActivity;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.ChatViewHolder> {
@@ -27,6 +29,13 @@ public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.ChatVi
     }
     // 채팅방 목록 데이터 갱신 겸 set
     public void setChatRoomAdapter(List<ChatRoom> chatRooms) {
+        Collections.sort(chatRooms, new Comparator<ChatRoom>() {
+            @Override
+            public int compare(ChatRoom chatRoom1, ChatRoom chatRoom2) {
+                // getLastSentTime()을 사용하여 LocalDateTime을 비교
+                return chatRoom2.getLastSentTime().compareTo(chatRoom1.getLastSentTime());
+            }
+        });
         this.chatRooms = chatRooms;
         notifyDataSetChanged(); //왜 갱신이 바로바로 안될까...특히 처음올때 화면과 채팅방에서 back해서 돌아올때 바로바로 왜 안바뀌는거지;;
     }
