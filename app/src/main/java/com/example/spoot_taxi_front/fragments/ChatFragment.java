@@ -73,6 +73,7 @@ public class ChatFragment extends Fragment {
         View view = getView();
         loadChatRoomList(view);
     }
+
     public void loadChatRoomList(View view) {
         Log.d("loadChatRoomList실행","loadChatRoomList실행중");
         Call<UserJoinedChatRoomResponse> call = chatApi.getUserChatRooms(SessionManager.getInstance().getCurrentUser().getEmail());

@@ -13,6 +13,9 @@ import com.example.spoot_taxi_front.models.ChatMessage;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import ua.naiksoftware.stomp.Stomp;
 import ua.naiksoftware.stomp.StompClient;
 
@@ -24,6 +27,8 @@ public class WebSocketManager {
     //웹소켓으로 오는 메세지를 실시간으로 관리하는 객체
     private MutableLiveData<ChatMessage> receivedMessages = new MutableLiveData<>();
 
+    // 이미 구독 중인 주소인지 확인하기 위한 Set을 생성하고 관리
+    Set<String> subscribedAddresses = new HashSet<>();
     private WebSocketManager() {
         // Private constructor to prevent external instantiation
     }
@@ -36,6 +41,7 @@ public class WebSocketManager {
 
     // 웹소켓 메시지를 받아오는 콜백을 처리하는 메서드
     private void handleMessage(ChatMessage chatMessage) {
+        Log.d("핸들메세지","잘되나");
         receivedMessages.postValue(chatMessage); // LiveData의 값을 변경하여 옵저버들에게 알림
     }
 
@@ -54,13 +60,29 @@ public class WebSocketManager {
     }
 
     public void subscribeToChannel(Long chatRoomId) {
-        stompClient.topic("/sub/channel/" + chatRoomId).subscribe(topicMessage -> {
+        // 구독 시도하는 부분
+        String addressToSubscribe = "/sub/channel/" + chatRoomId;
+        if (!subscribedAddresses.contains(addressToSubscribe)) {
+            // 아직 구독되지 않은 주소라면 구독 처리
+            stompClient.topic(addressToSubscribe).subscribe(topicMessage -> {
+                Log.d("TAG", topicMessage.getPayload());
+                ChatMessage payloadToChatMessage = convertPayloadToChatMessage(topicMessage.getPayload());
+                handleMessage(payloadToChatMessage);
+            });
+
+            // 구독 처리 후 Set에 주소 추가
+            subscribedAddresses.add(addressToSubscribe);
+        } else {
+            // 이미 구독 중인 주소라면 처리를 중복 수행하지 않도록 로그 등의 방어적인 처리
+            Log.d("Already Sub", "Already subscribed to address: " + addressToSubscribe);
+        }
+/*        stompClient.topic("/sub/channel/" + chatRoomId).subscribe(topicMessage -> {
             Log.d("TAG", topicMessage.getPayload());
             ChatMessage payloadToChatMessage = convertPayloadToChatMessage(topicMessage.getPayload());
 
             handleMessage(payloadToChatMessage);
             //Log.d("라이브데이터웹소켓",getReceivedMessages().getValue()); 이거 해놓으니까 null터지네;;
-        });
+        });*/
     }
 
 

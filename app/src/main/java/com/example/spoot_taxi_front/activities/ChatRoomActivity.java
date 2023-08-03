@@ -24,6 +24,7 @@ import com.example.spoot_taxi_front.network.dto.responses.ChatRoomMessageRespons
 import com.example.spoot_taxi_front.network.retrofit.ApiClient;
 import com.example.spoot_taxi_front.utils.SessionManager;
 import com.example.spoot_taxi_front.utils.TestChatMessageGenerator;
+import com.example.spoot_taxi_front.utils.WebSocketManager;
 import com.example.spoot_taxi_front.utils.WebSocketViewModel;
 
 import org.json.JSONException;
