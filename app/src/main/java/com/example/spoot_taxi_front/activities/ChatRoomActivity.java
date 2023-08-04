@@ -122,6 +122,13 @@ public class ChatRoomActivity extends AppCompatActivity {
                     //현재 챗룸꺼인지 아이디로 확인
                     if(chatMessage.getChatRoomId()==chatRoomId) {
                         messageAdapter.addChatMessages(chatMessage);
+                        if (chatMessage.getSenderId().equals(SessionManager.getInstance().getCurrentUser().getEmail())) {
+                            recyclerViewChat.smoothScrollToPosition(messageAdapter.getItemCount() - 1);
+                        } else {
+                            if (isRecyclerViewAtBottom()) {
+                                recyclerViewChat.smoothScrollToPosition(messageAdapter.getItemCount() - 1);
+                            }
+                        }
                     }
                 } else {
                     // LiveData가 아직 메시지를 받지 않았거나 null 값을 가진 경우 처리하는 로직
@@ -235,6 +242,22 @@ public class ChatRoomActivity extends AppCompatActivity {
             throw new RuntimeException(e);
         }
         webSocketViewModel.sendMessage(data);
+    }
+
+    // 리사이클러뷰가 현재 바닥에 있는지 확인하는 메소드
+    private boolean isRecyclerViewAtBottom() {
+        LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerViewChat.getLayoutManager();
+        int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
+        int itemCount = layoutManager.getItemCount();
+
+        Log.d("lastVisibleItemPosition", lastVisibleItemPosition+"");
+        Log.d("itemCount", itemCount+"");
+
+        // 리사이클러뷰에 아이템이 없는 경우
+        if (itemCount == 0) return true;
+
+        // 현재 보이는 마지막 아이템이 전체에서 10번째 이내의 아이템이라면 바닥에 있다고 판단
+        return lastVisibleItemPosition > (itemCount - 10);
     }
 }
 
