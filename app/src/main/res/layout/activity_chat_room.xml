@@ -31,29 +31,6 @@
             android:text="SPOOT TAXI"/>
     </androidx.appcompat.widget.Toolbar>
 
-<!--    기존의 layout대신 toolbar로 바꾼뒤 메뉴추가
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:orientation="horizontal"
-        android:background="@drawable/bg_top_bar">
-
-        <ImageView
-            android:layout_marginTop="15dp"
-            android:layout_marginStart="80dp"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/ic_taxi_white" />
-        <TextView
-            android:fontFamily="@font/bmjua_ttf"
-            android:layout_marginTop="20dp"
-            android:layout_marginStart="10dp"
-            android:textSize="30dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:text="SPOOT TAXI"/>
-    </LinearLayout>-->
     <!-- 채팅 내역을 표시할 RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewChat"
