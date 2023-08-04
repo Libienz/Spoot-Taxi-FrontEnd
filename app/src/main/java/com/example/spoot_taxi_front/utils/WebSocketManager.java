@@ -127,6 +127,13 @@ public class WebSocketManager {
             // Step 3: 추출한 값들을 사용하여 ChatMessage 객체 생성
             ChatMessage chatMessage = new ChatMessage(messageId, senderName, senderId, message, sentTime);
 
+            // chatRoom에 해당하는 JSON 객체를 가져옴
+            JSONObject chatRoomObject = jsonObject.getJSONObject("chatRoom");
+
+            // chatRoom의 id에 해당하는 값 가져오기
+            int chatRoomId = chatRoomObject.getInt("id");
+            chatMessage.setChatRoomId((long) chatRoomId);
+
             return chatMessage;
         } catch (JSONException e) {
             e.printStackTrace();

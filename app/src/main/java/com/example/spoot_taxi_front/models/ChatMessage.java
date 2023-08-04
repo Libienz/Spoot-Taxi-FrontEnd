@@ -8,6 +8,16 @@ public class ChatMessage {
     private String senderId;
     private String sentTime;
 
+    private Long chatRoomId;
+
+    public Long getChatRoomId() {
+        return chatRoomId;
+    }
+
+    public void setChatRoomId(Long chatRoomId) {
+        this.chatRoomId = chatRoomId;
+    }
+
     @Override
     public String toString() {
         return "ChatMessage{" +

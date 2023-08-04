@@ -117,8 +117,11 @@ public class ChatRoomActivity extends AppCompatActivity {
                 if (chatMessage != null) {
                     // LiveData에서 유효한 메시지를 받았을 때 처리하는 로직
                     Log.d("라이브리스트확인", String.valueOf(chatMessage));
-                    chatMessageList.add(chatMessage);
-                    messageAdapter.setChatMessages(chatMessageList);
+                    //현재 챗룸꺼인지 아이디로 확인
+                    if(chatMessage.getChatRoomId()==chatRoomId) {
+                        chatMessageList.add(chatMessage);
+                        messageAdapter.setChatMessages(chatMessageList);
+                    }
                 } else {
                     // LiveData가 아직 메시지를 받지 않았거나 null 값을 가진 경우 처리하는 로직
                     Log.d("라이브리스트확인", "No message received yet");
