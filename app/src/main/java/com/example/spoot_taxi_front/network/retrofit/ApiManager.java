@@ -1,6 +1,7 @@
 package com.example.spoot_taxi_front.network.retrofit;
 
 import com.example.spoot_taxi_front.network.api.AuthApi;
+import com.example.spoot_taxi_front.network.api.MatchingApi;
 import com.example.spoot_taxi_front.network.api.RallyApi;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -60,11 +61,23 @@ public class ApiManager {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(gsonConverterFactory())
+                .client(httpClient.build())
                 .build();
+
         return retrofit.create(RallyApi.class);
     }
 
+    public MatchingApi createMatchingApi(String jwtToken) {
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(new AuthInterceptor(jwtToken));
 
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(gsonConverterFactory())
+                .client(httpClient.build())
+                .build();
+        return retrofit.create(MatchingApi.class);
+    }
 
     // String을 LocalDateTime 으로 변형하는걸 등록한다.
     public GsonConverterFactory gsonConverterFactory(){

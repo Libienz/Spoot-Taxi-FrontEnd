@@ -29,6 +29,12 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         this.chatMessages = chatMessages;
         notifyDataSetChanged();
     }
+    public void addChatMessages(ChatMessage chatMessage) {
+        int newPosition = chatMessages.size();
+        this.chatMessages.add(chatMessage);
+        notifyItemInserted(newPosition);
+        //notifyDataSetChanged();
+    }
 
     @NonNull
     @Override
@@ -85,6 +91,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
             if (chatMessage.getSenderId().equals(currentUser.getEmail())) {
                 // 내가 보낸 메시지인 경우, 왼쪽
+                textViewMyMessage.setVisibility(View.VISIBLE);
+                textViewSentTime.setVisibility(View.VISIBLE);
+
                 textViewMyMessage.setText(chatMessage.getMessage());
                 textViewSentTime.setText(chatMessage.getSentTime()+"");
 
@@ -95,6 +104,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                 profileImgView.setVisibility(View.INVISIBLE);
             } else {
                 // 상대방이 보낸 메시지인 경우, 오른쪽
+                textViewRecivedMessage.setVisibility(View.VISIBLE);
+                textViewSenderName.setVisibility(View.VISIBLE);
+                textViewRecivedTime.setVisibility(View.VISIBLE);
+                profileImgView.setVisibility(View.VISIBLE);
+
                 textViewSenderName.setText(chatMessage.getSenderName());
                 textViewRecivedMessage.setText(chatMessage.getMessage());
                 textViewRecivedTime.setText(chatMessage.getSentTime() +"");
@@ -102,7 +116,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                 //숨김
                 textViewMyMessage.setVisibility(View.INVISIBLE);
                 textViewSentTime.setVisibility(View.INVISIBLE);
-
             }
 
         }

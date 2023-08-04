@@ -14,6 +14,7 @@
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.CAMERA" />
 
     <application
@@ -44,7 +45,6 @@
 
         <activity
             android:name=".activities.ChatRoomActivity"
-            android:windowSoftInputMode="adjustPan"
             android:exported="false" />
         <activity
             android:name=".activities.PasswordResetActivity"
@@ -71,6 +71,13 @@
             </intent-filter>
         </activity>
 
+        <!--   서비스를 추가하고 인텐트 필터를 설정한다.   -->
+        <service android:name=".network.fcm.MyFirebaseMessagingService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
         <meta-data
             android:name="com.kakao.sdk.AppKey"
             android:value="5fc7a866ed3c80056062b4e7e6692441" />
@@ -79,6 +86,7 @@
 
             <!-- 메인 액티비티에 대한 설정 등을 추가할 수 있습니다. -->
         </activity>
+
     </application>
 
 </manifest>

@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,7 +15,6 @@ import android.view.ViewGroup;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
 
 import android.view.Window;
@@ -24,7 +24,16 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.spoot_taxi_front.R;
+import com.example.spoot_taxi_front.network.api.MatchingApi;
+import com.example.spoot_taxi_front.network.dto.requests.MatchCancelRequest;
+import com.example.spoot_taxi_front.network.dto.requests.MatchingRequest;
+import com.example.spoot_taxi_front.network.dto.responses.MatchCancelResponse;
+import com.example.spoot_taxi_front.network.dto.responses.MatchingResponse;
+import com.example.spoot_taxi_front.network.retrofit.ApiManager;
+import com.example.spoot_taxi_front.utils.MatchingSuccessEvent;
+import com.example.spoot_taxi_front.utils.SessionManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.snackbar.Snackbar;
 
 import net.daum.mf.map.api.CameraUpdateFactory;
 import net.daum.mf.map.api.MapPoint;
@@ -32,20 +41,25 @@ import net.daum.mf.map.api.MapView;
 import net.daum.mf.map.api.MapView.CurrentLocationEventListener;
 import net.daum.mf.map.api.MapView.MapViewEventListener;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class MatchingFragment extends Fragment implements CurrentLocationEventListener, MapViewEventListener {
 
     private MapView mapView;
     private ViewGroup mapViewContainer;
-
-    private static final int REQUEST_LOCATION_PERMISSION = 1;
-
-    private LocationManager locationManager;
-
     private Button matchingButton;
-
     private double curLongitude;
     private double curLaitude;
+    private MatchingApi matchingApi;
+    Long waitingRoomId = 0L;
+    Long waitingRoomUserId = 0L;
 
+    private AlertDialog alertDialog;
 
     public MatchingFragment() {
         // Required empty public constructor
@@ -60,12 +74,42 @@ public class MatchingFragment extends Fragment implements CurrentLocationEventLi
         mapView.setCurrentLocationEventListener(this);
         mapView.setMapViewEventListener(this);
 
-
+        matchingApi = ApiManager.getInstance().createMatchingApi(SessionManager.getInstance().getJwtToken());
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        // EventBus 등록
+        EventBus.getDefault().register(this);
+    }
+    @Override
+    public void onStop() {
+        super.onStop();
+        // EventBus 등록 해제
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe
+    public void onMatchingSuccess(MatchingSuccessEvent event) {
+        Log.d("libienz", "onMatchingSuccess: eventBus");
+        // 매칭 성공 이벤트가 발생하면 매칭 프로그레스 팝업을 닫음
+        if (alertDialog != null && alertDialog.isShowing()) {
+            alertDialog.dismiss();
+        }
+        // 메인 스레드에서 Glide 코드 실행
+        getView().post(new Runnable() {
+            @Override
+            public void run() {
+                showMatchingSuccessPopup();
+            }
+        });
+
+    }
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_matching, container, false);
 
@@ -82,10 +126,25 @@ public class MatchingFragment extends Fragment implements CurrentLocationEventLi
             public void onClick(View v) {
                 // 버튼 클릭 이벤트 처리
                 if (curLaitude != 0.0 && curLongitude != 0.0) {
-                    // 매칭 버튼 클릭 시 팝업 표시
+                    //서버에 매칭 요청
+                    MatchingRequest matchingRequest = new MatchingRequest(SessionManager.getInstance().getCurrentUser().getEmail(), SessionManager.getInstance().getDeviceToken(), curLaitude, curLongitude);
+                    Log.d("Libienz", "latitude: " + curLaitude);
+                    Log.d("Libienz", "longitude: " + curLongitude);
+                    Call<MatchingResponse> callMatchingRequest = matchingApi.requestMatch(matchingRequest);
+                    callMatchingRequest.enqueue(new Callback<MatchingResponse>() {
+                        @Override
+                        public void onResponse(Call<MatchingResponse> call, Response<MatchingResponse> response) {
+                            handleMatchingResponse(response.code(), response.body());
+                        }
+
+                        @Override
+                        public void onFailure(Call<MatchingResponse> call, Throwable t) {
+                            Toast.makeText(requireContext(), "매칭 요청에 실패하였습니다.", Toast.LENGTH_SHORT).show();
+                            Log.e("API Failure", "API 호출에 실패하였습니다.", t);
+                        }
+                    });
                     showMatchingProgressPopup();
 
-                    //서버에 매칭 요성 by api
 
                 } else {
                     Toast.makeText(requireContext(), "위치를 계산중입니다. 잠시 후에 다시 시도해주세요", Toast.LENGTH_SHORT).show();
@@ -118,19 +177,30 @@ public class MatchingFragment extends Fragment implements CurrentLocationEventLi
         Button cancelButton = popupView.findViewById(R.id.cancelButton);
 
         // 팝업 표시
-        final AlertDialog alertDialog = builder.create();
+        alertDialog = builder.create();
         alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         alertDialog.show();
 
-        // 매칭 취소 버튼 클릭 시 팝업 닫기
+        // 매칭 취소 버튼 클릭
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showMatchingSuccessPopup();
-                alertDialog.dismiss();
-                //수정지점: 취소누르면 매칭 성공 액티비티 띄우기
+//                showMatchingSuccessPopup();
+                MatchCancelRequest matchCancelRequest = new MatchCancelRequest(SessionManager.getInstance().getCurrentUser().getEmail(), waitingRoomId, waitingRoomUserId);
+                Call<MatchCancelResponse> matchCancelCall = matchingApi.cancelMatching(matchCancelRequest);
+                matchCancelCall.enqueue(new Callback<MatchCancelResponse>() {
+                    @Override
+                    public void onResponse(Call<MatchCancelResponse> call, Response<MatchCancelResponse> response) {
+                        handleMatchCancelResponse(response.code(), response.body());
+                        alertDialog.dismiss();
+                    }
 
+                    @Override
+                    public void onFailure(Call<MatchCancelResponse> call, Throwable t) {
+                        Toast.makeText(requireContext(), "매칭 취소 요청에 실패하였습니다.", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
     }
@@ -153,7 +223,7 @@ public class MatchingFragment extends Fragment implements CurrentLocationEventLi
         Glide.with(this).asGif().load(R.raw.hello).into(gifImageView);
 
         // 팝업 표시
-        final AlertDialog alertDialog = builder.create();
+        alertDialog = builder.create();
         alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         alertDialog.show();
@@ -173,6 +243,32 @@ public class MatchingFragment extends Fragment implements CurrentLocationEventLi
         });
 
 
+    }
+
+    public void handleMatchingResponse(int statusCode, MatchingResponse matchingResponse) {
+        switch (statusCode) {
+            case 200:
+                waitingRoomId = matchingResponse.getWaitingRoomId();
+                waitingRoomUserId = matchingResponse.getWaitingRoomUserId();
+//                Toast.makeText(requireContext(), waitingRoomId + " " + waitingRoomUserId, Toast.LENGTH_SHORT).show();
+                break;
+            default:
+                Toast.makeText(requireContext(), "매칭 요청에 실패하였습니다.", Toast.LENGTH_SHORT).show();
+                Log.e("매칭 요청 실패", "statusCode: " + statusCode );
+                break;
+        }
+    }
+
+    public void handleMatchCancelResponse(int statusCode, MatchCancelResponse matchCancelResponse) {
+
+        switch (statusCode) {
+            case 200:
+                break;
+            default:
+                Toast.makeText(requireContext(), "매칭 취소 요청에 실패하였습니다.", Toast.LENGTH_SHORT).show();
+                Log.e("매칭 요청 실패", "statusCode: " + statusCode);
+                break;
+        }
     }
 
 
@@ -281,10 +377,6 @@ public class MatchingFragment extends Fragment implements CurrentLocationEventLi
     public void onMapViewMoveFinished(MapView mapView, MapPoint mapPoint) {
 
     }
-
-    // 다른 메소드들
-
-
 
 
 }

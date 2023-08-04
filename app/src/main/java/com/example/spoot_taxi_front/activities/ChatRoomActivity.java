@@ -99,8 +99,10 @@ public class ChatRoomActivity extends AppCompatActivity {
         chatRoomMessages.enqueue(new Callback<ChatRoomMessageResponse>() {
             @Override
             public void onResponse(Call<ChatRoomMessageResponse> call, Response<ChatRoomMessageResponse> response) {
-                chatMessageList = handleChatRoomMessageResponse(response.code(), response.body());
-                messageAdapter.setChatMessages(chatMessageList);// 어댑터를 여기서 set해야하는 이유는 밑에 주석부분에서 실행할시 비동기적으로 onCreate가 작동하기때문
+                handleChatRoomMessageResponse(response.code(), response.body());
+                for (ChatMessage chatMessage : chatMessageList) {
+                    Log.d("chatMessageList",chatMessage.toString());
+                }
             }
 
             @Override
@@ -119,8 +121,7 @@ public class ChatRoomActivity extends AppCompatActivity {
                     Log.d("라이브리스트확인", String.valueOf(chatMessage));
                     //현재 챗룸꺼인지 아이디로 확인
                     if(chatMessage.getChatRoomId()==chatRoomId) {
-                        chatMessageList.add(chatMessage);
-                        messageAdapter.setChatMessages(chatMessageList);
+                        messageAdapter.addChatMessages(chatMessage);
                     }
                 } else {
                     // LiveData가 아직 메시지를 받지 않았거나 null 값을 가진 경우 처리하는 로직
@@ -168,19 +169,19 @@ public class ChatRoomActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private List<ChatMessage> handleChatRoomMessageResponse(int statusCode, ChatRoomMessageResponse responseBody) {
+    private void handleChatRoomMessageResponse(int statusCode, ChatRoomMessageResponse responseBody) {
         switch (statusCode) {
             case 200:
                 List<MessageDto> messageDtoList = responseBody.getMessageDtoList();
                 //chatParticipant의 아이디도 액티비티에 저장해둔다(나가기 api쓸때 필요)
                 chatParticipantId=responseBody.getChatParticipantId();
                 Log.d("chatParticipantId는",chatParticipantId.toString());
-                return setChatMessageList(messageDtoList);
+                messageAdapter.setChatMessages(setChatMessageList(messageDtoList));// 어댑터를 여기서 set해야하는 이유는 밑에 주석부분에서 실행할시 비동기적으로 onCreate가 작동하기때문
+                break;
             default:
                 Toast.makeText(getApplicationContext(), "메시지 목록 정보를 받아올수 없습니다.", Toast.LENGTH_SHORT).show();
                 break;
         }
-        return null;
     }
 
     private List<ChatMessage> setChatMessageList(List<MessageDto> messageDtoList) {
