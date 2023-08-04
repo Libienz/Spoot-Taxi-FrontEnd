@@ -78,6 +78,7 @@ public class ChatRoomActivity extends AppCompatActivity {
 
         // RecyclerView 설정
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setStackFromEnd(true);
         recyclerViewChat.setLayoutManager(layoutManager);
         messageAdapter = new MessageAdapter();
         recyclerViewChat.setAdapter(messageAdapter);
@@ -259,5 +260,6 @@ public class ChatRoomActivity extends AppCompatActivity {
         // 현재 보이는 마지막 아이템이 전체에서 10번째 이내의 아이템이라면 바닥에 있다고 판단
         return lastVisibleItemPosition > (itemCount - 10);
     }
+
 }
 

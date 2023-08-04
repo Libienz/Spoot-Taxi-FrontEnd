@@ -31,7 +31,8 @@
             android:text="SPOOT TAXI"/>
     </androidx.appcompat.widget.Toolbar>
 
-    <!-- 채팅 내역을 표시할 RecyclerView -->
+
+ <!-- 채팅 내역을 표시할 RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewChat"
         android:layout_width="match_parent"
@@ -55,7 +56,6 @@
             android:fontFamily="@font/bmjua_ttf"
             android:background="@drawable/bg_rounded"
             android:hint="메시지 입력" />
-
         <!-- 메시지 전송 버튼 -->
         <android.widget.Button
             android:id="@+id/buttonSend"
