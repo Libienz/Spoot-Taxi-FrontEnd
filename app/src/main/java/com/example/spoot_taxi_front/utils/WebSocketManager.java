@@ -12,10 +12,14 @@ import com.example.spoot_taxi_front.models.ChatMessage;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.reactivestreams.Subscription;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
+import io.reactivex.disposables.Disposable;
 import ua.naiksoftware.stomp.Stomp;
 import ua.naiksoftware.stomp.StompClient;
 
@@ -27,8 +31,8 @@ public class WebSocketManager {
     //웹소켓으로 오는 메세지를 실시간으로 관리하는 객체
     private MutableLiveData<ChatMessage> receivedMessages = new MutableLiveData<>();
 
-    // 이미 구독 중인 주소인지 확인하기 위한 Set을 생성하고 관리
-    Set<String> subscribedAddresses = new HashSet<>();
+    // 구독한 주소와 해당 구독의 Disposable을 매핑하는 Map을 사용
+    Map<String, Disposable> subscriptionMap = new HashMap<>();
     private WebSocketManager() {
         // Private constructor to prevent external instantiation
     }
@@ -62,29 +66,41 @@ public class WebSocketManager {
     public void subscribeToChannel(Long chatRoomId) {
         // 구독 시도하는 부분
         String addressToSubscribe = "/sub/channel/" + chatRoomId;
-        if (!subscribedAddresses.contains(addressToSubscribe)) {
+        if (!subscriptionMap.containsKey(addressToSubscribe)) {
             // 아직 구독되지 않은 주소라면 구독 처리
-            stompClient.topic(addressToSubscribe).subscribe(topicMessage -> {
+            Disposable chatRoomSubscription = stompClient.topic(addressToSubscribe).subscribe(topicMessage -> {
                 Log.d("TAG", topicMessage.getPayload());
                 ChatMessage payloadToChatMessage = convertPayloadToChatMessage(topicMessage.getPayload());
                 handleMessage(payloadToChatMessage);
             });
-
-            // 구독 처리 후 Set에 주소 추가
-            subscribedAddresses.add(addressToSubscribe);
+            Log.d("disposable 확인", String.valueOf(chatRoomSubscription.isDisposed()));//false가 나와야 정상
+            subscriptionMap.put(addressToSubscribe,chatRoomSubscription);
+            Log.d("구독된거Map에넣기", String.valueOf(subscriptionMap.containsKey(addressToSubscribe)));
+/*            // 구독 처리 후 Set에 주소 추가
+            subscribedAddresses.add(addressToSubscribe);*/
         } else {
             // 이미 구독 중인 주소라면 처리를 중복 수행하지 않도록 로그 등의 방어적인 처리
             Log.d("Already Sub", "Already subscribed to address: " + addressToSubscribe);
         }
-/*        stompClient.topic("/sub/channel/" + chatRoomId).subscribe(topicMessage -> {
-            Log.d("TAG", topicMessage.getPayload());
-            ChatMessage payloadToChatMessage = convertPayloadToChatMessage(topicMessage.getPayload());
-
-            handleMessage(payloadToChatMessage);
-            //Log.d("라이브데이터웹소켓",getReceivedMessages().getValue()); 이거 해놓으니까 null터지네;;
-        });*/
     }
 
+    public void unsubscribeToChannel(Long chatRoomId){
+        String addressToUnsubscribe = "/sub/channel/" + chatRoomId;
+        if(subscriptionMap.containsKey(addressToUnsubscribe)){
+            Disposable disposable = subscriptionMap.get(addressToUnsubscribe);
+            disposable.dispose(); //구독해제
+            if(disposable.isDisposed()){
+                Log.d("구독해제됨","ㅇㅇ");
+            }else {
+                Log.d("구독해제안됨","망함");
+            }
+            subscriptionMap.remove(addressToUnsubscribe);
+        }
+        else {
+            // 구독 중이 아닌 주소라면 아니라고 로그찍음
+            Log.d("Not Sub", "Not subscribed to address: " + addressToUnsubscribe);
+        }
+    }
 
     public void sendMessage(JSONObject data) {
         stompClient.send("/pub/send", data.toString()).subscribe();

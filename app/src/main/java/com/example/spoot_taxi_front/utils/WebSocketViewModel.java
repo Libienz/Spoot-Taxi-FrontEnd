@@ -25,7 +25,9 @@ public class WebSocketViewModel extends ViewModel {
     public void subscribeToChannel(Long chatRoomId) {
         webSocketManager.subscribeToChannel(chatRoomId);
     }
-
+    public void unsubscribeToChannel(Long chatRoomId) {
+        webSocketManager.unsubscribeToChannel(chatRoomId);
+    }
     public void sendMessage(JSONObject data) {
         webSocketManager.sendMessage(data);
     }

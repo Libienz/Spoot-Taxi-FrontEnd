@@ -1,30 +1,31 @@
 package com.example.spoot_taxi_front.activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import androidx.appcompat.widget.Toolbar;
 
 import com.example.spoot_taxi_front.models.ChatMessage;
 import com.example.spoot_taxi_front.adapters.MessageAdapter;
 import com.example.spoot_taxi_front.R;
-import com.example.spoot_taxi_front.models.User;
 import com.example.spoot_taxi_front.network.api.ChatApi;
 import com.example.spoot_taxi_front.network.dto.MessageDto;
-import com.example.spoot_taxi_front.network.dto.UserJoinedChatRoomDto;
 import com.example.spoot_taxi_front.network.dto.responses.ChatRoomMessageResponse;
+import com.example.spoot_taxi_front.network.dto.responses.LeaveChatParticipantResponse;
 import com.example.spoot_taxi_front.network.retrofit.ApiClient;
 import com.example.spoot_taxi_front.utils.SessionManager;
-import com.example.spoot_taxi_front.utils.TestChatMessageGenerator;
-import com.example.spoot_taxi_front.utils.WebSocketManager;
 import com.example.spoot_taxi_front.utils.WebSocketViewModel;
 
 import org.json.JSONException;
@@ -47,6 +48,7 @@ public class ChatRoomActivity extends AppCompatActivity {
     private MessageAdapter messageAdapter;
     private WebSocketViewModel webSocketViewModel;
     private Long chatRoomId;
+    private Long chatParticipantId;
     private List<ChatMessage> chatMessageList = new ArrayList<>();
 
     private ChatApi chatApi;
@@ -55,6 +57,11 @@ public class ChatRoomActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_room);
+
+        //메뉴를 위한 툴바 설정, title을 false안하면 기본 디폴트타이틀이 보이게됨
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         // -1은 기본값
         chatRoomId = getIntent().getLongExtra("chatRoomId", -1);
@@ -121,10 +128,50 @@ public class ChatRoomActivity extends AppCompatActivity {
         //messageAdapter.setChatMessages(chatMessageList);
     }
 
+    //나가기 버튼을 위해서 메뉴ActionBar inflate해줌
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.chatroom_menu,menu);
+        return true;
+    }
+
+    //메뉴 선택했을때 이벤트처리
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int itemId = item.getItemId();
+        //나가기
+        if(itemId== R.id.action_leave){
+            Toast.makeText(this,"채팅방을 나갔습니다.",Toast.LENGTH_SHORT).show();
+            //leave API 사용
+            Call<LeaveChatParticipantResponse> stringCall = chatApi.leaveChatParticipant(chatParticipantId);
+            stringCall.enqueue(new Callback<LeaveChatParticipantResponse>() {
+                @Override
+                public void onResponse(Call<LeaveChatParticipantResponse> call, Response<LeaveChatParticipantResponse> response) {
+                    Log.d("Leave API",response.body().getMessage());
+                    webSocketViewModel.unsubscribeToChannel(chatRoomId);//채팅방 구독해제
+                    onBackPressed();//나가고 뒤로가서(chatFragment로 가서) 채팅방을 나감
+                }
+
+                @Override
+                public void onFailure(Call<LeaveChatParticipantResponse> call, Throwable t) {
+                    Toast.makeText(getApplicationContext(), "나가기 요청을 실패하였습니다.", Toast.LENGTH_SHORT).show();
+                    Log.e("API Failure", "API 호출에 실패하였습니다.", t);
+                }
+            });
+
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
     private List<ChatMessage> handleChatRoomMessageResponse(int statusCode, ChatRoomMessageResponse responseBody) {
         switch (statusCode) {
             case 200:
                 List<MessageDto> messageDtoList = responseBody.getMessageDtoList();
+                //chatParticipant의 아이디도 액티비티에 저장해둔다(나가기 api쓸때 필요)
+                chatParticipantId=responseBody.getChatParticipantId();
+                Log.d("chatParticipantId는",chatParticipantId.toString());
                 return setChatMessageList(messageDtoList);
             default:
                 Toast.makeText(getApplicationContext(), "메시지 목록 정보를 받아올수 없습니다.", Toast.LENGTH_SHORT).show();
@@ -186,12 +233,4 @@ public class ChatRoomActivity extends AppCompatActivity {
         webSocketViewModel.sendMessage(data);
     }
 }
-/*    private List<ChatMessage> getChatMessages() {
-        // 채팅 데이터 가져오기 (서버와의 연동 필요)
-        // 서버로부터 채팅 데이터 받아오기
-        // 채팅 데이터를 ChatMessage 객체로 변환하여 반환
-
-        //우선은 테스트용 데이터 리턴
-        return TestChatMessageGenerator.generateChatMessages(); // 예시로 빈 리스트 반환
-    }*/
 
