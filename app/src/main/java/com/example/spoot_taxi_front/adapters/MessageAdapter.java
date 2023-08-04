@@ -1,5 +1,6 @@
 package com.example.spoot_taxi_front.adapters;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,12 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     public void setChatMessages(List<ChatMessage> chatMessages) {
         this.chatMessages = chatMessages;
         notifyDataSetChanged();
+    }
+    public void addChatMessages(ChatMessage chatMessage) {
+        int newPosition = chatMessages.size();
+        this.chatMessages.add(chatMessage);
+        notifyItemInserted(newPosition);
+        //notifyDataSetChanged();
     }
 
     @NonNull
@@ -81,8 +88,12 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         public void bind(ChatMessage chatMessage) {
             // 채팅 메시지를 해당 뷰 요소에 설정
             User currentUser = SessionManager.getInstance().getCurrentUser();
+
             if (chatMessage.getSenderId().equals(currentUser.getEmail())) {
                 // 내가 보낸 메시지인 경우, 왼쪽
+                textViewMyMessage.setVisibility(View.VISIBLE);
+                textViewSentTime.setVisibility(View.VISIBLE);
+
                 textViewMyMessage.setText(chatMessage.getMessage());
                 textViewSentTime.setText(chatMessage.getSentTime()+"");
 
@@ -93,6 +104,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                 profileImgView.setVisibility(View.INVISIBLE);
             } else {
                 // 상대방이 보낸 메시지인 경우, 오른쪽
+                textViewRecivedMessage.setVisibility(View.VISIBLE);
+                textViewSenderName.setVisibility(View.VISIBLE);
+                textViewRecivedTime.setVisibility(View.VISIBLE);
+                profileImgView.setVisibility(View.VISIBLE);
+
                 textViewSenderName.setText(chatMessage.getSenderName());
                 textViewRecivedMessage.setText(chatMessage.getMessage());
                 textViewRecivedTime.setText(chatMessage.getSentTime() +"");
@@ -100,7 +116,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                 //숨김
                 textViewMyMessage.setVisibility(View.INVISIBLE);
                 textViewSentTime.setVisibility(View.INVISIBLE);
-
             }
 
         }

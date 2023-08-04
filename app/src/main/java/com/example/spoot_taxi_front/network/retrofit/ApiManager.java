@@ -13,13 +13,17 @@ import com.google.gson.JsonParseException;
 import java.lang.reflect.Type;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiManager {
-    private static final String BASE_URL = "http://192.168.219.110:8080/";
+
+//    private static final String BASE_URL = "http://192.168.219.110:8080/";
+    private static final String BASE_URL = "http://192.168.123.100:8080/";
+
     private static ApiManager instance;
 
     private ApiManager() {
@@ -36,6 +40,10 @@ public class ApiManager {
         // AuthInterceptor를 생성하여 토큰을 추가한 OkHttpClient를 생성
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(new AuthInterceptor(jwtToken));
+
+        httpClient.connectTimeout(30, TimeUnit.SECONDS); // 연결 타임아웃 설정
+        httpClient.readTimeout(30, TimeUnit.SECONDS); // 읽기 타임아웃 설정
+        httpClient.writeTimeout(30, TimeUnit.SECONDS); // 쓰기 타임아웃 설정
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)

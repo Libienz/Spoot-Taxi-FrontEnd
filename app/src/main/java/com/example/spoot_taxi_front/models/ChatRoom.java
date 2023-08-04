@@ -1,15 +1,16 @@
 package com.example.spoot_taxi_front.models;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class ChatRoom {
-    private String roomId;
+    private Long roomId;
     private String roomName;
     private List<User> participants;
     private String lastMessage;
     private String lastSentTime;
 
-    public ChatRoom(String roomId, String roomName, List<User> participants, String lastMessage, String lastSentTime) {
+    public ChatRoom(Long roomId, String roomName, List<User> participants, String lastMessage, String lastSentTime) {
         this.roomId = roomId;
         this.roomName = roomName;
         this.participants = participants;
@@ -17,6 +18,23 @@ public class ChatRoom {
         this.lastSentTime = lastSentTime;
     }
 
+    @Override
+    public String toString() {
+        return "ChatRoom{" +
+                "roomId=" + roomId +
+                ", roomName='" + roomName + '\'' +
+                ", participants=" + participants +
+                ", lastMessage='" + lastMessage + '\'' +
+                ", lastSentTime='" + lastSentTime + '\'' +
+                '}';
+    }
+
+    // 현재 시간을 기준으로 정렬된 LocalDateTime 객체 반환
+    public LocalDateTime getLastSentTimeToLocalDateTime() {
+        // 여기서 LocalDateTime으로 변환하는 로직을 구현
+        // 예시로는 아래와 같이 반환하도록 가정합니다.
+        return LocalDateTime.parse(lastSentTime);
+    }
     public String getLastSentTime() {
         return lastSentTime;
     }
@@ -25,11 +43,11 @@ public class ChatRoom {
         this.lastSentTime = lastSentTime;
     }
 
-    public String getRoomId() {
+    public Long getRoomId() {
         return roomId;
     }
 
-    public void setRoomId(String roomId) {
+    public void setRoomId(Long roomId) {
         this.roomId = roomId;
     }
 
