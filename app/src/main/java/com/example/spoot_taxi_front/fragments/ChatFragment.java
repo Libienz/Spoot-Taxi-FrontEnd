@@ -121,7 +121,7 @@ public class ChatFragment extends Fragment {
             List<User> userList = new ArrayList<>();
             List<UserDto> participants = userJoinedChatRoomDto.getParticipants();
             for (UserDto participant : participants) {
-                User user = new User(participant.getEmail(), participant.getPassword(), participant.getName(), null, participant.getGender());
+                User user = new User(participant.getEmail(), participant.getPassword(), participant.getName(), participant.getImgUrl(), participant.getGender());
                 userList.add(user);
             }
 
