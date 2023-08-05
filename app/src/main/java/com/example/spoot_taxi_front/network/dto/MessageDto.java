@@ -8,6 +8,11 @@ public class MessageDto {
     private String senderName;
     private String message;
     private LocalDateTime sentTime;
+    private String senderProfileImageUrl;
+
+    public String getSenderProfileImageUrl() {
+        return senderProfileImageUrl;
+    }
 
     public Long getMessageId() {
         return messageId;

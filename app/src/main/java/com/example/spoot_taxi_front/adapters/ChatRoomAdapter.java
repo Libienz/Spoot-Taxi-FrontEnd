@@ -1,18 +1,22 @@
 package com.example.spoot_taxi_front.adapters;
 
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.spoot_taxi_front.models.ChatMessage;
 import com.example.spoot_taxi_front.models.ChatRoom;
 import com.example.spoot_taxi_front.R;
 import com.example.spoot_taxi_front.activities.ChatRoomActivity;
+import com.example.spoot_taxi_front.models.User;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -84,14 +88,27 @@ public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.ChatVi
         private TextView roomNameTextView;
         private TextView lastMessageTextView;
         private TextView timeTextView;
-
-
+        private ImageView profileImageView1;
+        private ImageView profileImageView2;
+        private ImageView profileImageView3;
+        private ImageView profileImageView4;
+        private List<ImageView> profileImageViews;
         public ChatViewHolder(@NonNull View itemView) {
             super(itemView);
             // 아이템 뷰의 뷰 요소 초기화
             roomNameTextView = itemView.findViewById(R.id.roomNameTextView);
             lastMessageTextView = itemView.findViewById(R.id.lastMessageTextView);
             timeTextView = itemView.findViewById(R.id.timeTextView);
+            profileImageView1 = itemView.findViewById(R.id.profileImageView1);
+            profileImageView2 = itemView.findViewById(R.id.profileImageView2);
+            profileImageView3 = itemView.findViewById(R.id.profileImageView3);
+            profileImageView4 = itemView.findViewById(R.id.profileImageView4);
+            profileImageViews = new ArrayList<>();
+            profileImageViews.add(profileImageView1);
+            profileImageViews.add(profileImageView2);
+            profileImageViews.add(profileImageView3);
+            profileImageViews.add(profileImageView4);
+
         }
 
         // 아이템 뷰에 데이터를 설정하는 메서드
@@ -101,6 +118,15 @@ public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.ChatVi
             roomNameTextView.setText(chatRoom.getRoomName());
             lastMessageTextView.setText(chatRoom.getLastMessage());
             timeTextView.setText(chatRoom.getLastSentTime());
+            List<User> participants = chatRoom.getParticipants();
+            for (int i = 0; i < participants.size(); i++) {
+                User cur = participants.get(i);
+                String imgUrl = cur.getImgUrl();
+                Log.d("imgUrlCheck", "bind: " + imgUrl);
+                if (imgUrl != null) {
+                    Glide.with(itemView.getContext()).load(imgUrl).into(profileImageViews.get(i));
+                }
+            }
 
         }
     }
