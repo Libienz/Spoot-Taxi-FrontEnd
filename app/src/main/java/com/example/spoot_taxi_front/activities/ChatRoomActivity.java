@@ -7,6 +7,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -119,7 +121,31 @@ public class ChatRoomActivity extends AppCompatActivity {
                 recyclerViewChat.smoothScrollToPosition(messageAdapter.getItemCount() - 1);
             }
         });
-        // 전송 버튼 클릭 리스너 설정
+// 전송 버튼 초기 상태를 비활성화로 설정
+        buttonSend.setEnabled(false);
+
+// editText의 텍스트 변화를 감지하는 TextWatcher 설정
+        editTextMessage.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // editText의 텍스트가 비어있지 않은 경우에만 전송 버튼을 활성화
+                if (s.toString().isEmpty()) {
+                    buttonSend.setEnabled(false);
+                } else {
+                    buttonSend.setEnabled(true);
+                }
+            }
+        });
+
+// 전송 버튼 클릭 리스너 설정
         buttonSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -127,6 +153,8 @@ public class ChatRoomActivity extends AppCompatActivity {
                 String message = editTextMessage.getText().toString();
                 sendMessage(message);
                 editTextMessage.setText("");
+                // 전송 후 다시 버튼 비활성화
+                buttonSend.setEnabled(false);
             }
         });
 
