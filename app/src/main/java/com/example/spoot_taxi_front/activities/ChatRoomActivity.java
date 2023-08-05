@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 import androidx.appcompat.widget.Toolbar;
 
@@ -45,6 +46,7 @@ public class ChatRoomActivity extends AppCompatActivity {
     private RecyclerView recyclerViewChat;
     private EditText editTextMessage;
     private Button buttonSend;
+    private ImageButton buttonScrollToBottom;
     private MessageAdapter messageAdapter;
     private WebSocketViewModel webSocketViewModel;
     private Long chatRoomId;
@@ -75,6 +77,7 @@ public class ChatRoomActivity extends AppCompatActivity {
         recyclerViewChat = findViewById(R.id.recyclerViewChat);
         editTextMessage = findViewById(R.id.editTextMessage);
         buttonSend = findViewById(R.id.buttonSend);
+        buttonScrollToBottom = findViewById(R.id.buttonScrollToBottom);
 
         // RecyclerView 설정
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -83,6 +86,25 @@ public class ChatRoomActivity extends AppCompatActivity {
         messageAdapter = new MessageAdapter();
         recyclerViewChat.setAdapter(messageAdapter);
 
+        recyclerViewChat.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                if (!recyclerView.canScrollVertically(1)) {
+                    // 스크롤이 더 이상 안되는 경우 (맨 아래에 도달한 경우)
+                    buttonScrollToBottom.setVisibility(View.GONE);
+                } else {
+                    // 그 외에는 버튼을 보이도록 설정
+                    buttonScrollToBottom.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        buttonScrollToBottom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                recyclerViewChat.smoothScrollToPosition(messageAdapter.getItemCount() - 1);
+            }
+        });
         // 전송 버튼 클릭 리스너 설정
         buttonSend.setOnClickListener(new View.OnClickListener() {
             @Override
