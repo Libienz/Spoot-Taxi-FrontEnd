@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 import androidx.appcompat.widget.Toolbar;
 
@@ -45,6 +46,8 @@ public class ChatRoomActivity extends AppCompatActivity {
     private RecyclerView recyclerViewChat;
     private EditText editTextMessage;
     private Button buttonSend;
+    private Button newMsgButton;
+    private ImageButton buttonScrollToBottom;
     private MessageAdapter messageAdapter;
     private WebSocketViewModel webSocketViewModel;
     private Long chatRoomId;
@@ -75,13 +78,44 @@ public class ChatRoomActivity extends AppCompatActivity {
         recyclerViewChat = findViewById(R.id.recyclerViewChat);
         editTextMessage = findViewById(R.id.editTextMessage);
         buttonSend = findViewById(R.id.buttonSend);
-
+        buttonScrollToBottom = findViewById(R.id.buttonScrollToBottom);
+        newMsgButton = findViewById(R.id.newMsgButton);
         // RecyclerView 설정
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setStackFromEnd(true);
         recyclerViewChat.setLayoutManager(layoutManager);
         messageAdapter = new MessageAdapter();
         recyclerViewChat.setAdapter(messageAdapter);
 
+        recyclerViewChat.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                if (!recyclerView.canScrollVertically(1)) {
+                    // 스크롤이 더 이상 안되는 경우 (맨 아래에 도달한 경우)
+                    buttonScrollToBottom.setVisibility(View.GONE);
+                    newMsgButton.setVisibility(View.GONE);
+                } else {
+                    // 그 외에는 버튼을 보이도록 설정
+                    buttonScrollToBottom.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        //스크롤 버튼
+        buttonScrollToBottom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                recyclerViewChat.smoothScrollToPosition(messageAdapter.getItemCount() - 1);
+            }
+        });
+
+        //newMsg알림 버튼
+        newMsgButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                recyclerViewChat.smoothScrollToPosition(messageAdapter.getItemCount() - 1);
+            }
+        });
         // 전송 버튼 클릭 리스너 설정
         buttonSend.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,6 +156,15 @@ public class ChatRoomActivity extends AppCompatActivity {
                     //현재 챗룸꺼인지 아이디로 확인
                     if(chatMessage.getChatRoomId()==chatRoomId) {
                         messageAdapter.addChatMessages(chatMessage);
+                        if (chatMessage.getSenderId().equals(SessionManager.getInstance().getCurrentUser().getEmail())) {
+                            recyclerViewChat.smoothScrollToPosition(messageAdapter.getItemCount() - 1);
+                        } else {
+                            if (isRecyclerViewAtBottom()) {
+                                recyclerViewChat.smoothScrollToPosition(messageAdapter.getItemCount() - 1);
+                            } else {
+                                newMsgButton.setVisibility(View.VISIBLE);
+                            }
+                        }
                     }
                 } else {
                     // LiveData가 아직 메시지를 받지 않았거나 null 값을 가진 경우 처리하는 로직
@@ -236,5 +279,22 @@ public class ChatRoomActivity extends AppCompatActivity {
         }
         webSocketViewModel.sendMessage(data);
     }
+
+    // 리사이클러뷰가 현재 바닥에 있는지 확인하는 메소드
+    private boolean isRecyclerViewAtBottom() {
+        LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerViewChat.getLayoutManager();
+        int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
+        int itemCount = layoutManager.getItemCount();
+
+        Log.d("lastVisibleItemPosition", lastVisibleItemPosition+"");
+        Log.d("itemCount", itemCount+"");
+
+        // 리사이클러뷰에 아이템이 없는 경우
+        if (itemCount == 0) return true;
+
+        // 현재 보이는 마지막 아이템이 전체에서 10번째 이내의 아이템이라면 바닥에 있다고 판단
+        return lastVisibleItemPosition > (itemCount - 10);
+    }
+
 }
 

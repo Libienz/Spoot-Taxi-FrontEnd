@@ -50,7 +50,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         title = remoteMessage.getNotification().getTitle();
         Log.d("libienz", "rcv title: " + title);
         msg = remoteMessage.getNotification().getBody();
-        if (title.equals("matchSuccess")) {
+        if (title.equals("상명대행 택시팟 매칭 성공!")) {
             EventBus.getDefault().post(new MatchingSuccessEvent());
         }
 
