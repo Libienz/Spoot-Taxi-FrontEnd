@@ -86,11 +86,14 @@ public class ChatRoomActivity extends AppCompatActivity {
         recyclerViewChat.setLayoutManager(layoutManager);
         messageAdapter = new MessageAdapter();
         recyclerViewChat.setAdapter(messageAdapter);
-
+        //시작할 경우에 스크롤 버튼 꺼놓기
+        buttonScrollToBottom.setVisibility(View.GONE);
+        newMsgButton.setVisibility(View.GONE);
         recyclerViewChat.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                if (!recyclerView.canScrollVertically(1)) {
+                if (!recyclerView.canScrollVertically(1) || recyclerView.getAdapter().getItemCount() == 0/*리사이클러 뷰에 아이템이 하나도 없는 경우*/) {
+
                     // 스크롤이 더 이상 안되는 경우 (맨 아래에 도달한 경우)
                     buttonScrollToBottom.setVisibility(View.GONE);
                     newMsgButton.setVisibility(View.GONE);
