@@ -239,12 +239,13 @@ public class ChatRoomActivity extends AppCompatActivity {
             String senderId = messageDto.getSenderId();
             String senderName = messageDto.getSenderName();
             String message = messageDto.getMessage();
-
+            String senderProfileImageUrl = messageDto.getSenderProfileImageUrl();
             //LocalDateTime sentTime = messageDto.getSentTime();
 
             Optional<LocalDateTime> optionalSentTime = Optional.ofNullable(messageDto.getSentTime());
             String sentTimeString = optionalSentTime.map(LocalDateTime::toString).orElse("");
-            ChatMessage chatMessage = new ChatMessage(messageId, senderName, senderId, message, sentTimeString);
+
+            ChatMessage chatMessage = new ChatMessage(messageId, senderName, message, senderId, sentTimeString, senderProfileImageUrl);
             chatMessageApiResponseList.add(chatMessage);
         }
         return chatMessageApiResponseList;
@@ -272,6 +273,7 @@ public class ChatRoomActivity extends AppCompatActivity {
             data.put("senderName", SessionManager.getInstance().getCurrentUser().getNickname());
             data.put("sendTime", parsedDateTime);
             data.put("message", message);
+            data.put("senderProfileImageUrl", SessionManager.getInstance().getCurrentUser().getImgUrl());
 
             // 중첩된 JSONObject를 생성하여 넣을 수도 있습니다.
             JSONObject chatRoom = new JSONObject();

@@ -8,8 +8,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.spoot_taxi_front.models.ChatMessage;
 import com.example.spoot_taxi_front.R;
 import com.example.spoot_taxi_front.models.User;
@@ -67,7 +69,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         //보내는 메시지인 경우 사용할 tv들
         private TextView textViewMyMessage;
         private TextView textViewSentTime;
-        private ImageView profileImgView;
+        private CardView profileCardView;
+        private ImageView profileImageView;
+
 
 
         public void setLayoutGravity(int gravity) {
@@ -81,7 +85,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             textViewRecivedTime = itemView.findViewById(R.id.textViewRecivedTime);
             textViewMyMessage = itemView.findViewById(R.id.textViewMyMessage);
             textViewSentTime = itemView.findViewById(R.id.textViewSentTime);
-            profileImgView = itemView.findViewById(R.id.profileImageView);
+            profileImageView = itemView.findViewById(R.id.profileImageView);
+            profileCardView = itemView.findViewById(R.id.profileCardView);
 
         }
 
@@ -101,18 +106,22 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                 textViewRecivedMessage.setVisibility(View.INVISIBLE);
                 textViewSenderName.setVisibility(View.INVISIBLE);
                 textViewRecivedTime.setVisibility(View.INVISIBLE);
-                profileImgView.setVisibility(View.INVISIBLE);
+                profileImageView.setVisibility(View.INVISIBLE);
+                profileCardView.setVisibility(View.INVISIBLE);
+
             } else {
                 // 상대방이 보낸 메시지인 경우, 오른쪽
                 textViewRecivedMessage.setVisibility(View.VISIBLE);
                 textViewSenderName.setVisibility(View.VISIBLE);
                 textViewRecivedTime.setVisibility(View.VISIBLE);
-                profileImgView.setVisibility(View.VISIBLE);
+                profileImageView.setVisibility(View.VISIBLE);
+                profileCardView.setVisibility(View.VISIBLE);
 
                 textViewSenderName.setText(chatMessage.getSenderName());
                 textViewRecivedMessage.setText(chatMessage.getMessage());
                 textViewRecivedTime.setText(chatMessage.getSentTime() +"");
 
+                Glide.with(itemView.getContext()).load(chatMessage.getSenderProfileImageUrl()).into(profileImageView);
                 //숨김
                 textViewMyMessage.setVisibility(View.INVISIBLE);
                 textViewSentTime.setVisibility(View.INVISIBLE);
