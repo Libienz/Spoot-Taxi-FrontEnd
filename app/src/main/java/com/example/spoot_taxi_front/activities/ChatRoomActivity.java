@@ -46,6 +46,7 @@ public class ChatRoomActivity extends AppCompatActivity {
     private RecyclerView recyclerViewChat;
     private EditText editTextMessage;
     private Button buttonSend;
+    private Button newMsgButton;
     private ImageButton buttonScrollToBottom;
     private MessageAdapter messageAdapter;
     private WebSocketViewModel webSocketViewModel;
@@ -78,7 +79,7 @@ public class ChatRoomActivity extends AppCompatActivity {
         editTextMessage = findViewById(R.id.editTextMessage);
         buttonSend = findViewById(R.id.buttonSend);
         buttonScrollToBottom = findViewById(R.id.buttonScrollToBottom);
-
+        newMsgButton = findViewById(R.id.newMsgButton);
         // RecyclerView 설정
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setStackFromEnd(true);
@@ -92,6 +93,7 @@ public class ChatRoomActivity extends AppCompatActivity {
                 if (!recyclerView.canScrollVertically(1)) {
                     // 스크롤이 더 이상 안되는 경우 (맨 아래에 도달한 경우)
                     buttonScrollToBottom.setVisibility(View.GONE);
+                    newMsgButton.setVisibility(View.GONE);
                 } else {
                     // 그 외에는 버튼을 보이도록 설정
                     buttonScrollToBottom.setVisibility(View.VISIBLE);
@@ -99,7 +101,16 @@ public class ChatRoomActivity extends AppCompatActivity {
             }
         });
 
+        //스크롤 버튼
         buttonScrollToBottom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                recyclerViewChat.smoothScrollToPosition(messageAdapter.getItemCount() - 1);
+            }
+        });
+
+        //newMsg알림 버튼
+        newMsgButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 recyclerViewChat.smoothScrollToPosition(messageAdapter.getItemCount() - 1);
@@ -150,6 +161,8 @@ public class ChatRoomActivity extends AppCompatActivity {
                         } else {
                             if (isRecyclerViewAtBottom()) {
                                 recyclerViewChat.smoothScrollToPosition(messageAdapter.getItemCount() - 1);
+                            } else {
+                                newMsgButton.setVisibility(View.VISIBLE);
                             }
                         }
                     }
