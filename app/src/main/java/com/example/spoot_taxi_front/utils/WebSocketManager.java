@@ -1,23 +1,18 @@
 package com.example.spoot_taxi_front.utils;
 
-import static android.content.ContentValues.TAG;
-
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.spoot_taxi_front.activities.ChatRoomActivity;
 import com.example.spoot_taxi_front.models.ChatMessage;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.reactivestreams.Subscription;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import io.reactivex.disposables.Disposable;
 import ua.naiksoftware.stomp.Stomp;
@@ -47,6 +42,10 @@ public class WebSocketManager {
     private void handleMessage(ChatMessage chatMessage) {
         Log.d("핸들메세지","잘되나");
         receivedMessages.postValue(chatMessage); // LiveData의 값을 변경하여 옵저버들에게 알림
+        if (chatMessage.getSenderId().equals(SessionManager.getInstance().getCurrentUser().getEmail())) {
+            return;
+        }
+        EventBus.getDefault().post(new NewMessageEvent(chatMessage));
     }
 
     // LiveData를 반환하는 메서드
@@ -69,7 +68,7 @@ public class WebSocketManager {
         if (!subscriptionMap.containsKey(addressToSubscribe)) {
             // 아직 구독되지 않은 주소라면 구독 처리
             Disposable chatRoomSubscription = stompClient.topic(addressToSubscribe).subscribe(topicMessage -> {
-                Log.d("TAG", topicMessage.getPayload());
+                Log.d("messageArrived", topicMessage.getPayload());
                 ChatMessage payloadToChatMessage = convertPayloadToChatMessage(topicMessage.getPayload());
                 handleMessage(payloadToChatMessage);
             });

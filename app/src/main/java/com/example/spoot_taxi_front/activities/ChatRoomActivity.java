@@ -29,6 +29,7 @@ import com.example.spoot_taxi_front.network.retrofit.ApiClient;
 import com.example.spoot_taxi_front.utils.SessionManager;
 import com.example.spoot_taxi_front.utils.WebSocketViewModel;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -191,6 +192,7 @@ public class ChatRoomActivity extends AppCompatActivity {
         // 스크롤을 맨 아래로 이동
         scrollToBottom();
     }
+
     //메뉴 선택했을때 이벤트처리
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -307,12 +309,14 @@ public class ChatRoomActivity extends AppCompatActivity {
     }
 
     private void scrollToBottom() {
-        recyclerViewChat.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                recyclerViewChat.smoothScrollToPosition(messageAdapter.getItemCount() - 1);
-            }
-        }, 200);
+        if (messageAdapter.getItemCount() > 0) {
+            recyclerViewChat.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    recyclerViewChat.smoothScrollToPosition(messageAdapter.getItemCount() - 1);
+                }
+            }, 200);
+        }
     }
 }
 

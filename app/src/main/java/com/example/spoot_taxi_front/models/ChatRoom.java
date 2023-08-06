@@ -31,6 +31,9 @@ public class ChatRoom {
                 '}';
     }
 
+    public void setNonReadMessageCount(Integer nonReadMessageCount) {
+        this.nonReadMessageCount = nonReadMessageCount;
+    }
 
     public Integer getNonReadMessageCount() {
         return nonReadMessageCount;

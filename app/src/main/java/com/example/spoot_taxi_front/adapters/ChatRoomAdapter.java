@@ -44,6 +44,20 @@ public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.ChatVi
         notifyDataSetChanged(); //왜 갱신이 바로바로 안될까...특히 처음올때 화면과 채팅방에서 back해서 돌아올때 바로바로 왜 안바뀌는거지;;
     }
 
+    public void newMessageArriveUpdate (Long chatRoomId, String message, String sentTime) {
+
+        for (int i = 0; i < chatRooms.size(); i++) {
+            ChatRoom chatRoom = chatRooms.get(i);
+            if (chatRoom.getRoomId() == chatRoomId) {
+                chatRoom.setNonReadMessageCount(chatRoom.getNonReadMessageCount() + 1);
+                chatRoom.setLastMessage(message);
+                chatRoom.setLastSentTime(sentTime);
+                notifyItemChanged(i);
+                break;
+            }
+        }
+    }
+
     // 아이템 뷰를 생성하고 뷰홀더를 반환하는 메서드
     @NonNull
     @Override

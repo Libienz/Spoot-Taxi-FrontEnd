@@ -9,11 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.spoot_taxi_front.R;
+import com.example.spoot_taxi_front.models.ChatMessage;
 import com.example.spoot_taxi_front.models.ChatRoom;
 import com.example.spoot_taxi_front.models.User;
 import com.example.spoot_taxi_front.network.api.ChatApi;
@@ -21,9 +21,14 @@ import com.example.spoot_taxi_front.network.dto.UserDto;
 import com.example.spoot_taxi_front.network.dto.UserJoinedChatRoomDto;
 import com.example.spoot_taxi_front.network.dto.responses.UserJoinedChatRoomResponse;
 import com.example.spoot_taxi_front.network.retrofit.ApiClient;
+import com.example.spoot_taxi_front.utils.NewMessageEvent;
 import com.example.spoot_taxi_front.utils.SessionManager;
 import com.example.spoot_taxi_front.adapters.ChatRoomAdapter;
 import com.example.spoot_taxi_front.utils.WebSocketViewModel;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -73,7 +78,37 @@ public class ChatFragment extends Fragment {
         View view = getView();
         loadChatRoomList(view);
     }
+    @Override
+    public void onStart() {
+        super.onStart();
+        // EventBus 등록
+        EventBus.getDefault().register(this);
+    }
+    @Override
+    public void onStop() {
+        super.onStop();
+        // EventBus 등록 해제
+        EventBus.getDefault().unregister(this);
+    }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onNewMessageArrived(NewMessageEvent event) {
 
+        ChatMessage chatMessage = event.getChatMessage();
+        Long chatRoomId = chatMessage.getChatRoomId();
+        String message = chatMessage.getMessage();
+        String sentTime = chatMessage.getSentTime();
+        Log.d("ChatFragment", "onNewMessageArrived: detect");
+        // UI 업데이트 코드들을 runOnUiThread를 이용해 메인 스레드에서 실행
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                chatRoomAdapter.newMessageArriveUpdate(chatRoomId, message, sentTime);
+            }
+        });
+
+
+
+    }
     public void loadChatRoomList(View view) {
         Log.d("loadChatRoomList실행","loadChatRoomList실행중");
         Call<UserJoinedChatRoomResponse> call = chatApi.getUserChatRooms(SessionManager.getInstance().getCurrentUser().getEmail());
