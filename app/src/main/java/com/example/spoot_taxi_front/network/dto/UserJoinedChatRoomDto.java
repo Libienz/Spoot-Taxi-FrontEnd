@@ -9,7 +9,11 @@ public class UserJoinedChatRoomDto {
     private String lastMessage;
     private LocalDateTime lastSentTime;
     private List<UserDto> participants;
+    private Integer nonReadMessageCount;
 
+    public Integer getNonReadMessageCount() {
+        return nonReadMessageCount;
+    }
     public Long getChatRoomId() {
         return chatRoomId;
     }

@@ -9,13 +9,15 @@ public class ChatRoom {
     private List<User> participants;
     private String lastMessage;
     private String lastSentTime;
+    private Integer nonReadMessageCount;
 
-    public ChatRoom(Long roomId, String roomName, List<User> participants, String lastMessage, String lastSentTime) {
+    public ChatRoom(Long roomId, String roomName, List<User> participants, String lastMessage, String lastSentTime, Integer nonReadMessageCount) {
         this.roomId = roomId;
         this.roomName = roomName;
         this.participants = participants;
         this.lastMessage = lastMessage;
         this.lastSentTime = lastSentTime;
+        this.nonReadMessageCount = nonReadMessageCount;
     }
 
     @Override
@@ -27,6 +29,11 @@ public class ChatRoom {
                 ", lastMessage='" + lastMessage + '\'' +
                 ", lastSentTime='" + lastSentTime + '\'' +
                 '}';
+    }
+
+
+    public Integer getNonReadMessageCount() {
+        return nonReadMessageCount;
     }
 
     // 현재 시간을 기준으로 정렬된 LocalDateTime 객체 반환

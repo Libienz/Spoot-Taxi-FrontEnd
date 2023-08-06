@@ -132,8 +132,8 @@ public class ChatFragment extends Fragment {
 
             Optional<LocalDateTime> optionalLastSentTime = Optional.ofNullable(userJoinedChatRoomDto.getLastSentTime());
             String lastSentTimeString = optionalLastSentTime.map(LocalDateTime::toString).orElse("");
-
-            ChatRoom chatRoom = new ChatRoom(chatRoomId,chatRoomName,userList,lastMessage,lastSentTimeString);
+            Integer nonReadMessageCount = userJoinedChatRoomDto.getNonReadMessageCount();
+            ChatRoom chatRoom = new ChatRoom(chatRoomId,chatRoomName,userList,lastMessage,lastSentTimeString,nonReadMessageCount);
             Log.d("채팅방 목록",chatRoom.toString());
             chatRoomApiResponseList.add(chatRoom);
             // 특정 채널 구독

@@ -88,6 +88,7 @@ public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.ChatVi
         private TextView roomNameTextView;
         private TextView lastMessageTextView;
         private TextView timeTextView;
+        private TextView nonReadCountTextView;
         private ImageView profileImageView1;
         private ImageView profileImageView2;
         private ImageView profileImageView3;
@@ -99,6 +100,7 @@ public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.ChatVi
             roomNameTextView = itemView.findViewById(R.id.roomNameTextView);
             lastMessageTextView = itemView.findViewById(R.id.lastMessageTextView);
             timeTextView = itemView.findViewById(R.id.timeTextView);
+            nonReadCountTextView = itemView.findViewById(R.id.nonReadCountTextView);
             profileImageView1 = itemView.findViewById(R.id.profileImageView1);
             profileImageView2 = itemView.findViewById(R.id.profileImageView2);
             profileImageView3 = itemView.findViewById(R.id.profileImageView3);
@@ -114,10 +116,15 @@ public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.ChatVi
         // 아이템 뷰에 데이터를 설정하는 메서드
         public void bind(ChatRoom chatRoom) {
             // 아이템 뷰에 데이터 설정
-
             roomNameTextView.setText(chatRoom.getRoomName());
             lastMessageTextView.setText(chatRoom.getLastMessage());
             timeTextView.setText(chatRoom.getLastSentTime());
+            if (chatRoom.getNonReadMessageCount() > 0) {
+                nonReadCountTextView.setVisibility(View.VISIBLE);
+                nonReadCountTextView.setText(chatRoom.getNonReadMessageCount()+"");
+            } else {
+                nonReadCountTextView.setVisibility(View.INVISIBLE);
+            }
             List<User> participants = chatRoom.getParticipants();
             for (int i = 0; i < participants.size(); i++) {
                 User cur = participants.get(i);
