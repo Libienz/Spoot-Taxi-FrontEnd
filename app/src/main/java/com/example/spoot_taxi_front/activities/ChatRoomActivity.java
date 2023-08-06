@@ -73,7 +73,6 @@ public class ChatRoomActivity extends AppCompatActivity {
         //웹소켓매니저 가져오기
         //webSocketViewModel = new ViewModelProvider(this).get(WebSocketViewModel.class);
         webSocketViewModel = WebSocketViewModel.getInstance();
-
         // 레이아웃 요소 초기화
         recyclerViewChat = findViewById(R.id.recyclerViewChat);
         editTextMessage = findViewById(R.id.editTextMessage);
@@ -186,6 +185,12 @@ public class ChatRoomActivity extends AppCompatActivity {
         return true;
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // 스크롤을 맨 아래로 이동
+        scrollToBottom();
+    }
     //메뉴 선택했을때 이벤트처리
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -301,5 +306,13 @@ public class ChatRoomActivity extends AppCompatActivity {
         return lastVisibleItemPosition > (itemCount - 10);
     }
 
+    private void scrollToBottom() {
+        recyclerViewChat.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                recyclerViewChat.smoothScrollToPosition(messageAdapter.getItemCount() - 1);
+            }
+        }, 200);
+    }
 }
 
