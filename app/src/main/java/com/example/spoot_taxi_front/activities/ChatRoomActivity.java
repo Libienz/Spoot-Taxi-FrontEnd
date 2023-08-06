@@ -257,7 +257,7 @@ public class ChatRoomActivity extends AppCompatActivity {
 
         LocalDateTime now = LocalDateTime.now();
         // DateTimeFormatter를 사용하여 LocalDateTime을 원하는 형식으로 포맷합니다.
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         String formattedDateTime = now.format(formatter);
 //        System.out.println("포맷된 날짜와 시간: " + formattedDateTime);
 
