@@ -21,8 +21,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiManager {
 
-    private static final String BASE_URL = "http://192.168.219.110:8080/";
-//    private static final String BASE_URL = "http://192.168.123.100:8080/";
+//    private static final String BASE_URL = "http://192.168.219.110:8080/";
+    private static final String BASE_URL = "http://192.168.123.100:8080/";
 
     private static ApiManager instance;
 
@@ -87,7 +87,7 @@ public class ApiManager {
                     .registerTypeAdapter(LocalDateTime.class, new JsonDeserializer<LocalDateTime>() {
                         @Override
                         public LocalDateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-                            return LocalDateTime.parse(json.getAsString(), DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm"));
+                            return LocalDateTime.parse(json.getAsString(), DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
                         }
                     })
                     .create();

@@ -105,7 +105,9 @@ public class WebSocketManager {
     public void sendMessage(JSONObject data) {
         stompClient.send("/pub/send", data.toString()).subscribe();
     }
-
+    public void sendExitMessage(JSONObject data) {
+        stompClient.send("/pub/exit", data.toString()).subscribe();
+    }
     public void disconnectWebSocket() {
         if (stompClient != null && stompClient.isConnected()) {
             stompClient.disconnect();
@@ -124,12 +126,13 @@ public class WebSocketManager {
             String senderId = jsonObject.optString("senderEmail");
             String sentTime = jsonObject.optString("sendTime");
             String senderProfileImageUrl = jsonObject.optString("senderProfileImageUrl");
+            boolean isSystem = jsonObject.optBoolean("isSystem");
             // chatRoom에 해당하는 JSON 객체를 가져옴
             JSONObject chatRoomObject = jsonObject.getJSONObject("chatRoom");
             // chatRoom의 id에 해당하는 값 가져오기
             Long chatRoomId = chatRoomObject.getLong("id");
             // Step 3: 추출한 값들을 사용하여 ChatMessage 객체 생성
-            ChatMessage chatMessage = new ChatMessage(messageId, senderName, message, senderId, sentTime, chatRoomId, senderProfileImageUrl);
+            ChatMessage chatMessage = new ChatMessage(messageId, senderName, message, senderId, sentTime, chatRoomId, senderProfileImageUrl,isSystem);
 
             return chatMessage;
         } catch (JSONException e) {

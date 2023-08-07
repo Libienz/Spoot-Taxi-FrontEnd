@@ -8,6 +8,7 @@ public class ChatMessage {
     private String sentTime;
     private Long chatRoomId;
     private String senderProfileImageUrl;
+    private Boolean isSystem;
     public Long getChatRoomId() {
         return chatRoomId;
     }
@@ -27,16 +28,7 @@ public class ChatMessage {
                 '}';
     }
 
-    public ChatMessage(Long messageId, String senderName, String message, String senderId, String sentTime, String senderProfileImageUrl) {
-        this.messageId = messageId;
-        this.senderName = senderName;
-        this.message = message;
-        this.senderId = senderId;
-        this.sentTime = sentTime;
-        this.senderProfileImageUrl = senderProfileImageUrl;
-    }
-
-    public ChatMessage(Long messageId, String senderName, String message, String senderId, String sentTime, Long chatRoomId, String senderProfileImageUrl) {
+    public ChatMessage(Long messageId, String senderName, String message, String senderId, String sentTime, Long chatRoomId, String senderProfileImageUrl, Boolean isSystem) {
         this.messageId = messageId;
         this.senderName = senderName;
         this.message = message;
@@ -44,6 +36,17 @@ public class ChatMessage {
         this.sentTime = sentTime;
         this.chatRoomId = chatRoomId;
         this.senderProfileImageUrl = senderProfileImageUrl;
+        this.isSystem = isSystem;
+    }
+
+    public ChatMessage(Long messageId, String senderName, String message, String senderId, String sentTime, String senderProfileImageUrl,Boolean isSystem) {
+        this.messageId = messageId;
+        this.senderName = senderName;
+        this.message = message;
+        this.senderId = senderId;
+        this.sentTime = sentTime;
+        this.senderProfileImageUrl = senderProfileImageUrl;
+        this.isSystem = isSystem;
     }
 
     public String getSenderProfileImageUrl() {
@@ -92,5 +95,13 @@ public class ChatMessage {
 
     public void setSentTime(String sentTime) {
         this.sentTime = sentTime;
+    }
+
+    public Boolean getSystem() {
+        return isSystem;
+    }
+
+    public void setSystem(Boolean system) {
+        isSystem = system;
     }
 }
