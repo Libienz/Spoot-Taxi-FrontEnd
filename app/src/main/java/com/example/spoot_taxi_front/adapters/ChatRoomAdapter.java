@@ -14,11 +14,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.spoot_taxi_front.models.ChatMessage;
 import com.example.spoot_taxi_front.models.ChatRoom;
 import com.example.spoot_taxi_front.R;
 import com.example.spoot_taxi_front.activities.ChatRoomActivity;
 import com.example.spoot_taxi_front.models.User;
+import com.example.spoot_taxi_front.utils.ChatRoomMetaInformationManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,7 +34,7 @@ public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.ChatVi
         this.chatRooms = new ArrayList<>();
     }
     // 채팅방 목록 데이터 갱신 겸 set
-    public void setChatRoomAdapter(List<ChatRoom> chatRooms) {
+    public void setChatRoomList(List<ChatRoom> chatRooms) {
         Collections.sort(chatRooms, new Comparator<ChatRoom>() {
             @Override
             public int compare(ChatRoom chatRoom1, ChatRoom chatRoom2) {
@@ -43,32 +43,7 @@ public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.ChatVi
             }
         });
         this.chatRooms = chatRooms;
-        notifyDataSetChanged(); //왜 갱신이 바로바로 안될까...특히 처음올때 화면과 채팅방에서 back해서 돌아올때 바로바로 왜 안바뀌는거지;;
-    }
-
-    public void newMessageArriveUpdate (Long chatRoomId, String message, String sentTime) {
-
-        for (int i = 0; i < chatRooms.size(); i++) {
-            ChatRoom chatRoom = chatRooms.get(i);
-            if (chatRoom.getRoomId() == chatRoomId) {
-                chatRoom.setNonReadMessageCount(chatRoom.getNonReadMessageCount() + 1);
-                chatRoom.setLastMessage(message);
-                chatRoom.setLastSentTime(sentTime);
-                notifyItemChanged(i);
-                break;
-            }
-        }
-    }
-
-    public void enterChatRoomUpdate(Long chatRoomId) {
-        for (int i = 0; i < chatRooms.size(); i++) {
-            ChatRoom chatRoom = chatRooms.get(i);
-            if (chatRoom.getRoomId() == chatRoomId) {
-                chatRoom.setNonReadMessageCount(0);
-                notifyItemChanged(i);
-                break;
-            }
-        }
+        notifyDataSetChanged();
     }
 
 
@@ -97,12 +72,14 @@ public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.ChatVi
                 Intent intent = new Intent(holder.itemView.getContext(), ChatRoomActivity.class);
                 intent.putExtra("chatRoomId", chatRoom.getRoomId());
 
+                ChatRoomMetaInformationManager miInstance = ChatRoomMetaInformationManager.getInstance();
+                miInstance.nonReadCountZeroUpdate(chatRoom.getRoomId());
                 // UI 업데이트를 메인 스레드에서 수행
                 Handler handler = new Handler(Looper.getMainLooper());
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        enterChatRoomUpdate(chatRoom.getRoomId());
+                        setChatRoomList(miInstance.getChatRooms());
                     }
                 });
                 holder.itemView.getContext().startActivity(intent);
