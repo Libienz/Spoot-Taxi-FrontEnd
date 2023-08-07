@@ -25,6 +25,7 @@ import com.example.spoot_taxi_front.network.api.ChatApi;
 import com.example.spoot_taxi_front.network.dto.MessageDto;
 import com.example.spoot_taxi_front.network.dto.responses.ChatRoomMessageResponse;
 import com.example.spoot_taxi_front.network.dto.responses.LeaveChatParticipantResponse;
+import com.example.spoot_taxi_front.network.dto.responses.UpdateChatParticipantResponse;
 import com.example.spoot_taxi_front.network.retrofit.ApiClient;
 import com.example.spoot_taxi_front.utils.SessionManager;
 import com.example.spoot_taxi_front.utils.WebSocketViewModel;
@@ -191,6 +192,28 @@ public class ChatRoomActivity extends AppCompatActivity {
         super.onResume();
         // 스크롤을 맨 아래로 이동
         scrollToBottom();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        chatApi = ApiClient.createChatApi();
+        Call<UpdateChatParticipantResponse> updateChatParticipantCall = chatApi.updateChatParticipant(chatParticipantId);
+        updateChatParticipantCall.enqueue(new Callback<UpdateChatParticipantResponse>() {
+            @Override
+            public void onResponse(Call<UpdateChatParticipantResponse> call, Response<UpdateChatParticipantResponse> response) {
+                if (response.code() != 200) {
+                    Log.d("exitTimeUpdateApi", "fail");
+                    Log.d("exitTimeUpdateApi", response.code()+"");
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UpdateChatParticipantResponse> call, Throwable t) {
+
+            }
+        });
     }
 
     //메뉴 선택했을때 이벤트처리
