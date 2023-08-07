@@ -2,6 +2,7 @@ package com.example.spoot_taxi_front.network.api;
 
 import com.example.spoot_taxi_front.network.dto.responses.ChatRoomMessageResponse;
 import com.example.spoot_taxi_front.network.dto.responses.LeaveChatParticipantResponse;
+import com.example.spoot_taxi_front.network.dto.responses.UpdateChatParticipantResponse;
 import com.example.spoot_taxi_front.network.dto.responses.UserJoinedChatRoomResponse;
 
 import retrofit2.Call;
@@ -19,4 +20,7 @@ public interface ChatApi {
 
     @POST("/api/chat/leave")
     Call<LeaveChatParticipantResponse> leaveChatParticipant(@Query("chatParticipantId")Long chatParticipantId);
+
+    @POST("/api/chat/update/room-exit-time")
+    Call<UpdateChatParticipantResponse> updateChatParticipant(@Query("chatParticipantId") Long chatParticipantId);
 }
