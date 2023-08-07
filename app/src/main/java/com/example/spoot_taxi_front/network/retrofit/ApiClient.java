@@ -25,8 +25,8 @@ public class ApiClient {
 
 
 
-    private static final String BASE_URL = "http://192.168.219.110:8080/";
-//    private static final String BASE_URL = "http://192.168.123.100:8080/";
+//    private static final String BASE_URL = "http://192.168.219.110:8080/";
+    private static final String BASE_URL = "http://192.168.123.100:8080/";
 
 
 
@@ -64,7 +64,7 @@ public class ApiClient {
                     .registerTypeAdapter(LocalDateTime.class, new JsonDeserializer<LocalDateTime>() {
                         @Override
                         public LocalDateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-                            return LocalDateTime.parse(json.getAsString(), DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm"));
+                            return LocalDateTime.parse(json.getAsString(), DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
                         }
                     })
                     .create();

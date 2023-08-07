@@ -31,7 +31,9 @@ public class WebSocketViewModel extends ViewModel {
     public void sendMessage(JSONObject data) {
         webSocketManager.sendMessage(data);
     }
-
+    public void sendExitMessage(JSONObject data) {
+        webSocketManager.sendExitMessage(data);
+    }
     public void disconnectWebSocket() {
         webSocketManager.disconnectWebSocket();
     }

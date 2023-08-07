@@ -7,6 +7,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -119,7 +121,31 @@ public class ChatRoomActivity extends AppCompatActivity {
                 recyclerViewChat.smoothScrollToPosition(messageAdapter.getItemCount() - 1);
             }
         });
-        // 전송 버튼 클릭 리스너 설정
+// 전송 버튼 초기 상태를 비활성화로 설정
+        buttonSend.setEnabled(false);
+
+// editText의 텍스트 변화를 감지하는 TextWatcher 설정
+        editTextMessage.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // editText의 텍스트가 비어있지 않은 경우에만 전송 버튼을 활성화
+                if (s.toString().isEmpty()) {
+                    buttonSend.setEnabled(false);
+                } else {
+                    buttonSend.setEnabled(true);
+                }
+            }
+        });
+
+// 전송 버튼 클릭 리스너 설정
         buttonSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -127,6 +153,8 @@ public class ChatRoomActivity extends AppCompatActivity {
                 String message = editTextMessage.getText().toString();
                 sendMessage(message);
                 editTextMessage.setText("");
+                // 전송 후 다시 버튼 비활성화
+                buttonSend.setEnabled(false);
             }
         });
 
@@ -200,6 +228,7 @@ public class ChatRoomActivity extends AppCompatActivity {
                 public void onResponse(Call<LeaveChatParticipantResponse> call, Response<LeaveChatParticipantResponse> response) {
                     Log.d("Leave API",response.body().getMessage());
                     webSocketViewModel.unsubscribeToChannel(chatRoomId);//채팅방 구독해제
+                    sendExitMessage();
                     onBackPressed();//나가고 뒤로가서(chatFragment로 가서) 채팅방을 나감
                 }
 
@@ -240,21 +269,21 @@ public class ChatRoomActivity extends AppCompatActivity {
             String senderName = messageDto.getSenderName();
             String message = messageDto.getMessage();
             String senderProfileImageUrl = messageDto.getSenderProfileImageUrl();
+            Boolean isSystem = messageDto.getSystem();
             //LocalDateTime sentTime = messageDto.getSentTime();
 
             Optional<LocalDateTime> optionalSentTime = Optional.ofNullable(messageDto.getSentTime());
             String sentTimeString = optionalSentTime.map(LocalDateTime::toString).orElse("");
 
-            ChatMessage chatMessage = new ChatMessage(messageId, senderName, message, senderId, sentTimeString, senderProfileImageUrl);
+            ChatMessage chatMessage = new ChatMessage(messageId, senderName, message, senderId, sentTimeString, senderProfileImageUrl,isSystem);
             chatMessageApiResponseList.add(chatMessage);
         }
         return chatMessageApiResponseList;
     }
 
+    //입력한 텍스트와 필요한데이터를 json으로말아서 웹소켓이용해서 메시지 전송
     private void sendMessage(String message) {
-        // 메시지 전송 처리 (서버와의 연동 필요)
-        // 서버로 메시지 전송
-
+        //현재 시간
         LocalDateTime now = LocalDateTime.now();
         // DateTimeFormatter를 사용하여 LocalDateTime을 원하는 형식으로 포맷합니다.
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
@@ -283,6 +312,31 @@ public class ChatRoomActivity extends AppCompatActivity {
             throw new RuntimeException(e);
         }
         webSocketViewModel.sendMessage(data);
+    }
+    //채팅방을 나가면서 서버에 메세지를 남김
+    private void sendExitMessage(){
+        LocalDateTime now = LocalDateTime.now();
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        String formattedDateTime = now.format(formatter);
+
+        LocalDateTime parsedDateTime = LocalDateTime.parse(formattedDateTime, formatter);
+
+        JSONObject data = new JSONObject();
+
+        // 내부 필드를 put하여 JSON 데이터를 생성합니다.
+        try {
+            data.put("senderName", SessionManager.getInstance().getCurrentUser().getNickname());
+            data.put("sendTime", parsedDateTime);
+
+            // 중첩된 JSONObject를 생성하여 넣을 수도 있습니다.
+            JSONObject chatRoom = new JSONObject();
+            chatRoom.put("id", chatRoomId);
+            data.put("chatRoom", chatRoom);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+        webSocketViewModel.sendExitMessage(data);
     }
 
     // 리사이클러뷰가 현재 바닥에 있는지 확인하는 메소드
