@@ -82,8 +82,11 @@ public class ChatFragment extends Fragment {
     public void onStart() {
         super.onStart();
         // EventBus 등록
+        View view = getView();
+        loadChatRoomList(view);
         EventBus.getDefault().register(this);
     }
+
     @Override
     public void onStop() {
         super.onStop();

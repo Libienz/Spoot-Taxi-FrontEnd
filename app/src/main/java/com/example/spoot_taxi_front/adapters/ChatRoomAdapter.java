@@ -1,6 +1,8 @@
 package com.example.spoot_taxi_front.adapters;
 
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,6 +60,18 @@ public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.ChatVi
         }
     }
 
+    public void enterChatRoomUpdate(Long chatRoomId) {
+        for (int i = 0; i < chatRooms.size(); i++) {
+            ChatRoom chatRoom = chatRooms.get(i);
+            if (chatRoom.getRoomId() == chatRoomId) {
+                chatRoom.setNonReadMessageCount(0);
+                notifyItemChanged(i);
+                break;
+            }
+        }
+    }
+
+
     // 아이템 뷰를 생성하고 뷰홀더를 반환하는 메서드
     @NonNull
     @Override
@@ -82,8 +96,16 @@ public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.ChatVi
                 // 채팅방으로 이동하면서 채팅방id도 같이 보낸다.
                 Intent intent = new Intent(holder.itemView.getContext(), ChatRoomActivity.class);
                 intent.putExtra("chatRoomId", chatRoom.getRoomId());
-                holder.itemView.getContext().startActivity(intent);
 
+                // UI 업데이트를 메인 스레드에서 수행
+                Handler handler = new Handler(Looper.getMainLooper());
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        enterChatRoomUpdate(chatRoom.getRoomId());
+                    }
+                });
+                holder.itemView.getContext().startActivity(intent);
             }
         });
     }

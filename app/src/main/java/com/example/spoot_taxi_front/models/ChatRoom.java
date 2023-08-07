@@ -1,9 +1,15 @@
 package com.example.spoot_taxi_front.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import androidx.annotation.NonNull;
+
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
-public class ChatRoom {
+public class ChatRoom implements Cloneable{
     private Long roomId;
     private String roomName;
     private List<User> participants;
@@ -18,6 +24,18 @@ public class ChatRoom {
         this.lastMessage = lastMessage;
         this.lastSentTime = lastSentTime;
         this.nonReadMessageCount = nonReadMessageCount;
+    }
+    // clone 메서드를 오버라이딩하여 객체를 복사함
+    @Override
+    public ChatRoom clone() {
+        try {
+            ChatRoom copiedChatRoom = (ChatRoom) super.clone();
+            // participants가 참조형이므로 새로운 리스트로 복사해야 함
+            copiedChatRoom.participants = new ArrayList<>(this.participants);
+            return copiedChatRoom;
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
