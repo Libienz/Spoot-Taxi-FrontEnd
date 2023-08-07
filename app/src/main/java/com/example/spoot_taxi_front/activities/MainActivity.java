@@ -145,11 +145,6 @@ public class MainActivity extends AppCompatActivity {
             if (chat != null){
                 Log.d("채팅네비","채팅네비");
                 fragmentTransaction.show(chat);
-                //다른 fragment 다녀올때마다 채팅방 갱신
-                View view = chat.getView();
-                ChatFragment chatFragment = (ChatFragment) chat;
-                chatFragment.loadChatRoomList(view);
-
             }
         } else if (tag.equals(TAG_SETTINGS)) {
             if (settings != null) {
