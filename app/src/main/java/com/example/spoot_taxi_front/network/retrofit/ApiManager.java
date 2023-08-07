@@ -87,7 +87,7 @@ public class ApiManager {
                     .registerTypeAdapter(LocalDateTime.class, new JsonDeserializer<LocalDateTime>() {
                         @Override
                         public LocalDateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-                            return LocalDateTime.parse(json.getAsString(), DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
+                            return LocalDateTime.parse(json.getAsString(), DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm"));
                         }
                     })
                     .create();
