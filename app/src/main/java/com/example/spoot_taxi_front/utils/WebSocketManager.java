@@ -42,6 +42,7 @@ public class WebSocketManager {
     private void handleMessage(ChatMessage chatMessage) {
         Log.d("핸들메세지","잘되나");
         receivedMessages.postValue(chatMessage); // LiveData의 값을 변경하여 옵저버들에게 알림
+        ChatRoomMetaInformationManager.getInstance().newMessageArriveUpdate(chatMessage);
         if (chatMessage.getSenderId().equals(SessionManager.getInstance().getCurrentUser().getEmail())) {
             return;
         }
