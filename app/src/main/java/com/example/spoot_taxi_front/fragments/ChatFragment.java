@@ -1,6 +1,9 @@
 package com.example.spoot_taxi_front.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -20,7 +23,7 @@ import com.example.spoot_taxi_front.network.dto.UserDto;
 import com.example.spoot_taxi_front.network.dto.UserJoinedChatRoomDto;
 import com.example.spoot_taxi_front.network.dto.responses.UserJoinedChatRoomResponse;
 import com.example.spoot_taxi_front.network.retrofit.ApiClient;
-import com.example.spoot_taxi_front.utils.ChatRoomMetaInformationManager;
+import com.example.spoot_taxi_front.utils.LocalChatRoomManager;
 import com.example.spoot_taxi_front.utils.NewMessageEvent;
 import com.example.spoot_taxi_front.utils.SessionManager;
 import com.example.spoot_taxi_front.adapters.ChatRoomAdapter;
@@ -46,11 +49,29 @@ public class ChatFragment extends Fragment {
     private WebSocketViewModel webSocketViewModel;
     private ChatApi chatApi;
     private List<ChatRoom> chatRoomList = new ArrayList<>();
-    private ChatRoomMetaInformationManager chatRoomMetaInformationManager;
+    private LocalChatRoomManager localChatRoomManager;
 
     public ChatFragment() {
         // Required empty public constructor
     }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        Log.d("chatFragment", "onHiddenChanged: ");
+        if (hidden == false) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Log.d("chatFragment", "ui update re");
+                    chatRoomAdapter.setChatRoomList(localChatRoomManager.getChatRooms());;
+                }
+            });
+
+        }
+    }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -72,13 +93,20 @@ public class ChatFragment extends Fragment {
         chatApi = ApiClient.createChatApi();
         loadChatRoomListToView(view);
 
-        chatRoomMetaInformationManager = chatRoomMetaInformationManager.getInstance();
+        localChatRoomManager = localChatRoomManager.getInstance();
         return view;
     }
 
     public void onResume() {
         super.onResume();
-        chatRoomAdapter.setChatRoomList(chatRoomMetaInformationManager.getChatRooms());
+        Log.d("chatFragment", "onResume: ");
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Log.d("chatFragment", "ui update onResume");
+                chatRoomAdapter.setChatRoomList(localChatRoomManager.getChatRooms());;
+            }
+        });
         Log.d("ChatFragment","onResume실행");
         View view = getView();
     }
@@ -92,9 +120,11 @@ public class ChatFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-        // EventBus 등록 해제
         EventBus.getDefault().unregister(this);
     }
+
+
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNewMessageArrived(NewMessageEvent event) {
 
@@ -102,7 +132,8 @@ public class ChatFragment extends Fragment {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                chatRoomAdapter.setChatRoomList(chatRoomMetaInformationManager.getChatRooms());
+                Log.d("ChatFragment", "run: " + localChatRoomManager.getChatRooms().size());
+                chatRoomAdapter.setChatRoomList(localChatRoomManager.getChatRooms());
             }
         });
 
@@ -116,7 +147,7 @@ public class ChatFragment extends Fragment {
             @Override
             public void onResponse(Call<UserJoinedChatRoomResponse> call, Response<UserJoinedChatRoomResponse> response) {
                 chatRoomList= extractChatRoomListFromResponse(response.code(), response.body());
-                ChatRoomMetaInformationManager.getInstance().setChatRooms(chatRoomList);
+                LocalChatRoomManager.getInstance().setChatRooms(chatRoomList);
                 chatRoomAdapter.setChatRoomList(chatRoomList);// 유저가 참여중인 채팅방 리스트 api로 받은값 set
             }
 

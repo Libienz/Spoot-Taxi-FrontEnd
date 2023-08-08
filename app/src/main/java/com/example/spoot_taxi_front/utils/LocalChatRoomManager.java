@@ -6,19 +6,19 @@ import com.example.spoot_taxi_front.models.ChatRoom;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChatRoomMetaInformationManager {
+public class LocalChatRoomManager {
 
-    private static ChatRoomMetaInformationManager instance;
+    private static LocalChatRoomManager instance;
 
     private List<ChatRoom> chatRooms = new ArrayList<>();
 
-    private ChatRoomMetaInformationManager() {}
+    private LocalChatRoomManager() {}
 
-    public static ChatRoomMetaInformationManager getInstance() {
+    public static LocalChatRoomManager getInstance() {
         if (instance == null) {
-            synchronized (ChatRoomMetaInformationManager.class) {
+            synchronized (LocalChatRoomManager.class) {
                 if (instance == null) {
-                    instance = new ChatRoomMetaInformationManager();
+                    instance = new LocalChatRoomManager();
                 }
             }
         }
@@ -60,5 +60,16 @@ public class ChatRoomMetaInformationManager {
             }
         }
     }
+
+    public void leaveChatRoom(Long chatRoomId) {
+        for (int i = 0; i < chatRooms.size(); i++) {
+            ChatRoom chatRoom = chatRooms.get(i);
+            if (chatRoom.getRoomId() == chatRoomId) {
+                chatRooms.remove(i);
+                break;
+            }
+        }
+    }
+
 
 }

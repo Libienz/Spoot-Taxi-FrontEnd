@@ -18,7 +18,7 @@ import com.example.spoot_taxi_front.models.ChatRoom;
 import com.example.spoot_taxi_front.R;
 import com.example.spoot_taxi_front.activities.ChatRoomActivity;
 import com.example.spoot_taxi_front.models.User;
-import com.example.spoot_taxi_front.utils.ChatRoomMetaInformationManager;
+import com.example.spoot_taxi_front.utils.LocalChatRoomManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -72,7 +72,7 @@ public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.ChatVi
                 Intent intent = new Intent(holder.itemView.getContext(), ChatRoomActivity.class);
                 intent.putExtra("chatRoomId", chatRoom.getRoomId());
 
-                ChatRoomMetaInformationManager miInstance = ChatRoomMetaInformationManager.getInstance();
+                LocalChatRoomManager miInstance = LocalChatRoomManager.getInstance();
                 miInstance.nonReadCountZeroUpdate(chatRoom.getRoomId());
                 // UI 업데이트를 메인 스레드에서 수행
                 Handler handler = new Handler(Looper.getMainLooper());

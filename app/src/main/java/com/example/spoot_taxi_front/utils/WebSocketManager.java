@@ -42,7 +42,7 @@ public class WebSocketManager {
     private void handleMessage(ChatMessage chatMessage) {
         Log.d("핸들메세지","잘되나");
         receivedMessages.postValue(chatMessage); // LiveData의 값을 변경하여 옵저버들에게 알림
-        ChatRoomMetaInformationManager.getInstance().newMessageArriveUpdate(chatMessage);
+        LocalChatRoomManager.getInstance().newMessageArriveUpdate(chatMessage);
         if (chatMessage.getSenderId().equals(SessionManager.getInstance().getCurrentUser().getEmail())) {
             return;
         }
@@ -56,7 +56,8 @@ public class WebSocketManager {
     //원래는 ws://localhost:8080/ws/websocket 가 맞지만 안드로이드 에뮬레이터에서는 10.0.2.2 여야 하나봄. 실제폰으로는 아직 검증 안됨.
     public StompClient connectWebSocket() {
         if (stompClient == null) {
-            stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, "ws://10.0.2.2:8080/ws/websocket");
+//            stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, "ws://10.0.2.2:8080/ws/websocket");
+            stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, "ws://192.168.219.110:8080/ws/websocket");
             stompClient.connect();
         }
 
@@ -105,7 +106,9 @@ public class WebSocketManager {
     public void sendMessage(JSONObject data) {
         stompClient.send("/pub/send", data.toString()).subscribe();
     }
-
+    public void sendExitMessage(JSONObject data) {
+        stompClient.send("/pub/exit", data.toString()).subscribe();
+    }
     public void disconnectWebSocket() {
         if (stompClient != null && stompClient.isConnected()) {
             stompClient.disconnect();
@@ -124,12 +127,13 @@ public class WebSocketManager {
             String senderId = jsonObject.optString("senderEmail");
             String sentTime = jsonObject.optString("sendTime");
             String senderProfileImageUrl = jsonObject.optString("senderProfileImageUrl");
+            boolean isSystem = jsonObject.optBoolean("isSystem");
             // chatRoom에 해당하는 JSON 객체를 가져옴
             JSONObject chatRoomObject = jsonObject.getJSONObject("chatRoom");
             // chatRoom의 id에 해당하는 값 가져오기
             Long chatRoomId = chatRoomObject.getLong("id");
             // Step 3: 추출한 값들을 사용하여 ChatMessage 객체 생성
-            ChatMessage chatMessage = new ChatMessage(messageId, senderName, message, senderId, sentTime, chatRoomId, senderProfileImageUrl);
+            ChatMessage chatMessage = new ChatMessage(messageId, senderName, message, senderId, sentTime, chatRoomId, senderProfileImageUrl,isSystem);
 
             return chatMessage;
         } catch (JSONException e) {
