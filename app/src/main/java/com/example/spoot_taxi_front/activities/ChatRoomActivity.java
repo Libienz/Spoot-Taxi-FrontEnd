@@ -27,7 +27,9 @@ import com.example.spoot_taxi_front.network.api.ChatApi;
 import com.example.spoot_taxi_front.network.dto.MessageDto;
 import com.example.spoot_taxi_front.network.dto.responses.ChatRoomMessageResponse;
 import com.example.spoot_taxi_front.network.dto.responses.LeaveChatParticipantResponse;
+import com.example.spoot_taxi_front.network.dto.responses.UpdateChatParticipantResponse;
 import com.example.spoot_taxi_front.network.retrofit.ApiClient;
+import com.example.spoot_taxi_front.utils.LocalChatRoomManager;
 import com.example.spoot_taxi_front.utils.SessionManager;
 import com.example.spoot_taxi_front.utils.WebSocketViewModel;
 
@@ -75,7 +77,6 @@ public class ChatRoomActivity extends AppCompatActivity {
         //웹소켓매니저 가져오기
         //webSocketViewModel = new ViewModelProvider(this).get(WebSocketViewModel.class);
         webSocketViewModel = WebSocketViewModel.getInstance();
-
         // 레이아웃 요소 초기화
         recyclerViewChat = findViewById(R.id.recyclerViewChat);
         editTextMessage = findViewById(R.id.editTextMessage);
@@ -121,10 +122,10 @@ public class ChatRoomActivity extends AppCompatActivity {
                 recyclerViewChat.smoothScrollToPosition(messageAdapter.getItemCount() - 1);
             }
         });
-// 전송 버튼 초기 상태를 비활성화로 설정
+        // 전송 버튼 초기 상태를 비활성화로 설정
         buttonSend.setEnabled(false);
 
-// editText의 텍스트 변화를 감지하는 TextWatcher 설정
+        // editText의 텍스트 변화를 감지하는 TextWatcher 설정
         editTextMessage.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -145,7 +146,7 @@ public class ChatRoomActivity extends AppCompatActivity {
             }
         });
 
-// 전송 버튼 클릭 리스너 설정
+        // 전송 버튼 클릭 리스너 설정
         buttonSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -214,6 +215,35 @@ public class ChatRoomActivity extends AppCompatActivity {
         return true;
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // 스크롤을 맨 아래로 이동
+        scrollToBottom();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        chatApi = ApiClient.createChatApi();
+        Call<UpdateChatParticipantResponse> updateChatParticipantCall = chatApi.updateChatParticipant(chatParticipantId);
+        updateChatParticipantCall.enqueue(new Callback<UpdateChatParticipantResponse>() {
+            @Override
+            public void onResponse(Call<UpdateChatParticipantResponse> call, Response<UpdateChatParticipantResponse> response) {
+                if (response.code() != 200) {
+                    Log.d("exitTimeUpdateApi", "fail");
+                    Log.d("exitTimeUpdateApi", response.code()+"");
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UpdateChatParticipantResponse> call, Throwable t) {
+
+            }
+        });
+    }
+
     //메뉴 선택했을때 이벤트처리
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -229,6 +259,7 @@ public class ChatRoomActivity extends AppCompatActivity {
                     Log.d("Leave API",response.body().getMessage());
                     webSocketViewModel.unsubscribeToChannel(chatRoomId);//채팅방 구독해제
                     sendExitMessage();
+                    LocalChatRoomManager.getInstance().leaveChatRoom(chatRoomId);
                     onBackPressed();//나가고 뒤로가서(chatFragment로 가서) 채팅방을 나감
                 }
 
@@ -283,6 +314,7 @@ public class ChatRoomActivity extends AppCompatActivity {
 
     //입력한 텍스트와 필요한데이터를 json으로말아서 웹소켓이용해서 메시지 전송
     private void sendMessage(String message) {
+        Log.d("SendMessage", "called");
         //현재 시간
         LocalDateTime now = LocalDateTime.now();
         // DateTimeFormatter를 사용하여 LocalDateTime을 원하는 형식으로 포맷합니다.
@@ -355,5 +387,15 @@ public class ChatRoomActivity extends AppCompatActivity {
         return lastVisibleItemPosition > (itemCount - 10);
     }
 
+    private void scrollToBottom() {
+        if (messageAdapter.getItemCount() > 0) {
+            recyclerViewChat.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    recyclerViewChat.smoothScrollToPosition(messageAdapter.getItemCount() - 1);
+                }
+            }, 200);
+        }
+    }
 }
 
