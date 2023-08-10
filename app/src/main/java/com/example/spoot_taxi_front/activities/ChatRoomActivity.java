@@ -24,7 +24,7 @@ import com.example.spoot_taxi_front.network.api.ChatApi;
 import com.example.spoot_taxi_front.network.dto.MessageDto;
 import com.example.spoot_taxi_front.network.dto.responses.ChatRoomMessageResponse;
 import com.example.spoot_taxi_front.network.dto.responses.LeaveChatParticipantResponse;
-import com.example.spoot_taxi_front.network.retrofit.ApiClient;
+import com.example.spoot_taxi_front.network.retrofit.ApiManager;
 import com.example.spoot_taxi_front.utils.SessionManager;
 import com.example.spoot_taxi_front.utils.WebSocketViewModel;
 
@@ -94,7 +94,7 @@ public class ChatRoomActivity extends AppCompatActivity {
         });
 
         // 채팅 데이터 가져오기 (서버와의 연동 필요)
-        chatApi = ApiClient.createChatApi();
+        chatApi = ApiManager.createChatApi();
         Call<ChatRoomMessageResponse> chatRoomMessages = chatApi.getChatRoomMessages(SessionManager.getInstance().getCurrentUser().getEmail(), chatRoomId);
         chatRoomMessages.enqueue(new Callback<ChatRoomMessageResponse>() {
             @Override

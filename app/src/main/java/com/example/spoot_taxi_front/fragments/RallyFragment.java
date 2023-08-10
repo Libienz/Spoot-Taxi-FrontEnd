@@ -19,7 +19,6 @@ import com.example.spoot_taxi_front.R;
 import com.example.spoot_taxi_front.network.api.RallyApi;
 import com.example.spoot_taxi_front.network.dto.RallyInformationDto;
 import com.example.spoot_taxi_front.network.dto.responses.RallyResponse;
-import com.example.spoot_taxi_front.network.retrofit.ApiClient;
 import com.example.spoot_taxi_front.network.retrofit.ApiManager;
 import com.example.spoot_taxi_front.utils.SessionManager;
 

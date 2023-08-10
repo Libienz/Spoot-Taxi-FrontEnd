@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,7 +19,7 @@ import com.example.spoot_taxi_front.network.api.ChatApi;
 import com.example.spoot_taxi_front.network.dto.UserDto;
 import com.example.spoot_taxi_front.network.dto.UserJoinedChatRoomDto;
 import com.example.spoot_taxi_front.network.dto.responses.UserJoinedChatRoomResponse;
-import com.example.spoot_taxi_front.network.retrofit.ApiClient;
+import com.example.spoot_taxi_front.network.retrofit.ApiManager;
 import com.example.spoot_taxi_front.utils.SessionManager;
 import com.example.spoot_taxi_front.adapters.ChatRoomAdapter;
 import com.example.spoot_taxi_front.utils.WebSocketViewModel;
@@ -61,7 +60,7 @@ public class ChatFragment extends Fragment {
         // WebSocket 연결
         webSocketViewModel.connectWebSocket();
 
-        chatApi=ApiClient.createChatApi();
+        chatApi= ApiManager.createChatApi();
         loadChatRoomList(view);
 
         return view;
