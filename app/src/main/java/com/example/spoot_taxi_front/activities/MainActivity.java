@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
                         SessionManager.getInstance().setDeviceToken(token);
                         // Log and toast
                         Log.d("FCM", token);
-                        Toast.makeText(MainActivity.this, token, Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(MainActivity.this, token, Toast.LENGTH_SHORT).show();
                     }
                 });
 

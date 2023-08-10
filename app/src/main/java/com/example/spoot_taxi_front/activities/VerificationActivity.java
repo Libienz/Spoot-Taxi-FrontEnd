@@ -51,7 +51,7 @@ public class VerificationActivity extends AppCompatActivity {
             public void onClick(View view) {
                 binding.verifyTv.setText("");
                 binding.verifyTimerTv.setText("");
-
+                Toast.makeText(getApplicationContext(), "가입여부 체크 및 전송 중..", Toast.LENGTH_SHORT).show();
                 boolean isEmailFilled = ic.checkEmailFilled(binding.emailEdt, binding.emailTv);
                 boolean isCorrectEmailForm = ic.checkEmailFormat(binding.emailEdt, binding.emailTv);
 
@@ -63,12 +63,13 @@ public class VerificationActivity extends AppCompatActivity {
                 String email = binding.emailEdt.getText().toString();
 
 
-                Toast.makeText(getApplicationContext(), "인증메일 발송 중..", Toast.LENGTH_SHORT).show();
+
 
                 Call<EmailVerificationResponse> sendVerificationEmailCall = authApi.sendVerificationEmailForJoin(email, false);
                 sendVerificationEmailCall.enqueue(new Callback<EmailVerificationResponse>() {
                     @Override
                     public void onResponse(Call<EmailVerificationResponse> call, Response<EmailVerificationResponse> response) {
+                        Toast.makeText(getApplicationContext(), "인증메일 발송 완료!", Toast.LENGTH_SHORT).show();
                         handleSendVerificationEmailResponse(response, email);
 
                     }

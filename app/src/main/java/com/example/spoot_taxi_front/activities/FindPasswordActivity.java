@@ -71,21 +71,22 @@ public class FindPasswordActivity extends AppCompatActivity {
                 String email = binding.emailEdt.getText().toString();
                 Call<EmailVerificationResponse> verificationCall = authApi.sendVerificationEmailForJoin(email, true);
 
+                Toast.makeText(getApplicationContext(), "가입여부 체크 및 전송 중..", Toast.LENGTH_SHORT).show();
                 //이메일 인증 요청
                 verificationCall.enqueue(new Callback<EmailVerificationResponse>() {
                     @Override
                     public void onResponse(Call<EmailVerificationResponse> call, Response<EmailVerificationResponse> response) {
+                        if (response.code() == 409) {
+                            binding.emailTv.setText("가입되어 있지 않은 이메일입니다");
+                            return;
+                        }
                         Boolean sended = response.body().getSuccess();
                         Integer verificationCode = response.body().getVerificationCode();
                         if (sended != null && sended) {
                             // 가입된 이메일임 -> 인증 코드로 진행
-//                            Toast.makeText(getApplicationContext(), "인증메일 발송 완료!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "인증메일 발송 완료!", Toast.LENGTH_SHORT).show();
                             processEmailverification(email, verificationCode);
 
-                        } else {
-                            // 가입되어 있지 않은 이메일임을 알리고 종료
-                            binding.emailTv.setText("가입되어 있지 않은 이메일입니다");
-                            return;
                         }
                     }
 
