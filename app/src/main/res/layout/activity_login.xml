@@ -12,24 +12,23 @@
         android:layout_width="200dp"
         android:layout_height="120dp"
         android:layout_marginTop="10dp"
-        android:src="@drawable/ic_taxi_blue" />
+        android:src="@drawable/img_logo" />
 
-    <TextView
+    <ImageView
+        android:layout_width="340dp"
+        android:layout_height="80dp"
+        android:layout_margin="10dp"
+        android:layout_marginTop="10dp"
         android:fontFamily="@font/bmjua_ttf"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="한번의 클릭으로 등교 택시팟 구하기!"
-        android:textColor="#000000"
-        android:textSize="25sp"
-        android:layout_marginTop="10dp" />
-    <TextView
+        android:src="@drawable/img_slogan" />
+<!--    <TextView
         android:fontFamily="@font/bmjua_ttf"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Spoot Taxi"
         android:textColor="#000000"
         android:textSize="34sp"
-        android:layout_marginTop="10dp" />
+        android:layout_marginTop="10dp" />-->
 
     <EditText
         android:id="@+id/enter_ID"

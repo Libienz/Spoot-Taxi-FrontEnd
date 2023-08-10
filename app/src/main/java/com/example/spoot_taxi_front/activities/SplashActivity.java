@@ -1,34 +1,63 @@
 package com.example.spoot_taxi_front.activities;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.os.Bundle;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
-
+import android.widget.ImageView;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.load.resource.gif.GifDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.example.spoot_taxi_front.R;
-//import android.support.v7.app.AppCompatActivity;
 
 public class SplashActivity extends AppCompatActivity {
 
-    private static final long SPLASH_DELAY = 2000; // 2초간 Splash 화면을 표시하기 위한 딜레이 값
+    private static final long SPLASH_DELAY = 3000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        // 일정 시간이 지난 후 메인 액티비티로 전환하기 위해 핸들러를 사용합니다.
+        ImageView gifImageView = findViewById(R.id.gifImageView);
+
+        RequestOptions options = new RequestOptions()
+                .fitCenter();
+
+        Glide.with(this)
+                .asGif()
+                .load(R.raw.splash)
+                .apply(options)
+                .listener(new GifListener()) // GifDrawable 리스너 설정
+                .into(gifImageView);
+
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                // 메인 액티비티로 전환하기 위한 인텐트를 생성합니다.
                 Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
                 startActivity(intent);
-
-                // 현재 액티비티를 종료합니다.
                 finish();
             }
         }, SPLASH_DELAY);
+    }
+
+    // GifDrawable 리스너 클래스
+    private class GifListener implements RequestListener<GifDrawable> {
+        @Override
+        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<GifDrawable> target, boolean isFirstResource) {
+            return false;
+        }
+
+        @Override
+        public boolean onResourceReady(GifDrawable resource, Object model, Target<GifDrawable> target, DataSource dataSource, boolean isFirstResource) {
+            // GIF 이미지 한 번만 재생 후 멈춤
+            resource.setLoopCount(1);
+            return false;
+        }
     }
 }
