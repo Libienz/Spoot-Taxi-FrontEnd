@@ -60,7 +60,7 @@ public class ChatFragment extends Fragment {
         // WebSocket 연결
         webSocketViewModel.connectWebSocket();
 
-        chatApi= ApiManager.createChatApi();
+        chatApi= ApiManager.createChatApi(SessionManager.getInstance().getJwtToken());
         loadChatRoomList(view);
 
         return view;

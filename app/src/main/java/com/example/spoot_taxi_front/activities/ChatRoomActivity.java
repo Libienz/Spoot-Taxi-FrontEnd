@@ -94,7 +94,7 @@ public class ChatRoomActivity extends AppCompatActivity {
         });
 
         // 채팅 데이터 가져오기 (서버와의 연동 필요)
-        chatApi = ApiManager.createChatApi();
+        chatApi = ApiManager.createChatApi(SessionManager.getInstance().getJwtToken());
         Call<ChatRoomMessageResponse> chatRoomMessages = chatApi.getChatRoomMessages(SessionManager.getInstance().getCurrentUser().getEmail(), chatRoomId);
         chatRoomMessages.enqueue(new Callback<ChatRoomMessageResponse>() {
             @Override

@@ -81,7 +81,10 @@ public class ApiManager {
     }
 
 
-    public static ChatApi createChatApi() {
+    public static ChatApi createChatApi(String jwtToken) {
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(new AuthInterceptor(jwtToken));
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(gsonConverterFactory())
