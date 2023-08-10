@@ -1,21 +1,41 @@
 package com.example.spoot_taxi_front.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import androidx.annotation.NonNull;
+
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
-public class ChatRoom {
+public class ChatRoom implements Cloneable{
     private Long roomId;
     private String roomName;
     private List<User> participants;
     private String lastMessage;
     private String lastSentTime;
+    private Integer nonReadMessageCount;
 
-    public ChatRoom(Long roomId, String roomName, List<User> participants, String lastMessage, String lastSentTime) {
+    public ChatRoom(Long roomId, String roomName, List<User> participants, String lastMessage, String lastSentTime, Integer nonReadMessageCount) {
         this.roomId = roomId;
         this.roomName = roomName;
         this.participants = participants;
         this.lastMessage = lastMessage;
         this.lastSentTime = lastSentTime;
+        this.nonReadMessageCount = nonReadMessageCount;
+    }
+    // clone 메서드를 오버라이딩하여 객체를 복사함
+    @Override
+    public ChatRoom clone() {
+        try {
+            ChatRoom copiedChatRoom = (ChatRoom) super.clone();
+            // participants가 참조형이므로 새로운 리스트로 복사해야 함
+            copiedChatRoom.participants = new ArrayList<>(this.participants);
+            return copiedChatRoom;
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -27,6 +47,14 @@ public class ChatRoom {
                 ", lastMessage='" + lastMessage + '\'' +
                 ", lastSentTime='" + lastSentTime + '\'' +
                 '}';
+    }
+
+    public void setNonReadMessageCount(Integer nonReadMessageCount) {
+        this.nonReadMessageCount = nonReadMessageCount;
+    }
+
+    public Integer getNonReadMessageCount() {
+        return nonReadMessageCount;
     }
 
     // 현재 시간을 기준으로 정렬된 LocalDateTime 객체 반환

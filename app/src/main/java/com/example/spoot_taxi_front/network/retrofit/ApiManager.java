@@ -92,7 +92,6 @@ public class ApiManager {
         return retrofit.create(ChatApi.class);
     }
 
-
     // String을 LocalDateTime 으로 변형하는걸 등록한다.
     public static GsonConverterFactory gsonConverterFactory(){
         Gson gson = null;

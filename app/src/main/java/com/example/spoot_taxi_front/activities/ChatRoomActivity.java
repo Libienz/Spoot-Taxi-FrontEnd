@@ -7,6 +7,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 import androidx.appcompat.widget.Toolbar;
 
@@ -24,7 +27,9 @@ import com.example.spoot_taxi_front.network.api.ChatApi;
 import com.example.spoot_taxi_front.network.dto.MessageDto;
 import com.example.spoot_taxi_front.network.dto.responses.ChatRoomMessageResponse;
 import com.example.spoot_taxi_front.network.dto.responses.LeaveChatParticipantResponse;
+import com.example.spoot_taxi_front.network.dto.responses.UpdateChatParticipantResponse;
 import com.example.spoot_taxi_front.network.retrofit.ApiManager;
+import com.example.spoot_taxi_front.utils.LocalChatRoomManager;
 import com.example.spoot_taxi_front.utils.SessionManager;
 import com.example.spoot_taxi_front.utils.WebSocketViewModel;
 
@@ -45,6 +50,8 @@ public class ChatRoomActivity extends AppCompatActivity {
     private RecyclerView recyclerViewChat;
     private EditText editTextMessage;
     private Button buttonSend;
+    private Button newMsgButton;
+    private ImageButton buttonScrollToBottom;
     private MessageAdapter messageAdapter;
     private WebSocketViewModel webSocketViewModel;
     private Long chatRoomId;
@@ -70,17 +77,74 @@ public class ChatRoomActivity extends AppCompatActivity {
         //웹소켓매니저 가져오기
         //webSocketViewModel = new ViewModelProvider(this).get(WebSocketViewModel.class);
         webSocketViewModel = WebSocketViewModel.getInstance();
-
         // 레이아웃 요소 초기화
         recyclerViewChat = findViewById(R.id.recyclerViewChat);
         editTextMessage = findViewById(R.id.editTextMessage);
         buttonSend = findViewById(R.id.buttonSend);
-
+        buttonScrollToBottom = findViewById(R.id.buttonScrollToBottom);
+        newMsgButton = findViewById(R.id.newMsgButton);
         // RecyclerView 설정
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setStackFromEnd(true);
         recyclerViewChat.setLayoutManager(layoutManager);
         messageAdapter = new MessageAdapter();
         recyclerViewChat.setAdapter(messageAdapter);
+        //시작할 경우에 스크롤 버튼 꺼놓기
+        buttonScrollToBottom.setVisibility(View.GONE);
+        newMsgButton.setVisibility(View.GONE);
+        recyclerViewChat.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                if (!recyclerView.canScrollVertically(1) || recyclerView.getAdapter().getItemCount() == 0/*리사이클러 뷰에 아이템이 하나도 없는 경우*/) {
+
+                    // 스크롤이 더 이상 안되는 경우 (맨 아래에 도달한 경우)
+                    buttonScrollToBottom.setVisibility(View.GONE);
+                    newMsgButton.setVisibility(View.GONE);
+                } else {
+                    // 그 외에는 버튼을 보이도록 설정
+                    buttonScrollToBottom.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        //스크롤 버튼
+        buttonScrollToBottom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                recyclerViewChat.smoothScrollToPosition(messageAdapter.getItemCount() - 1);
+            }
+        });
+
+        //newMsg알림 버튼
+        newMsgButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                recyclerViewChat.smoothScrollToPosition(messageAdapter.getItemCount() - 1);
+            }
+        });
+        // 전송 버튼 초기 상태를 비활성화로 설정
+        buttonSend.setEnabled(false);
+
+        // editText의 텍스트 변화를 감지하는 TextWatcher 설정
+        editTextMessage.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // editText의 텍스트가 비어있지 않은 경우에만 전송 버튼을 활성화
+                if (s.toString().isEmpty()) {
+                    buttonSend.setEnabled(false);
+                } else {
+                    buttonSend.setEnabled(true);
+                }
+            }
+        });
 
         // 전송 버튼 클릭 리스너 설정
         buttonSend.setOnClickListener(new View.OnClickListener() {
@@ -90,6 +154,8 @@ public class ChatRoomActivity extends AppCompatActivity {
                 String message = editTextMessage.getText().toString();
                 sendMessage(message);
                 editTextMessage.setText("");
+                // 전송 후 다시 버튼 비활성화
+                buttonSend.setEnabled(false);
             }
         });
 
@@ -122,6 +188,15 @@ public class ChatRoomActivity extends AppCompatActivity {
                     //현재 챗룸꺼인지 아이디로 확인
                     if(chatMessage.getChatRoomId()==chatRoomId) {
                         messageAdapter.addChatMessages(chatMessage);
+                        if (chatMessage.getSenderId().equals(SessionManager.getInstance().getCurrentUser().getEmail())) {
+                            recyclerViewChat.smoothScrollToPosition(messageAdapter.getItemCount() - 1);
+                        } else {
+                            if (isRecyclerViewAtBottom()) {
+                                recyclerViewChat.smoothScrollToPosition(messageAdapter.getItemCount() - 1);
+                            } else {
+                                newMsgButton.setVisibility(View.VISIBLE);
+                            }
+                        }
                     }
                 } else {
                     // LiveData가 아직 메시지를 받지 않았거나 null 값을 가진 경우 처리하는 로직
@@ -140,6 +215,35 @@ public class ChatRoomActivity extends AppCompatActivity {
         return true;
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // 스크롤을 맨 아래로 이동
+        scrollToBottom();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        chatApi = ApiManager.createChatApi(SessionManager.getInstance().getJwtToken());
+        Call<UpdateChatParticipantResponse> updateChatParticipantCall = chatApi.updateChatParticipant(chatParticipantId);
+        updateChatParticipantCall.enqueue(new Callback<UpdateChatParticipantResponse>() {
+            @Override
+            public void onResponse(Call<UpdateChatParticipantResponse> call, Response<UpdateChatParticipantResponse> response) {
+                if (response.code() != 200) {
+                    Log.d("exitTimeUpdateApi", "fail");
+                    Log.d("exitTimeUpdateApi", response.code()+"");
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UpdateChatParticipantResponse> call, Throwable t) {
+
+            }
+        });
+    }
+
     //메뉴 선택했을때 이벤트처리
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -154,6 +258,8 @@ public class ChatRoomActivity extends AppCompatActivity {
                 public void onResponse(Call<LeaveChatParticipantResponse> call, Response<LeaveChatParticipantResponse> response) {
                     Log.d("Leave API",response.body().getMessage());
                     webSocketViewModel.unsubscribeToChannel(chatRoomId);//채팅방 구독해제
+                    sendExitMessage();
+                    LocalChatRoomManager.getInstance().leaveChatRoom(chatRoomId);
                     onBackPressed();//나가고 뒤로가서(chatFragment로 가서) 채팅방을 나감
                 }
 
@@ -193,24 +299,26 @@ public class ChatRoomActivity extends AppCompatActivity {
             String senderId = messageDto.getSenderId();
             String senderName = messageDto.getSenderName();
             String message = messageDto.getMessage();
-
+            String senderProfileImageUrl = messageDto.getSenderProfileImageUrl();
+            Boolean isSystem = messageDto.getSystem();
             //LocalDateTime sentTime = messageDto.getSentTime();
 
             Optional<LocalDateTime> optionalSentTime = Optional.ofNullable(messageDto.getSentTime());
             String sentTimeString = optionalSentTime.map(LocalDateTime::toString).orElse("");
-            ChatMessage chatMessage = new ChatMessage(messageId, senderName, senderId, message, sentTimeString);
+
+            ChatMessage chatMessage = new ChatMessage(messageId, senderName, message, senderId, sentTimeString, senderProfileImageUrl,isSystem);
             chatMessageApiResponseList.add(chatMessage);
         }
         return chatMessageApiResponseList;
     }
 
+    //입력한 텍스트와 필요한데이터를 json으로말아서 웹소켓이용해서 메시지 전송
     private void sendMessage(String message) {
-        // 메시지 전송 처리 (서버와의 연동 필요)
-        // 서버로 메시지 전송
-
+        Log.d("SendMessage", "called");
+        //현재 시간
         LocalDateTime now = LocalDateTime.now();
         // DateTimeFormatter를 사용하여 LocalDateTime을 원하는 형식으로 포맷합니다.
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         String formattedDateTime = now.format(formatter);
 //        System.out.println("포맷된 날짜와 시간: " + formattedDateTime);
 
@@ -226,6 +334,7 @@ public class ChatRoomActivity extends AppCompatActivity {
             data.put("senderName", SessionManager.getInstance().getCurrentUser().getNickname());
             data.put("sendTime", parsedDateTime);
             data.put("message", message);
+            data.put("senderProfileImageUrl", SessionManager.getInstance().getCurrentUser().getImgUrl());
 
             // 중첩된 JSONObject를 생성하여 넣을 수도 있습니다.
             JSONObject chatRoom = new JSONObject();
@@ -236,5 +345,56 @@ public class ChatRoomActivity extends AppCompatActivity {
         }
         webSocketViewModel.sendMessage(data);
     }
-}
+    //채팅방을 나가면서 서버에 메세지를 남김
+    private void sendExitMessage(){
+        LocalDateTime now = LocalDateTime.now();
 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        String formattedDateTime = now.format(formatter);
+
+        LocalDateTime parsedDateTime = LocalDateTime.parse(formattedDateTime, formatter);
+
+        JSONObject data = new JSONObject();
+
+        // 내부 필드를 put하여 JSON 데이터를 생성합니다.
+        try {
+            data.put("senderName", SessionManager.getInstance().getCurrentUser().getNickname());
+            data.put("sendTime", parsedDateTime);
+
+            // 중첩된 JSONObject를 생성하여 넣을 수도 있습니다.
+            JSONObject chatRoom = new JSONObject();
+            chatRoom.put("id", chatRoomId);
+            data.put("chatRoom", chatRoom);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+        webSocketViewModel.sendExitMessage(data);
+    }
+
+    // 리사이클러뷰가 현재 바닥에 있는지 확인하는 메소드
+    private boolean isRecyclerViewAtBottom() {
+        LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerViewChat.getLayoutManager();
+        int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
+        int itemCount = layoutManager.getItemCount();
+
+        Log.d("lastVisibleItemPosition", lastVisibleItemPosition+"");
+        Log.d("itemCount", itemCount+"");
+
+        // 리사이클러뷰에 아이템이 없는 경우
+        if (itemCount == 0) return true;
+
+        // 현재 보이는 마지막 아이템이 전체에서 10번째 이내의 아이템이라면 바닥에 있다고 판단
+        return lastVisibleItemPosition > (itemCount - 10);
+    }
+
+    private void scrollToBottom() {
+        if (messageAdapter.getItemCount() > 0) {
+            recyclerViewChat.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    recyclerViewChat.smoothScrollToPosition(messageAdapter.getItemCount() - 1);
+                }
+            }, 200);
+        }
+    }
+}

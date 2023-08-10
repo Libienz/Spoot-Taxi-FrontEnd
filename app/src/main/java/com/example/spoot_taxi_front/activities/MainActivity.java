@@ -1,5 +1,7 @@
 package com.example.spoot_taxi_front.activities;
 
+import static android.app.PendingIntent.getActivity;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -8,6 +10,8 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -22,6 +26,7 @@ import com.example.spoot_taxi_front.fragments.RallyFragment;
 import com.example.spoot_taxi_front.fragments.SettingsFragment;
 
 
+import com.example.spoot_taxi_front.utils.LocalChatRoomManager;
 import com.example.spoot_taxi_front.utils.SessionManager;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -41,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
     Button matchingButton;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,14 +149,8 @@ public class MainActivity extends AppCompatActivity {
                 fragmentTransaction.show(home);
             }
         } else if (tag.equals(TAG_CHAT)) {
-            if (chat != null){
-                Log.d("채팅네비","채팅네비");
+            if (chat != null) {
                 fragmentTransaction.show(chat);
-                //다른 fragment 다녀올때마다 채팅방 갱신
-                View view = chat.getView();
-                ChatFragment chatFragment = (ChatFragment) chat;
-                chatFragment.loadChatRoomList(view);
-
             }
         } else if (tag.equals(TAG_SETTINGS)) {
             if (settings != null) {

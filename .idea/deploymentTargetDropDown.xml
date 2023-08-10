@@ -6,12 +6,16 @@
         <type value="RUNNING_DEVICE_TARGET" />
         <deviceKey>
           <Key>
+
             <type value="VIRTUAL_DEVICE_PATH" />
             <value value="C:\Users\yello\.android\avd\test.avd" />
+
           </Key>
         </deviceKey>
       </Target>
     </runningDeviceTargetSelectedWithDropDown>
+
     <timeTargetWasSelectedWithDropDown value="2023-08-10T00:37:14.453632100Z" />
+
   </component>
 </project>

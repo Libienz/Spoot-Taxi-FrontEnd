@@ -4,12 +4,11 @@ public class ChatMessage {
     private Long messageId;
     private String senderName;
     private String message;
-
     private String senderId;
     private String sentTime;
-
     private Long chatRoomId;
-
+    private String senderProfileImageUrl;
+    private Boolean isSystem;
     public Long getChatRoomId() {
         return chatRoomId;
     }
@@ -29,12 +28,33 @@ public class ChatMessage {
                 '}';
     }
 
-    public ChatMessage(Long messageId, String senderName, String senderId, String message, String sentTime) {
+    public ChatMessage(Long messageId, String senderName, String message, String senderId, String sentTime, Long chatRoomId, String senderProfileImageUrl, Boolean isSystem) {
         this.messageId = messageId;
         this.senderName = senderName;
-        this.senderId = senderId;
         this.message = message;
+        this.senderId = senderId;
         this.sentTime = sentTime;
+        this.chatRoomId = chatRoomId;
+        this.senderProfileImageUrl = senderProfileImageUrl;
+        this.isSystem = isSystem;
+    }
+
+    public ChatMessage(Long messageId, String senderName, String message, String senderId, String sentTime, String senderProfileImageUrl,Boolean isSystem) {
+        this.messageId = messageId;
+        this.senderName = senderName;
+        this.message = message;
+        this.senderId = senderId;
+        this.sentTime = sentTime;
+        this.senderProfileImageUrl = senderProfileImageUrl;
+        this.isSystem = isSystem;
+    }
+
+    public String getSenderProfileImageUrl() {
+        return senderProfileImageUrl;
+    }
+
+    public void setSenderProfileImageUrl(String senderProfileImageUrl) {
+        this.senderProfileImageUrl = senderProfileImageUrl;
     }
 
     public String getSenderId() {
@@ -75,5 +95,13 @@ public class ChatMessage {
 
     public void setSentTime(String sentTime) {
         this.sentTime = sentTime;
+    }
+
+    public Boolean getSystem() {
+        return isSystem;
+    }
+
+    public void setSystem(Boolean system) {
+        isSystem = system;
     }
 }

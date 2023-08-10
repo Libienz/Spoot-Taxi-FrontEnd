@@ -62,7 +62,7 @@ public class JoinActivity extends AppCompatActivity {
     private static final int PICK_IMAGE_REQUEST_CODE = 1;
     private static final int ALBUM_PERMISSION_REQUEST_CODE = 1; // 앨범 접근 권한 요청 코드
     private static final int ALBUM_REQUEST_CODE = 2; // 앨범 액티비티 호출 요청 코드
-
+    private static final String DEFAULT_PROFILE_IMAGE_URL = "http://192.168.219.110:8080/api/images/profile-image/default-profile-image.jpg";
 
     //회원가입에 기입할 정보들
     private String email;
@@ -243,6 +243,7 @@ public class JoinActivity extends AppCompatActivity {
         //프로필 이미지를 선택하지 않았다면 default Profile Image의 url로 유저의 프로필 이미지 url을 설정한다.
         else {
             UserDto userDto = createUserDtoFromEditText();
+            userDto.setImgUrl(DEFAULT_PROFILE_IMAGE_URL);
             callJoinApi(userDto);
         }
     }

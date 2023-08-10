@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,16 +23,23 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.spoot_taxi_front.R;
+import com.example.spoot_taxi_front.models.ChatRoom;
+import com.example.spoot_taxi_front.models.User;
+import com.example.spoot_taxi_front.network.api.ChatApi;
 import com.example.spoot_taxi_front.network.api.MatchingApi;
+import com.example.spoot_taxi_front.network.dto.UserDto;
+import com.example.spoot_taxi_front.network.dto.UserJoinedChatRoomDto;
 import com.example.spoot_taxi_front.network.dto.requests.MatchCancelRequest;
 import com.example.spoot_taxi_front.network.dto.requests.MatchingRequest;
 import com.example.spoot_taxi_front.network.dto.responses.MatchCancelResponse;
 import com.example.spoot_taxi_front.network.dto.responses.MatchingResponse;
+import com.example.spoot_taxi_front.network.dto.responses.UserJoinedChatRoomResponse;
 import com.example.spoot_taxi_front.network.retrofit.ApiManager;
+import com.example.spoot_taxi_front.utils.LocalChatRoomManager;
 import com.example.spoot_taxi_front.utils.MatchingSuccessEvent;
 import com.example.spoot_taxi_front.utils.SessionManager;
+import com.example.spoot_taxi_front.utils.WebSocketViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.snackbar.Snackbar;
 
 import net.daum.mf.map.api.CameraUpdateFactory;
 import net.daum.mf.map.api.MapPoint;
@@ -43,6 +49,11 @@ import net.daum.mf.map.api.MapView.MapViewEventListener;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -56,6 +67,7 @@ public class MatchingFragment extends Fragment implements CurrentLocationEventLi
     private double curLongitude;
     private double curLaitude;
     private MatchingApi matchingApi;
+    private ChatApi chatApi;
     Long waitingRoomId = 0L;
     Long waitingRoomUserId = 0L;
 
@@ -73,8 +85,9 @@ public class MatchingFragment extends Fragment implements CurrentLocationEventLi
         mapView = new MapView(requireContext());
         mapView.setCurrentLocationEventListener(this);
         mapView.setMapViewEventListener(this);
-
+        WebSocketViewModel.getInstance().connectWebSocket();
         matchingApi = ApiManager.getInstance().createMatchingApi(SessionManager.getInstance().getJwtToken());
+        chatApi = ApiManager.createChatApi(SessionManager.getInstance().getJwtToken());
     }
 
     @Override
@@ -91,8 +104,9 @@ public class MatchingFragment extends Fragment implements CurrentLocationEventLi
     }
 
     @Subscribe
-    public void onMatchingSuccess(MatchingSuccessEvent event) {
+    public void onMatchingSuccess(MatchingSuccessEvent event) throws InterruptedException {
         Log.d("libienz", "onMatchingSuccess: eventBus");
+        Thread.sleep(2000);
         // 매칭 성공 이벤트가 발생하면 매칭 프로그레스 팝업을 닫음
         if (alertDialog != null && alertDialog.isShowing()) {
             alertDialog.dismiss();
@@ -101,6 +115,8 @@ public class MatchingFragment extends Fragment implements CurrentLocationEventLi
         getView().post(new Runnable() {
             @Override
             public void run() {
+                // 참여 중인 채팅방 api 호출을 통해 갱신
+                loadUserJoinedChatRoomToLocal();
                 showMatchingSuccessPopup();
             }
         });
@@ -237,6 +253,8 @@ public class MatchingFragment extends Fragment implements CurrentLocationEventLi
                 BottomNavigationView bottomNavigationView = requireActivity().findViewById(R.id.navigationView);
                 MenuItem chatItem = bottomNavigationView.getMenu().findItem(R.id.chatFragment);
                 chatItem.setChecked(true); // 아이템을 선택한 상태로 설정
+                ChatFragment chatFragment = new ChatFragment();
+
                 bottomNavigationView.setSelectedItemId(chatItem.getItemId()); // 클릭 이벤트 발생
                 alertDialog.dismiss();
             }
@@ -244,6 +262,7 @@ public class MatchingFragment extends Fragment implements CurrentLocationEventLi
 
 
     }
+
 
     public void handleMatchingResponse(int statusCode, MatchingResponse matchingResponse) {
         switch (statusCode) {
@@ -378,5 +397,63 @@ public class MatchingFragment extends Fragment implements CurrentLocationEventLi
 
     }
 
+    private void loadUserJoinedChatRoomToLocal() {
+        Call<UserJoinedChatRoomResponse> call = chatApi.getUserChatRooms(SessionManager.getInstance().getCurrentUser().getEmail());
+        call.enqueue(new Callback<UserJoinedChatRoomResponse>() {
+            @Override
+            public void onResponse(Call<UserJoinedChatRoomResponse> call, Response<UserJoinedChatRoomResponse> response) {
+                List<ChatRoom> responseChatRoomList = extractChatRoomListFromResponse(response.code(), response.body());
+                LocalChatRoomManager.getInstance().setChatRooms(responseChatRoomList);
+                Log.d("ChatFragment", "onResponse: " + LocalChatRoomManager.getInstance().getChatRooms().size());
+
+            }
+
+            @Override
+            public void onFailure(Call<UserJoinedChatRoomResponse> call, Throwable t) {
+                Toast.makeText(getContext(), "채팅방 목록 요청에 실패하였습니다.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private List<ChatRoom> extractChatRoomListFromResponse(int statusCode, UserJoinedChatRoomResponse responseBody) {
+        switch (statusCode) {
+            case 200:
+                List<UserJoinedChatRoomDto> userJoinedChatRoomDtoList = responseBody.getUserJoinedChatRoomDtoList();
+                return parseDtoToChatRooms(userJoinedChatRoomDtoList);
+            default:
+                Toast.makeText(getContext(), "채팅방 목록 정보를 받아올수 없습니다.", Toast.LENGTH_SHORT).show();
+                break;
+        }
+        return null;
+    }
+
+    private List<ChatRoom> parseDtoToChatRooms(List<UserJoinedChatRoomDto> userJoinedChatRoomDtoList) {
+        List<ChatRoom> chatRoomApiResponseList = new ArrayList<>();
+        for (UserJoinedChatRoomDto userJoinedChatRoomDto : userJoinedChatRoomDtoList) {
+            Long chatRoomId = userJoinedChatRoomDto.getChatRoomId();
+            String chatRoomName = userJoinedChatRoomDto.getChatRoomName();
+
+            List<User> userList = new ArrayList<>();
+            List<UserDto> participants = userJoinedChatRoomDto.getParticipants();
+            for (UserDto participant : participants) {
+                User user = new User(participant.getEmail(), participant.getPassword(), participant.getName(), participant.getImgUrl(), participant.getGender());
+                userList.add(user);
+            }
+
+            Optional<String> optionalLastMessage = Optional.ofNullable(userJoinedChatRoomDto.getLastMessage());
+            String lastMessage = optionalLastMessage.orElse("");
+
+            //LocalDateTime lastSentTime = userJoinedChatRoomDto.getLastSentTime();
+
+            Optional<LocalDateTime> optionalLastSentTime = Optional.ofNullable(userJoinedChatRoomDto.getLastSentTime());
+            String lastSentTimeString = optionalLastSentTime.map(LocalDateTime::toString).orElse("");
+            Integer nonReadMessageCount = userJoinedChatRoomDto.getNonReadMessageCount();
+            ChatRoom chatRoom = new ChatRoom(chatRoomId,chatRoomName,userList,lastMessage,lastSentTimeString,nonReadMessageCount);
+            Log.d("채팅방 목록",chatRoom.toString());
+            chatRoomApiResponseList.add(chatRoom);
+            // 특정 채널 구독
+            WebSocketViewModel.getInstance().subscribeToChannel(chatRoomId);
+        }
+        return chatRoomApiResponseList;
+    }
 
 }
