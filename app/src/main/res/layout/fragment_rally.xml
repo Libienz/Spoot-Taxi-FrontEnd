@@ -44,43 +44,45 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:descendantFocusability="blocksDescendants"
         android:layout_marginTop="80dp"
-        android:layout_marginBottom="80dp">
+        android:layout_marginBottom="80dp"
+        android:descendantFocusability="blocksDescendants">
 
         <TableLayout
             android:id="@+id/rallyTL"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
             <TextView
                 android:id="@+id/rallyTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="오늘의 시위"
                 android:gravity="center"
                 android:padding="10dp"
-                android:textStyle="bold"
-                android:textSize="20sp"/>
+                android:text="오늘의 시위"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
             <TextView
                 android:id="@+id/rallyDateTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="right"
-                android:text="날짜"
                 android:padding="15sp"
+                android:text="날짜"
                 android:textStyle="bold" />
             <!-- 테이블 헤더 -->
 
-            <TableRow
-                android:id="@+id/rallyProperty">
+            <TableRow android:id="@+id/rallyProperty">
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@color/bubbleColor"
                     android:gravity="center"
-                    android:text="집회 일시"
                     android:padding="10dp"
+                    android:text="집회 일시"
                     android:textStyle="bold" />
 
                 <TextView
@@ -89,34 +91,34 @@
                     android:layout_weight="1"
                     android:background="@color/bubbleColor"
                     android:gravity="center"
+                    android:padding="10dp"
                     android:text="장소"
-                    android:padding="10dp"
                     android:textStyle="bold" />
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@color/bubbleColor"
                     android:gravity="center"
+                    android:padding="10dp"
                     android:text="신고 인원"
-                    android:padding="10dp"
                     android:textStyle="bold" />
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@color/bubbleColor"
                     android:gravity="center"
-                    android:text="관할서"
                     android:padding="10dp"
+                    android:text="관할서"
                     android:textStyle="bold" />
             </TableRow>
 
 
         </TableLayout>
     </ScrollView>
-
-
 
 
 </FrameLayout>

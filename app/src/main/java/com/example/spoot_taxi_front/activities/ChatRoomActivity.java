@@ -223,6 +223,12 @@ public class ChatRoomActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        LocalChatRoomManager.getInstance().nonReadCountZeroUpdate(chatRoomId);
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
         chatApi = ApiManager.createChatApi(SessionManager.getInstance().getJwtToken());
@@ -259,7 +265,7 @@ public class ChatRoomActivity extends AppCompatActivity {
                     Log.d("Leave API",response.body().getMessage());
                     webSocketViewModel.unsubscribeToChannel(chatRoomId);//채팅방 구독해제
                     sendExitMessage();
-                    LocalChatRoomManager.getInstance().leaveChatRoom(chatRoomId);
+                    LocalChatRoomManager.getInstance().exitChatRoom(chatRoomId);
                     onBackPressed();//나가고 뒤로가서(chatFragment로 가서) 채팅방을 나감
                 }
 
