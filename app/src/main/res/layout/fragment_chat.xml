@@ -97,7 +97,7 @@
                     android:layout_marginBottom="25dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="상대방을 존중하고 배려하는 매너 채팅은 A+를 불러온답니다 :)"
+                    android:text="상대방을 존중하고 배려하는 매너 채팅은 A+를 불러온답니다 \u2B50"
                     android:maxWidth="300dp"
                     android:textColor="#000000"
                     android:textSize="20sp"

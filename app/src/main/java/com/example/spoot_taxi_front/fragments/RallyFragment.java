@@ -48,7 +48,7 @@ public class RallyFragment extends Fragment {
         // 뷰 요소 초기화
         rallyRecyclerView = view.findViewById(R.id.rallyRecyclerView);
         rallyDateTextView = view.findViewById(R.id.rallyDateTextView);
-        rallyDateTextView.setText(LocalDateTime.now().getMonthValue() + "월 " + LocalDateTime.now().getDayOfMonth() + "일 주요집회");
+        rallyDateTextView.setText("\u2B50 " + LocalDateTime.now().getMonthValue() + "월 " + LocalDateTime.now().getDayOfMonth() + "일 주요집회" + " \u2B50");
         rallyRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         rallyAdapter = new RallyAdapter();
         getRallyInformationFromServer();

@@ -124,7 +124,7 @@
             android:fontFamily="@font/bmjua_ttf"
             android:layout_marginTop="10dp"
             android:layout_gravity="center"
-            android:text="오늘의 주요 집회 정보"
+            android:text="\u2B50 오늘의 주요 집회 정보 \u2B50"
             android:textSize="20sp" />
 
         <androidx.recyclerview.widget.RecyclerView
