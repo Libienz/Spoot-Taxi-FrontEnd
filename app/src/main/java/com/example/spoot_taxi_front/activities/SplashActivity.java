@@ -31,7 +31,7 @@ public class SplashActivity extends AppCompatActivity {
 
         Glide.with(this)
                 .asGif()
-                .load(R.raw.splash)
+                .load(R.raw.town)
                 .apply(options)
                 .listener(new GifListener()) // GifDrawable 리스너 설정
                 .into(gifImageView);

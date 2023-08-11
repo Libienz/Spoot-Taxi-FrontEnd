@@ -9,8 +9,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.spoot_taxi_front.R;
 import com.example.spoot_taxi_front.models.User;
 import com.example.spoot_taxi_front.network.retrofit.ApiManager;
@@ -31,6 +33,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button loginButton;
     private Button registerButton;
     private Button lostPWButton;
+    private ImageView movingCarView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +46,9 @@ public class LoginActivity extends AppCompatActivity {
         loginButton = findViewById(R.id.login);
         registerButton = findViewById(R.id.register);
         lostPWButton = findViewById(R.id.lost_pw);
+        movingCarView = findViewById(R.id.gifImageView);
+
+        Glide.with(this).asGif().load(R.raw.moving_taxi).into(movingCarView);
 
         //Api Client 생성
         AuthApi authApi = ApiManager.getInstance().createAuthApi(SessionManager.getInstance().getJwtToken());
