@@ -2,41 +2,115 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.ChatFragment">
 
     <!-- TODO: Update blank fragment layout -->
 
-
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:orientation="horizontal"
-        android:background="@drawable/bg_top_bar">
-
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="4dp">
         <ImageView
-            android:layout_marginTop="15dp"
-            android:layout_marginStart="80dp"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/ic_taxi_white" />
+            android:layout_marginStart="120dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:src="@drawable/ic_chat" />
+
         <TextView
-            android:fontFamily="@font/bmjua_ttf"
-            android:layout_marginTop="20dp"
-            android:layout_marginStart="10dp"
-            android:textSize="30dp"
             android:layout_width="wrap_content"
-            android:textColor="@color/white"
             android:layout_height="wrap_content"
-            android:text="SPOOT TAXI"/>
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/bmjua_ttf"
+            android:text="채팅 목록"
+            android:textColor="@color/black"
+            android:textSize="30dp" />
 
-
-    </LinearLayout>
-
+    </androidx.cardview.widget.CardView>
     <!-- Add your chat room views here -->
+
+    <androidx.cardview.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/cardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="#C5DBFF"
+        android:layout_margin="8dp"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="15dp">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/profileCardView"
+                android:layout_gravity="center"
+                android:layout_marginStart="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                app:cardCornerRadius="80dp" >
+                <ImageView
+                    android:id="@+id/profileImageView"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/img_admin_profile"
+                    android:background="@drawable/bg_rounded"
+                    android:scaleType="centerCrop" />
+            </androidx.cardview.widget.CardView>
+
+            <!-- TextView 및 기타 내용들 -->
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textViewSenderName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/bmjua_ttf"
+                    android:gravity="start"
+                    android:padding="4dp"
+                    android:text="알고 계셨나요?"
+                    android:textColor="#000000"
+                    android:textSize="20sp" />
+                <TextView
+                    android:fontFamily="@font/bmjua_ttf"
+                    android:id="@+id/textViewRecivedMessage"
+                    android:background="@drawable/bg_bubble_left"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginBottom="25dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="상대방을 존중하고 배려하는 매너 채팅은 A+를 불러온답니다 :)"
+                    android:maxWidth="300dp"
+                    android:textColor="#000000"
+                    android:textSize="20sp"
+                    android:padding="12dp"
+                    android:gravity="start" />
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/chatRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="644dp"
         android:layout_gravity="bottom" />
+    </LinearLayout>
 </FrameLayout>

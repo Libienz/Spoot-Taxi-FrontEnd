@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.SettingsFragment"
     android:orientation="vertical">
 
@@ -11,55 +12,116 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical" >
-        <LinearLayout
+
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:orientation="horizontal"
-            android:background="@drawable/bg_top_bar">
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="10dp"
+            app:cardElevation="4dp">
             <ImageView
-                android:layout_marginTop="15dp"
-                android:layout_marginStart="80dp"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:src="@drawable/ic_taxi_white" />
+                android:layout_marginStart="60dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:src="@drawable/ic_settings" />
+
             <TextView
-                android:fontFamily="@font/bmjua_ttf"
-                android:layout_marginTop="20dp"
-                android:layout_marginStart="10dp"
-                android:textSize="30dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:text="SPOOT TAXI"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_marginTop="30dp"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:orientation="horizontal"
-            android:clickable="true"
-            android:id="@+id/userUpdateButton">
-
-            <ImageView
-                android:layout_marginStart="30dp"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@drawable/img_default_profile"/>
-            <TextView
-                android:layout_marginTop="4dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
                 android:fontFamily="@font/bmjua_ttf"
-                android:layout_marginStart="30dp"
-                android:layout_width="230dp"
-                android:textSize="25sp"
+                android:text="설정"
+                android:textColor="@color/black"
+                android:textSize="30dp" />
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/cardView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="#C5DBFF"
+            android:layout_margin="8dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="15dp">
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="개인정보 수정" />
-            <ImageView
-                android:layout_marginTop="7dp"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/img_arrow_right" />
-        </LinearLayout>
+                android:orientation="horizontal">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/profileCardView"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    app:cardCornerRadius="80dp" >
+                    <ImageView
+                        android:id="@+id/profileImageView"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/img_admin_profile"
+                        android:background="@drawable/bg_rounded"
+                        android:scaleType="centerCrop" />
+                </androidx.cardview.widget.CardView>
+
+                <!-- TextView 및 기타 내용들 -->
+
+                <LinearLayout
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/sessionEmailTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="10dp"
+                        android:fontFamily="@font/bmjua_ttf"
+                        android:gravity="start"
+                        android:text="202010891@sangmyung.kr"
+                        android:textColor="#000000"
+                        android:textSize="20sp" />
+                    <LinearLayout
+                        android:layout_marginTop="30dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:layout_marginBottom="30dp"
+                        android:orientation="horizontal"
+                        android:clickable="true"
+                        android:id="@+id/userUpdateButton">
+
+                        <ImageView
+                            android:layout_marginStart="30dp"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:src="@drawable/img_default_profile"/>
+                        <TextView
+                            android:layout_marginTop="4dp"
+                            android:fontFamily="@font/bmjua_ttf"
+                            android:layout_marginStart="5dp"
+                            android:layout_width="wrap_content"
+                            android:textSize="25sp"
+                            android:layout_height="wrap_content"
+                            android:text="개인정보 수정" />
+                        <ImageView
+                            android:layout_marginTop="7dp"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/img_arrow_right" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
 
         <LinearLayout
             android:layout_marginTop="20dp"
