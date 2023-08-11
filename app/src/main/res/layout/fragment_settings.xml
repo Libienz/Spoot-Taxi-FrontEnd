@@ -115,6 +115,7 @@
                             android:layout_marginTop="7dp"
                             android:layout_width="20dp"
                             android:layout_height="20dp"
+                            android:layout_marginStart="59dp"
                             android:src="@drawable/img_arrow_right" />
                     </LinearLayout>
 
