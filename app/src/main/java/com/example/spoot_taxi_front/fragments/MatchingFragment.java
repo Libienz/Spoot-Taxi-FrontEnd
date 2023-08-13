@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -35,14 +34,12 @@ import com.example.spoot_taxi_front.network.dto.requests.MatchingRequest;
 import com.example.spoot_taxi_front.network.dto.responses.MatchCancelResponse;
 import com.example.spoot_taxi_front.network.dto.responses.MatchingResponse;
 import com.example.spoot_taxi_front.network.dto.responses.UserJoinedChatRoomResponse;
-import com.example.spoot_taxi_front.network.retrofit.ApiClient;
 import com.example.spoot_taxi_front.network.retrofit.ApiManager;
 import com.example.spoot_taxi_front.utils.LocalChatRoomManager;
 import com.example.spoot_taxi_front.utils.MatchingSuccessEvent;
 import com.example.spoot_taxi_front.utils.SessionManager;
 import com.example.spoot_taxi_front.utils.WebSocketViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.snackbar.Snackbar;
 
 import net.daum.mf.map.api.CameraUpdateFactory;
 import net.daum.mf.map.api.MapPoint;
@@ -90,7 +87,7 @@ public class MatchingFragment extends Fragment implements CurrentLocationEventLi
         mapView.setMapViewEventListener(this);
         WebSocketViewModel.getInstance().connectWebSocket();
         matchingApi = ApiManager.getInstance().createMatchingApi(SessionManager.getInstance().getJwtToken());
-        chatApi = ApiClient.createChatApi();
+        chatApi = ApiManager.createChatApi(SessionManager.getInstance().getJwtToken());
     }
 
     @Override

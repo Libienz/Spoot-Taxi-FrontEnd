@@ -1,9 +1,7 @@
 package com.example.spoot_taxi_front.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -22,7 +20,7 @@ import com.example.spoot_taxi_front.network.api.ChatApi;
 import com.example.spoot_taxi_front.network.dto.UserDto;
 import com.example.spoot_taxi_front.network.dto.UserJoinedChatRoomDto;
 import com.example.spoot_taxi_front.network.dto.responses.UserJoinedChatRoomResponse;
-import com.example.spoot_taxi_front.network.retrofit.ApiClient;
+import com.example.spoot_taxi_front.network.retrofit.ApiManager;
 import com.example.spoot_taxi_front.utils.LocalChatRoomManager;
 import com.example.spoot_taxi_front.utils.NewMessageEvent;
 import com.example.spoot_taxi_front.utils.SessionManager;
@@ -90,7 +88,7 @@ public class ChatFragment extends Fragment {
         webSocketViewModel.connectWebSocket();
 
         //api client 초기화
-        chatApi = ApiClient.createChatApi();
+        chatApi = ApiManager.createChatApi(SessionManager.getInstance().getJwtToken());
         loadChatRoomListToView(view);
 
         localChatRoomManager = localChatRoomManager.getInstance();

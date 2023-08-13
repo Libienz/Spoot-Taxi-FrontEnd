@@ -61,7 +61,7 @@ public class LocalChatRoomManager {
         }
     }
 
-    public void leaveChatRoom(Long chatRoomId) {
+    public void exitChatRoom(Long chatRoomId) {
         for (int i = 0; i < chatRooms.size(); i++) {
             ChatRoom chatRoom = chatRooms.get(i);
             if (chatRoom.getRoomId() == chatRoomId) {

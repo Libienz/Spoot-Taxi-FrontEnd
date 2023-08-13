@@ -28,7 +28,7 @@ import com.example.spoot_taxi_front.network.dto.MessageDto;
 import com.example.spoot_taxi_front.network.dto.responses.ChatRoomMessageResponse;
 import com.example.spoot_taxi_front.network.dto.responses.LeaveChatParticipantResponse;
 import com.example.spoot_taxi_front.network.dto.responses.UpdateChatParticipantResponse;
-import com.example.spoot_taxi_front.network.retrofit.ApiClient;
+import com.example.spoot_taxi_front.network.retrofit.ApiManager;
 import com.example.spoot_taxi_front.utils.LocalChatRoomManager;
 import com.example.spoot_taxi_front.utils.SessionManager;
 import com.example.spoot_taxi_front.utils.WebSocketViewModel;
@@ -160,7 +160,7 @@ public class ChatRoomActivity extends AppCompatActivity {
         });
 
         // 채팅 데이터 가져오기 (서버와의 연동 필요)
-        chatApi = ApiClient.createChatApi();
+        chatApi = ApiManager.createChatApi(SessionManager.getInstance().getJwtToken());
         Call<ChatRoomMessageResponse> chatRoomMessages = chatApi.getChatRoomMessages(SessionManager.getInstance().getCurrentUser().getEmail(), chatRoomId);
         chatRoomMessages.enqueue(new Callback<ChatRoomMessageResponse>() {
             @Override
@@ -223,9 +223,15 @@ public class ChatRoomActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        LocalChatRoomManager.getInstance().nonReadCountZeroUpdate(chatRoomId);
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
-        chatApi = ApiClient.createChatApi();
+        chatApi = ApiManager.createChatApi(SessionManager.getInstance().getJwtToken());
         Call<UpdateChatParticipantResponse> updateChatParticipantCall = chatApi.updateChatParticipant(chatParticipantId);
         updateChatParticipantCall.enqueue(new Callback<UpdateChatParticipantResponse>() {
             @Override
@@ -259,7 +265,7 @@ public class ChatRoomActivity extends AppCompatActivity {
                     Log.d("Leave API",response.body().getMessage());
                     webSocketViewModel.unsubscribeToChannel(chatRoomId);//채팅방 구독해제
                     sendExitMessage();
-                    LocalChatRoomManager.getInstance().leaveChatRoom(chatRoomId);
+                    LocalChatRoomManager.getInstance().exitChatRoom(chatRoomId);
                     onBackPressed();//나가고 뒤로가서(chatFragment로 가서) 채팅방을 나감
                 }
 
@@ -398,4 +404,3 @@ public class ChatRoomActivity extends AppCompatActivity {
         }
     }
 }
-

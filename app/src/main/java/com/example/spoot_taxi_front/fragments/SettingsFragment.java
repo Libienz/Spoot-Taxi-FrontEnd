@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.spoot_taxi_front.R;
@@ -30,8 +31,10 @@ import com.example.spoot_taxi_front.utils.SessionManager;
 public class SettingsFragment extends Fragment {
 
     //레이아웃 요소들
-    Button logOutButton;
-    Button userUpdateButton;
+    View logoutButton;
+    View userUpdateButton;
+    TextView sessionEmailTextView;
+    ImageView profileImageView;
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -56,9 +59,14 @@ public class SettingsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
-        View userUpdateButton = view.findViewById(R.id.userUpdateButton);
-        View logoutButton = view.findViewById(R.id.logOutButton);
+        userUpdateButton = view.findViewById(R.id.userUpdateButton);
+        logoutButton = view.findViewById(R.id.logOutButton);
+        sessionEmailTextView = view.findViewById(R.id.sessionEmailTextView);
+        profileImageView = view.findViewById(R.id.profileImageView);
 
+        //뷰요소 렌더링
+        Glide.with(this).load(SessionManager.getInstance().getCurrentUser().getImgUrl()).into(profileImageView);
+        sessionEmailTextView.setText(SessionManager.getInstance().getCurrentUser().getEmail());
         //정보 수정 버튼 클릭
         userUpdateButton.setOnClickListener(new View.OnClickListener() {
             @Override

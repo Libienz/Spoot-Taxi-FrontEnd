@@ -8,21 +8,16 @@
     android:gravity="center"
     android:background="@android:color/white">
 
+
     <ImageView
-        android:id="@+id/splash_image"
+        android:id="@+id/gifImageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/splash_image" />
-
-    <TextView
-        android:fontFamily="@font/bmjua_ttf"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:scaleType="centerCrop"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="230dp"
-        android:text="Spoot taxi"
-        android:textColor="@android:color/black"
-        android:textSize="30sp" />
+        android:layout_gravity="center"
+        android:layout_marginBottom="0dp"
+        android:src="@raw/splash" />
+
 
 </RelativeLayout>
