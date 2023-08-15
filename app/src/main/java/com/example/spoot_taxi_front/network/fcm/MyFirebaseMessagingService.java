@@ -58,7 +58,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         createNotificationChannel();
 
         Intent intent = new Intent(this, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "my_channel_id")
                 .setSmallIcon(R.mipmap.ic_launcher)

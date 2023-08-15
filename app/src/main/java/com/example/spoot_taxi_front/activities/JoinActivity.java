@@ -228,6 +228,7 @@ public class JoinActivity extends AppCompatActivity {
                     imgUrl = response.body().getImageUrl();
                     userDto.setImgUrl(imgUrl);
                     //받아온 imgUrl정보까지 유저에 말아서 회원가입 api 호출!
+                    userDto.setDeviceToken(SessionManager.getInstance().getDeviceToken());
                     callJoinApi(userDto);
                 }
 
@@ -244,6 +245,7 @@ public class JoinActivity extends AppCompatActivity {
         else {
             UserDto userDto = createUserDtoFromEditText();
             userDto.setImgUrl(DEFAULT_PROFILE_IMAGE_URL);
+            userDto.setDeviceToken(SessionManager.getInstance().getDeviceToken());
             callJoinApi(userDto);
         }
     }

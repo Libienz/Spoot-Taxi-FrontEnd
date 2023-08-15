@@ -1,10 +1,12 @@
 package com.example.spoot_taxi_front.activities;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
@@ -14,6 +16,10 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.example.spoot_taxi_front.R;
+import com.example.spoot_taxi_front.utils.SessionManager;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -29,6 +35,24 @@ public class SplashActivity extends AppCompatActivity {
         RequestOptions options = new RequestOptions()
                 .fitCenter();
 
+
+        //device Token
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w("FCM", "Fetching FCM registration token failed", task.getException());
+                            return;
+                        }
+
+                        // Get new FCM registration token
+                        String token = task.getResult();
+                        SessionManager.getInstance().setDeviceToken(token);
+                        // Log and toast
+                        Log.d("FCM", token);
+                    }
+                });
         Glide.with(this)
                 .asGif()
                 .load(R.raw.town)
