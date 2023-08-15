@@ -48,13 +48,13 @@ public interface AuthApi {
 
     //프로필 이미지 업로드
     @Multipart
-    @POST("/api/images/profile-image/upload")
+    @POST("/api/images")
     Call<UploadImageResponse> uploadImage(@Part MultipartBody.Part imagePart);
 
 
     //프로필 이미지 GET
     @Multipart
-    @GET("/api/images/profile-image/{fileName}")
+    @GET("/api/images/{fileName}")
     Call<ResponseBody> getProfileImage(@Path("fileName") String fileName);
 
 }
