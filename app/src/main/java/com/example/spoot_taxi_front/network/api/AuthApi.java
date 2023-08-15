@@ -30,11 +30,11 @@ public interface AuthApi {
     @POST("api/auth/join")
     Call<JoinResponse> join(@Body UserDto joinDto);
     //유저정보수정
-    @PUT("api/update/users/{email}")
+    @PUT("api/users/{email}")
     Call<UserSaveResponse> updateUser(@Path("email") String email, @Body UserDto updateDto);
 
     //유저 비밀번호 수정
-    @PUT("api/update/users/{email}/password")
+    @PUT("api/users/{email}/password")
     Call<UserSaveResponse> updateUserPassword(@Path("email") String email, @Body UserDto updateDto);
 
     //이메일 중복 확인 (가입된 이메일인지 확인)
