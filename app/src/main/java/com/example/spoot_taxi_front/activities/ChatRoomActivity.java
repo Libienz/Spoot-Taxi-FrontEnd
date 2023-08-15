@@ -161,7 +161,7 @@ public class ChatRoomActivity extends AppCompatActivity {
 
         // 채팅 데이터 가져오기 (서버와의 연동 필요)
         chatApi = ApiManager.createChatApi(SessionManager.getInstance().getJwtToken());
-        Call<ChatRoomMessageResponse> chatRoomMessages = chatApi.getChatRoomMessages(SessionManager.getInstance().getCurrentUser().getEmail(), chatRoomId);
+        Call<ChatRoomMessageResponse> chatRoomMessages = chatApi.getChatRoomMessages(chatRoomId,SessionManager.getInstance().getCurrentUser().getEmail());
         chatRoomMessages.enqueue(new Callback<ChatRoomMessageResponse>() {
             @Override
             public void onResponse(Call<ChatRoomMessageResponse> call, Response<ChatRoomMessageResponse> response) {
@@ -232,7 +232,7 @@ public class ChatRoomActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         chatApi = ApiManager.createChatApi(SessionManager.getInstance().getJwtToken());
-        Call<UpdateChatParticipantResponse> updateChatParticipantCall = chatApi.updateChatParticipant(chatParticipantId);
+        Call<UpdateChatParticipantResponse> updateChatParticipantCall = chatApi.updateChatParticipant(chatRoomId, chatParticipantId);
         updateChatParticipantCall.enqueue(new Callback<UpdateChatParticipantResponse>() {
             @Override
             public void onResponse(Call<UpdateChatParticipantResponse> call, Response<UpdateChatParticipantResponse> response) {
@@ -258,7 +258,7 @@ public class ChatRoomActivity extends AppCompatActivity {
         if(itemId== R.id.action_leave){
             Toast.makeText(this,"채팅방을 나갔습니다.",Toast.LENGTH_SHORT).show();
             //leave API 사용
-            Call<LeaveChatParticipantResponse> stringCall = chatApi.leaveChatParticipant(chatParticipantId);
+            Call<LeaveChatParticipantResponse> stringCall = chatApi.leaveChatParticipant(chatRoomId, chatParticipantId);
             stringCall.enqueue(new Callback<LeaveChatParticipantResponse>() {
                 @Override
                 public void onResponse(Call<LeaveChatParticipantResponse> call, Response<LeaveChatParticipantResponse> response) {

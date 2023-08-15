@@ -57,7 +57,7 @@ public class WebSocketManager {
     public StompClient connectWebSocket() {
         if (stompClient == null) {
 //            stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, "ws://10.0.2.2:8080/ws/websocket");
-            stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, "ws://192.168.219.110:8080/ws/websocket");
+            stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, "ws://192.168.219.110:8090/ws/websocket");
             stompClient.connect();
         }
 

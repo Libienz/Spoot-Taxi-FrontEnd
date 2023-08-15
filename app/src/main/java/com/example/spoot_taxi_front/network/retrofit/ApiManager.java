@@ -88,6 +88,7 @@ public class ApiManager {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(gsonConverterFactory())
+                .client(httpClient.build())
                 .build();
         return retrofit.create(ChatApi.class);
     }
