@@ -6,12 +6,11 @@ import java.util.List;
 
 public class RallyInformationDto {
 
-    private Boolean success;
-    private String message;
+
+    private String comment;
     private LocalDateTime date;
 
     private List<RallyDetailsDto> rallyDetailsDtoList;
-
 
     public static class RallyDetailsDto {
         private LocalDateTime startTime;
@@ -45,16 +44,8 @@ public class RallyInformationDto {
         return date;
     }
 
-    public List<RallyDetailsDto> getRallyDetailsList() {
-        return rallyDetailsDtoList;
-    }
-
-    public Boolean getSuccess() {
-        return success;
-    }
-
-    public String getMessage() {
-        return message;
+    public String getComment() {
+        return comment;
     }
 
     public List<RallyDetailsDto> getRallyDetailsDtoList() {
