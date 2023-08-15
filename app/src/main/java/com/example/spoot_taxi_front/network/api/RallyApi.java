@@ -7,7 +7,7 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 
 public interface RallyApi {
-    @GET("/api/rally-info")
+    @GET("/api/rally-information")
     Call<RallyResponse> getRallyInfo();
 
 }
