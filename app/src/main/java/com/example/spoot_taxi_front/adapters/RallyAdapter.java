@@ -1,6 +1,5 @@
 package com.example.spoot_taxi_front.adapters;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,11 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.example.spoot_taxi_front.R;
-import com.example.spoot_taxi_front.models.ChatMessage;
-import com.example.spoot_taxi_front.models.ChatRoom;
-import com.example.spoot_taxi_front.models.User;
 import com.example.spoot_taxi_front.network.dto.RallyInformationDto;
 
 import java.util.ArrayList;
@@ -89,7 +84,7 @@ public class RallyAdapter extends RecyclerView.Adapter<RallyAdapter.RallyViewHol
             rallyEndTimeTextView.setText(rallyDetail.getEndTime().getHour()+"시 " + rallyDetail.getEndTime().getMinute() +"분");
             rallyLocationTextView.setText(rallyDetail.getLocation());
             rallyScaleTextView.setText(rallyDetail.getRallyScale());
-            rallyJurisdictionTextView.setText(rallyDetail.getJurisdiction());
+            rallyJurisdictionTextView.setText(rallyDetail.getLocationDetail());
         }
     }
 }
