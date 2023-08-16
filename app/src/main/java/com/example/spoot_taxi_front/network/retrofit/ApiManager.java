@@ -81,7 +81,7 @@ public class ApiManager {
     }
 
 
-    public static ChatApi createChatApi(String jwtToken) {
+    public ChatApi createChatApi(String jwtToken) {
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(new AuthInterceptor(jwtToken));
 

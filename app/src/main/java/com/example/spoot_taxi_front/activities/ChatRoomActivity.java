@@ -160,7 +160,7 @@ public class ChatRoomActivity extends AppCompatActivity {
         });
 
         // 채팅 데이터 가져오기 (서버와의 연동 필요)
-        chatApi = ApiManager.createChatApi(SessionManager.getInstance().getJwtToken());
+        chatApi = ApiManager.getInstance().createChatApi(SessionManager.getInstance().getJwtToken());
         Call<ChatRoomMessageResponse> chatRoomMessages = chatApi.getChatRoomMessages(chatRoomId,SessionManager.getInstance().getCurrentUser().getEmail());
         chatRoomMessages.enqueue(new Callback<ChatRoomMessageResponse>() {
             @Override
@@ -231,7 +231,7 @@ public class ChatRoomActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        chatApi = ApiManager.createChatApi(SessionManager.getInstance().getJwtToken());
+        chatApi = ApiManager.getInstance().createChatApi(SessionManager.getInstance().getJwtToken());
         Call<UpdateChatParticipantResponse> updateChatParticipantCall = chatApi.updateChatParticipant(chatRoomId, chatParticipantId);
         updateChatParticipantCall.enqueue(new Callback<UpdateChatParticipantResponse>() {
             @Override

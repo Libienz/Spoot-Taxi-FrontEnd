@@ -88,7 +88,7 @@ public class ChatFragment extends Fragment {
         webSocketViewModel.connectWebSocket();
 
         //api client 초기화
-        chatApi = ApiManager.createChatApi(SessionManager.getInstance().getJwtToken());
+        chatApi = ApiManager.getInstance().createChatApi(SessionManager.getInstance().getJwtToken());
         Log.d("chatFragment", "create api with token " + SessionManager.getInstance().getJwtToken());
         loadChatRoomListToView(view);
 
