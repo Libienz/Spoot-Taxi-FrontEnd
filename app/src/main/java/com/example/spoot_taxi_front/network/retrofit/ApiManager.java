@@ -81,13 +81,14 @@ public class ApiManager {
     }
 
 
-    public static ChatApi createChatApi(String jwtToken) {
+    public ChatApi createChatApi(String jwtToken) {
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(new AuthInterceptor(jwtToken));
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(gsonConverterFactory())
+                .client(httpClient.build())
                 .build();
         return retrofit.create(ChatApi.class);
     }

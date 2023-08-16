@@ -10,6 +10,7 @@ public class UserDto implements Serializable {
     private String name;
     private Gender gender;
     private String imgUrl;
+    private String deviceToken;
 
     public UserDto(String email, String password, String name, Gender gender, String imgUrl) {
         this.email = email;
@@ -25,6 +26,14 @@ public class UserDto implements Serializable {
         this.name = name;
         this.imgUrl = "http://192.168.219.109:8080/api/images/profile-image/default-profile-image.jpg";
         this.gender = gender;
+    }
+
+    public String getDeviceToken() {
+        return deviceToken;
+    }
+
+    public void setDeviceToken(String deviceToken) {
+        this.deviceToken = deviceToken;
     }
 
     public String getImgUrl() {

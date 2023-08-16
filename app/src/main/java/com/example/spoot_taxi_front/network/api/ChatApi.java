@@ -6,21 +6,24 @@ import com.example.spoot_taxi_front.network.dto.responses.UpdateChatParticipantR
 import com.example.spoot_taxi_front.network.dto.responses.UserJoinedChatRoomResponse;
 
 import retrofit2.Call;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface ChatApi {
     //유저가 참가한 ChatRoom의 이름과 Id 반환 API
-    @GET("/api/chat/user/chatRooms")
+    @GET("/api/chatrooms")
     Call<UserJoinedChatRoomResponse> getUserChatRooms(@Query("email")String email);
 
-    @GET("/api/chat/chatRoom/messages")
-    Call<ChatRoomMessageResponse> getChatRoomMessages(@Query("userEmail")String userEmail,@Query("chatRoomId")Long chatRoomId);
+    @GET("/api/chatrooms/{roomId}/messages")
+    Call<ChatRoomMessageResponse> getChatRoomMessages(@Path ("roomId") Long chatRoomId, @Query("userEmail")String userEmail);
 
-    @POST("/api/chat/leave")
-    Call<LeaveChatParticipantResponse> leaveChatParticipant(@Query("chatParticipantId")Long chatParticipantId);
+    @DELETE("/api/chatrooms/{roomId}/participants/{participantId}")
+    Call<LeaveChatParticipantResponse> leaveChatParticipant(@Path("roomId")Long chatRoomId, @Path("participantId")Long participantId);
 
-    @POST("/api/chat/update/room-exit-time")
-    Call<UpdateChatParticipantResponse> updateChatParticipant(@Query("chatParticipantId") Long chatParticipantId);
+    @PUT("/api/chatrooms/{roomId}/participants/{participantId}/room-exit-time")
+    Call<UpdateChatParticipantResponse> updateChatParticipant(@Path("roomId")Long chatRoomId, @Path("participantId")Long participantId);
 }

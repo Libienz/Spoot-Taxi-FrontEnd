@@ -40,12 +40,14 @@ public class RallyFragment extends Fragment {
     private List<RallyInformationDto.RallyDetailsDto> rallyDetailsDtoList = new ArrayList<>();
     RallyApi rallyApi;
     private TextView rallyDateTextView;
+    private TextView commentTextView;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_rally, container, false);
         rallyApi = ApiManager.getInstance().createRallyApi(SessionManager.getInstance().getJwtToken());
         // 뷰 요소 초기화
+        commentTextView = view.findViewById(R.id.textViewComment);
         rallyRecyclerView = view.findViewById(R.id.rallyRecyclerView);
         rallyDateTextView = view.findViewById(R.id.rallyDateTextView);
         rallyDateTextView.setText("\u2B50 " + LocalDateTime.now().getMonthValue() + "월 " + LocalDateTime.now().getDayOfMonth() + "일 주요집회" + " \u2B50");
@@ -96,6 +98,8 @@ public class RallyFragment extends Fragment {
         switch (statusCode) {
             case 200:
                 RallyInformationDto rallyInformationDto = responseBody.getRallyInformationDto();
+                Log.d("rallyFragment", "comment: " + rallyInformationDto.getComment());
+                commentTextView.setText(rallyInformationDto.getComment());
                 rallyDetailsDtoList = rallyInformationDto.getRallyDetailsDtoList();
                 rallyAdapter.setRallyDetails(rallyDetailsDtoList);
                 break;

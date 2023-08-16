@@ -88,7 +88,8 @@ public class ChatFragment extends Fragment {
         webSocketViewModel.connectWebSocket();
 
         //api client 초기화
-        chatApi = ApiManager.createChatApi(SessionManager.getInstance().getJwtToken());
+        chatApi = ApiManager.getInstance().createChatApi(SessionManager.getInstance().getJwtToken());
+        Log.d("chatFragment", "create api with token " + SessionManager.getInstance().getJwtToken());
         loadChatRoomListToView(view);
 
         localChatRoomManager = localChatRoomManager.getInstance();
@@ -141,6 +142,7 @@ public class ChatFragment extends Fragment {
     public void loadChatRoomListToView(View view) {
         Log.d("chatFragment","loadChatRoomList실행중");
         Call<UserJoinedChatRoomResponse> call = chatApi.getUserChatRooms(SessionManager.getInstance().getCurrentUser().getEmail());
+
         call.enqueue(new Callback<UserJoinedChatRoomResponse>() {
             @Override
             public void onResponse(Call<UserJoinedChatRoomResponse> call, Response<UserJoinedChatRoomResponse> response) {
@@ -165,6 +167,8 @@ public class ChatFragment extends Fragment {
                 return parseDtoToChatRooms(userJoinedChatRoomDtoList);
             default:
                 Toast.makeText(getContext(), "채팅방 목록 정보를 받아올수 없습니다.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "code: " + statusCode, Toast.LENGTH_SHORT).show();
+
                 break;
         }
         return null;

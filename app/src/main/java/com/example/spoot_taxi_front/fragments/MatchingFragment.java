@@ -87,7 +87,7 @@ public class MatchingFragment extends Fragment implements CurrentLocationEventLi
         mapView.setMapViewEventListener(this);
         WebSocketViewModel.getInstance().connectWebSocket();
         matchingApi = ApiManager.getInstance().createMatchingApi(SessionManager.getInstance().getJwtToken());
-        chatApi = ApiManager.createChatApi(SessionManager.getInstance().getJwtToken());
+        chatApi = ApiManager.getInstance().createChatApi(SessionManager.getInstance().getJwtToken());
     }
 
     @Override

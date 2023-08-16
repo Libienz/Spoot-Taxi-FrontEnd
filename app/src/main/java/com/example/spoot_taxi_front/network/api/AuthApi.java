@@ -30,11 +30,11 @@ public interface AuthApi {
     @POST("api/auth/join")
     Call<JoinResponse> join(@Body UserDto joinDto);
     //유저정보수정
-    @PUT("api/update/users/{email}")
+    @PUT("api/users/{email}")
     Call<UserSaveResponse> updateUser(@Path("email") String email, @Body UserDto updateDto);
 
     //유저 비밀번호 수정
-    @PUT("api/update/users/{email}/password")
+    @PUT("api/users/{email}/password")
     Call<UserSaveResponse> updateUserPassword(@Path("email") String email, @Body UserDto updateDto);
 
     //이메일 중복 확인 (가입된 이메일인지 확인)
@@ -48,13 +48,13 @@ public interface AuthApi {
 
     //프로필 이미지 업로드
     @Multipart
-    @POST("/api/images/profile-image/upload")
+    @POST("/api/images")
     Call<UploadImageResponse> uploadImage(@Part MultipartBody.Part imagePart);
 
 
     //프로필 이미지 GET
     @Multipart
-    @GET("/api/images/profile-image/{fileName}")
+    @GET("/api/images/{fileName}")
     Call<ResponseBody> getProfileImage(@Path("fileName") String fileName);
 
 }

@@ -101,7 +101,7 @@
                         android:textSize="20sp" />
                     <TextView
                         android:fontFamily="@font/bmjua_ttf"
-                        android:id="@+id/textViewRecivedMessage"
+                        android:id="@+id/textViewComment"
                         android:background="@drawable/bg_bubble_left"
                         android:layout_marginStart="5dp"
                         android:layout_marginBottom="25dp"
