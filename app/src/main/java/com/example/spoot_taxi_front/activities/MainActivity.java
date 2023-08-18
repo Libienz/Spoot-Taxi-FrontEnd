@@ -59,9 +59,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
         localChatRoomManager = LocalChatRoomManager.getInstance();
         binding = ActivityMainBinding.inflate(getLayoutInflater());
-        EventBus.getDefault().register(this);
         setContentView(binding.getRoot());
 
         localChatRoomManager.loadChatRoomsFromServer();
@@ -121,7 +121,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
         // EventBus 해제
         EventBus.getDefault().unregister(this);
     }

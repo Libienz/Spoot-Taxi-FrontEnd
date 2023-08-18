@@ -102,8 +102,6 @@ public class PasswordResetActivity extends AppCompatActivity {
                 break;
             default:
                 Toast.makeText(getApplicationContext(), "비밀번호 재설정에 실패하였습니다.", Toast.LENGTH_SHORT).show();
-                Toast.makeText(getApplicationContext(), "비밀번호 재설정에 실패하였습니다." + statusCode, Toast.LENGTH_SHORT).show();
-
                 break;
 
         }
