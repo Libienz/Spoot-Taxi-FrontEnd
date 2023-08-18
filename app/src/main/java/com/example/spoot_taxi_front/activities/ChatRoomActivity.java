@@ -57,7 +57,6 @@ public class ChatRoomActivity extends AppCompatActivity {
     private Long chatRoomId;
     private Long chatParticipantId;
     private List<ChatMessage> chatMessageList = new ArrayList<>();
-
     private ChatApi chatApi;
 
     @Override
@@ -65,33 +64,30 @@ public class ChatRoomActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_room);
 
-        //메뉴를 위한 툴바 설정, title을 false안하면 기본 디폴트타이틀이 보이게됨
+        /**===============요소들 초기화 및 설정==================**/
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-
-        // -1은 기본값
         chatRoomId = getIntent().getLongExtra("chatRoomId", -1);
-        Log.d("채팅방 id", chatRoomId.toString());
-
-        //웹소켓매니저 가져오기
-        //webSocketViewModel = new ViewModelProvider(this).get(WebSocketViewModel.class);
         webSocketViewModel = WebSocketViewModel.getInstance();
+
         // 레이아웃 요소 초기화
         recyclerViewChat = findViewById(R.id.recyclerViewChat);
         editTextMessage = findViewById(R.id.editTextMessage);
         buttonSend = findViewById(R.id.buttonSend);
         buttonScrollToBottom = findViewById(R.id.buttonScrollToBottom);
         newMsgButton = findViewById(R.id.newMsgButton);
+
         // RecyclerView 설정
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setStackFromEnd(true);
         recyclerViewChat.setLayoutManager(layoutManager);
         messageAdapter = new MessageAdapter();
         recyclerViewChat.setAdapter(messageAdapter);
-        //시작할 경우에 스크롤 버튼 꺼놓기
         buttonScrollToBottom.setVisibility(View.GONE);
         newMsgButton.setVisibility(View.GONE);
+
+        /**===============Listeners==================**/
         recyclerViewChat.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
@@ -107,7 +103,6 @@ public class ChatRoomActivity extends AppCompatActivity {
             }
         });
 
-        //스크롤 버튼
         buttonScrollToBottom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -115,17 +110,14 @@ public class ChatRoomActivity extends AppCompatActivity {
             }
         });
 
-        //newMsg알림 버튼
         newMsgButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 recyclerViewChat.smoothScrollToPosition(messageAdapter.getItemCount() - 1);
             }
         });
-        // 전송 버튼 초기 상태를 비활성화로 설정
         buttonSend.setEnabled(false);
 
-        // editText의 텍스트 변화를 감지하는 TextWatcher 설정
         editTextMessage.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -146,7 +138,6 @@ public class ChatRoomActivity extends AppCompatActivity {
             }
         });
 
-        // 전송 버튼 클릭 리스너 설정
         buttonSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -159,7 +150,7 @@ public class ChatRoomActivity extends AppCompatActivity {
             }
         });
 
-        // 채팅 데이터 가져오기 (서버와의 연동 필요)
+        /**===============Data Setting==================**/
         chatApi = ApiManager.getInstance().createChatApi(SessionManager.getInstance().getJwtToken());
         Call<ChatRoomMessageResponse> chatRoomMessages = chatApi.getChatRoomMessages(chatRoomId,SessionManager.getInstance().getCurrentUser().getEmail());
         chatRoomMessages.enqueue(new Callback<ChatRoomMessageResponse>() {
@@ -207,7 +198,7 @@ public class ChatRoomActivity extends AppCompatActivity {
         //messageAdapter.setChatMessages(chatMessageList);
     }
 
-    //나가기 버튼을 위해서 메뉴ActionBar inflate해줌
+    /**===============생명주기 메서드들==================**/
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -218,7 +209,6 @@ public class ChatRoomActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        // 스크롤을 맨 아래로 이동
         scrollToBottom();
     }
 
@@ -281,6 +271,8 @@ public class ChatRoomActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+
+    /**===============일반 메서드들==================**/
     private void handleChatRoomMessageResponse(int statusCode, ChatRoomMessageResponse responseBody) {
         switch (statusCode) {
             case 200:

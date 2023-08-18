@@ -25,7 +25,6 @@ import retrofit2.Response;
 public class LocalChatRoomManager {
 
     private static LocalChatRoomManager instance;
-
     private List<ChatRoom> chatRooms = new ArrayList<>();
     private ChatApi chatApi;
     private WebSocketViewModel webSocketViewModel;
@@ -115,6 +114,7 @@ public class LocalChatRoomManager {
             @Override
             public void onResponse(Call<UserJoinedChatRoomResponse> call, Response<UserJoinedChatRoomResponse> response) {
                 chatRooms = extractChatRoomListFromResponse(response.code(), response.body());
+                EventBus.getDefault().post(new NonReadCountUpdateEvent());
             }
 
             @Override
