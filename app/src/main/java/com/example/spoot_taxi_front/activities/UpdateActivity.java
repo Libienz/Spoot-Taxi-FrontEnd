@@ -55,7 +55,7 @@ public class UpdateActivity extends AppCompatActivity {
     private ActivityUpdateBinding binding;
     private static final int ALBUM_PERMISSION_REQUEST_CODE = 1; // 앨범 접근 권한 요청 코드
     private static final int ALBUM_REQUEST_CODE = 2; // 앨범 액티비티 호출 요청 코드
-
+    private static final String DEFAULT_PROFILE_IMAGE_URL = "http://192.168.219.110:8080/api/images/default-profile-image.jpg";
 
     private String email;
     private String password;
@@ -77,11 +77,8 @@ public class UpdateActivity extends AppCompatActivity {
         authApi = ApiManager.getInstance().createAuthApi(SessionManager.getInstance().getJwtToken());
         //현재 유저정보로 Edit Text 채워놓기
         User currentUser = SessionManager.getInstance().getCurrentUser();
-
         binding.inputEmail.setText(currentUser.getEmail());
-//        binding.profileImageView.setImageURI(Uri.parse(currentUser.getImgUrl()));
-//        binding.profileImageView.setImageURI(Uri.parse("http://192.168.219.110:8080/api/images/profile-image/file_20230731_195748_7305.jpg"));
-        Glide.with(this).load("http://192.168.219.110:8080/api/images/profile-image/file_20230731_195748_7305.jpg").into(binding.profileImageView);
+        Glide.with(this).load(SessionManager.getInstance().getCurrentUser().getImgUrl()).into(binding.profileImageView);
         binding.inputPassword.setText(currentUser.getPassword());
         binding.inputPwck.setText(currentUser.getPassword());
         binding.inputNickname.setText(currentUser.getNickname());
@@ -146,35 +143,8 @@ public class UpdateActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View view) {
-
-
                 if (!chcekUpdateInputs()) return;
-
-//                //모든 체크 사항 통과
-//                //User 초기화 및 업데이트 요청
-//                email = binding.inputEmail.getText().toString();
-//                password = binding.inputPassword.getText().toString();
-//                nickname = binding.inputNickname.getText().toString();
-//                RadioGroup radioGroup = binding.inputGender;
-//                int selectedId = radioGroup.getCheckedRadioButtonId();
-//
-//                RadioButton radioButton = findViewById(selectedId);
-//                String gender = radioButton.getText().toString();
-//
-//                if (gender.equals("여성")) {
-//                    gen = Gender.FEMALE;
-//                } else if (gender.equals("남성")) {
-//                    gen = Gender.MALE;
-//                } else {
-//                    gen = Gender.ETC;
-//                }
-
                 updateProcess();
-                //유저 초기화
-                User user = new User(email, password, nickname, imgUrl, gen);
-                //update user api
-
-
             }
         });
 
@@ -255,7 +225,6 @@ public class UpdateActivity extends AppCompatActivity {
     private void updateProcess() {
 
         //프로필 이미지를 선택했다면 프로필 이미지를 서버에 업로드
-        //imgUrl을 받아온 후 imgurl 정보를 포함시켜 회원가입을 요청한다.
         if (imageFile != null) {
 
             //가입에 요청할 유저 정보를 EditText에서 받아옴

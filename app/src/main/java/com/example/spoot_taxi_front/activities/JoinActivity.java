@@ -55,7 +55,7 @@ public class JoinActivity extends AppCompatActivity {
 
     private ActivityJoinBinding binding;
     private static final int ALBUM_PERMISSION_REQUEST_CODE = 1; // 앨범 접근 권한 요청 코드
-    private static final String DEFAULT_PROFILE_IMAGE_URL = "http://192.168.219.110:8080/api/images/profile-image/default-profile-image.jpg";
+    private static final String DEFAULT_PROFILE_IMAGE_URL = "http://192.168.219.110:8080/api/images/default-profile-image.jpg";
 
     //회원가입에 기입할 정보들
     private String email;
