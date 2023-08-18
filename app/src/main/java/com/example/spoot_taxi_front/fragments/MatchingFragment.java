@@ -67,7 +67,6 @@ public class MatchingFragment extends Fragment implements CurrentLocationEventLi
     private double curLongitude;
     private double curLaitude;
     private MatchingApi matchingApi;
-    private ChatApi chatApi;
     Long waitingRoomId = 0L;
     Long waitingRoomUserId = 0L;
 
@@ -87,7 +86,6 @@ public class MatchingFragment extends Fragment implements CurrentLocationEventLi
         mapView.setMapViewEventListener(this);
         WebSocketViewModel.getInstance().connectWebSocket();
         matchingApi = ApiManager.getInstance().createMatchingApi(SessionManager.getInstance().getJwtToken());
-        chatApi = ApiManager.getInstance().createChatApi(SessionManager.getInstance().getJwtToken());
     }
 
     @Override
@@ -116,7 +114,8 @@ public class MatchingFragment extends Fragment implements CurrentLocationEventLi
             @Override
             public void run() {
                 // 참여 중인 채팅방 api 호출을 통해 갱신
-                loadUserJoinedChatRoomToLocal();
+//                loadUserJoinedChatRoomToLocal();
+                LocalChatRoomManager.getInstance().loadChatRoomsFromServer();
                 showMatchingSuccessPopup();
             }
         });
@@ -140,12 +139,11 @@ public class MatchingFragment extends Fragment implements CurrentLocationEventLi
 
             @Override
             public void onClick(View v) {
-                // 버튼 클릭 이벤트 처리
                 if (curLaitude != 0.0 && curLongitude != 0.0) {
                     //서버에 매칭 요청
                     MatchingRequest matchingRequest = new MatchingRequest(SessionManager.getInstance().getCurrentUser().getEmail(), SessionManager.getInstance().getDeviceToken(), curLaitude, curLongitude);
-                    Log.d("Libienz", "latitude: " + curLaitude);
-                    Log.d("Libienz", "longitude: " + curLongitude);
+                    Log.d("MatchRequest", "latitude: " + curLaitude);
+                    Log.d("MatchRequest", "longitude: " + curLongitude);
                     Call<MatchingResponse> callMatchingRequest = matchingApi.requestMatch(matchingRequest);
                     callMatchingRequest.enqueue(new Callback<MatchingResponse>() {
                         @Override
@@ -165,7 +163,6 @@ public class MatchingFragment extends Fragment implements CurrentLocationEventLi
                 } else {
                     Toast.makeText(requireContext(), "위치를 계산중입니다. 잠시 후에 다시 시도해주세요", Toast.LENGTH_SHORT).show();
                 }
-
             }
         });
 
@@ -269,7 +266,6 @@ public class MatchingFragment extends Fragment implements CurrentLocationEventLi
             case 200:
                 waitingRoomId = matchingResponse.getWaitingRoomId();
                 waitingRoomUserId = matchingResponse.getWaitingRoomUserId();
-//                Toast.makeText(requireContext(), waitingRoomId + " " + waitingRoomUserId, Toast.LENGTH_SHORT).show();
                 break;
             default:
                 Toast.makeText(requireContext(), "매칭 요청에 실패하였습니다.", Toast.LENGTH_SHORT).show();
@@ -395,65 +391,6 @@ public class MatchingFragment extends Fragment implements CurrentLocationEventLi
     @Override
     public void onMapViewMoveFinished(MapView mapView, MapPoint mapPoint) {
 
-    }
-
-    private void loadUserJoinedChatRoomToLocal() {
-        Call<UserJoinedChatRoomResponse> call = chatApi.getUserChatRooms(SessionManager.getInstance().getCurrentUser().getEmail());
-        call.enqueue(new Callback<UserJoinedChatRoomResponse>() {
-            @Override
-            public void onResponse(Call<UserJoinedChatRoomResponse> call, Response<UserJoinedChatRoomResponse> response) {
-                List<ChatRoom> responseChatRoomList = extractChatRoomListFromResponse(response.code(), response.body());
-                LocalChatRoomManager.getInstance().setChatRooms(responseChatRoomList);
-                Log.d("ChatFragment", "onResponse: " + LocalChatRoomManager.getInstance().getChatRooms().size());
-
-            }
-
-            @Override
-            public void onFailure(Call<UserJoinedChatRoomResponse> call, Throwable t) {
-                Toast.makeText(getContext(), "채팅방 목록 요청에 실패하였습니다.", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-    private List<ChatRoom> extractChatRoomListFromResponse(int statusCode, UserJoinedChatRoomResponse responseBody) {
-        switch (statusCode) {
-            case 200:
-                List<UserJoinedChatRoomDto> userJoinedChatRoomDtoList = responseBody.getUserJoinedChatRoomDtoList();
-                return parseDtoToChatRooms(userJoinedChatRoomDtoList);
-            default:
-                Toast.makeText(getContext(), "채팅방 목록 정보를 받아올수 없습니다.", Toast.LENGTH_SHORT).show();
-                break;
-        }
-        return null;
-    }
-
-    private List<ChatRoom> parseDtoToChatRooms(List<UserJoinedChatRoomDto> userJoinedChatRoomDtoList) {
-        List<ChatRoom> chatRoomApiResponseList = new ArrayList<>();
-        for (UserJoinedChatRoomDto userJoinedChatRoomDto : userJoinedChatRoomDtoList) {
-            Long chatRoomId = userJoinedChatRoomDto.getChatRoomId();
-            String chatRoomName = userJoinedChatRoomDto.getChatRoomName();
-
-            List<User> userList = new ArrayList<>();
-            List<UserDto> participants = userJoinedChatRoomDto.getParticipants();
-            for (UserDto participant : participants) {
-                User user = new User(participant.getEmail(), participant.getPassword(), participant.getName(), participant.getImgUrl(), participant.getGender());
-                userList.add(user);
-            }
-
-            Optional<String> optionalLastMessage = Optional.ofNullable(userJoinedChatRoomDto.getLastMessage());
-            String lastMessage = optionalLastMessage.orElse("");
-
-            //LocalDateTime lastSentTime = userJoinedChatRoomDto.getLastSentTime();
-
-            Optional<LocalDateTime> optionalLastSentTime = Optional.ofNullable(userJoinedChatRoomDto.getLastSentTime());
-            String lastSentTimeString = optionalLastSentTime.map(LocalDateTime::toString).orElse("");
-            Integer nonReadMessageCount = userJoinedChatRoomDto.getNonReadMessageCount();
-            ChatRoom chatRoom = new ChatRoom(chatRoomId,chatRoomName,userList,lastMessage,lastSentTimeString,nonReadMessageCount);
-            Log.d("채팅방 목록",chatRoom.toString());
-            chatRoomApiResponseList.add(chatRoom);
-            // 특정 채널 구독
-            WebSocketViewModel.getInstance().subscribeToChannel(chatRoomId);
-        }
-        return chatRoomApiResponseList;
     }
 
 }
