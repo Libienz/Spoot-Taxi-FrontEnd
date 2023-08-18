@@ -62,9 +62,6 @@ public class VerificationActivity extends AppCompatActivity {
 
                 String email = binding.emailEdt.getText().toString();
 
-
-
-
                 Call<EmailVerificationResponse> sendVerificationEmailCall = authApi.sendVerificationEmailForJoin(email, false);
                 sendVerificationEmailCall.enqueue(new Callback<EmailVerificationResponse>() {
                     @Override
