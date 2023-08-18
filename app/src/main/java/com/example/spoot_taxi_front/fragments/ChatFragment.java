@@ -8,38 +8,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.spoot_taxi_front.R;
-import com.example.spoot_taxi_front.models.ChatRoom;
-import com.example.spoot_taxi_front.models.User;
-import com.example.spoot_taxi_front.network.api.ChatApi;
-import com.example.spoot_taxi_front.network.dto.UserDto;
-import com.example.spoot_taxi_front.network.dto.UserJoinedChatRoomDto;
-import com.example.spoot_taxi_front.network.dto.responses.UserJoinedChatRoomResponse;
-import com.example.spoot_taxi_front.network.retrofit.ApiManager;
 import com.example.spoot_taxi_front.utils.ChatRoomDataChange;
 import com.example.spoot_taxi_front.utils.LocalChatRoomManager;
-import com.example.spoot_taxi_front.utils.NewMessageEvent;
-import com.example.spoot_taxi_front.utils.SessionManager;
 import com.example.spoot_taxi_front.adapters.ChatRoomAdapter;
-import com.example.spoot_taxi_front.utils.WebSocketViewModel;
+import com.example.spoot_taxi_front.network.socket.WebSocketViewModel;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class ChatFragment extends Fragment {
 

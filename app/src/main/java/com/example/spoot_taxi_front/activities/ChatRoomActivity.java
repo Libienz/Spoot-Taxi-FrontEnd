@@ -31,7 +31,7 @@ import com.example.spoot_taxi_front.network.dto.responses.UpdateChatParticipantR
 import com.example.spoot_taxi_front.network.retrofit.ApiManager;
 import com.example.spoot_taxi_front.utils.LocalChatRoomManager;
 import com.example.spoot_taxi_front.utils.SessionManager;
-import com.example.spoot_taxi_front.utils.WebSocketViewModel;
+import com.example.spoot_taxi_front.network.socket.WebSocketViewModel;
 
 import org.json.JSONException;
 import org.json.JSONObject;

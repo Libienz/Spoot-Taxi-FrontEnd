@@ -23,22 +23,16 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.spoot_taxi_front.R;
-import com.example.spoot_taxi_front.models.ChatRoom;
-import com.example.spoot_taxi_front.models.User;
-import com.example.spoot_taxi_front.network.api.ChatApi;
 import com.example.spoot_taxi_front.network.api.MatchingApi;
-import com.example.spoot_taxi_front.network.dto.UserDto;
-import com.example.spoot_taxi_front.network.dto.UserJoinedChatRoomDto;
 import com.example.spoot_taxi_front.network.dto.requests.MatchCancelRequest;
 import com.example.spoot_taxi_front.network.dto.requests.MatchingRequest;
 import com.example.spoot_taxi_front.network.dto.responses.MatchCancelResponse;
 import com.example.spoot_taxi_front.network.dto.responses.MatchingResponse;
-import com.example.spoot_taxi_front.network.dto.responses.UserJoinedChatRoomResponse;
 import com.example.spoot_taxi_front.network.retrofit.ApiManager;
 import com.example.spoot_taxi_front.utils.LocalChatRoomManager;
 import com.example.spoot_taxi_front.utils.MatchingSuccessEvent;
 import com.example.spoot_taxi_front.utils.SessionManager;
-import com.example.spoot_taxi_front.utils.WebSocketViewModel;
+import com.example.spoot_taxi_front.network.socket.WebSocketViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import net.daum.mf.map.api.CameraUpdateFactory;
@@ -49,11 +43,6 @@ import net.daum.mf.map.api.MapView.MapViewEventListener;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 import retrofit2.Call;
 import retrofit2.Callback;

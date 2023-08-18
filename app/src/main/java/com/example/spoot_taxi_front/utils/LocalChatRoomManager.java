@@ -10,6 +10,7 @@ import com.example.spoot_taxi_front.network.dto.UserDto;
 import com.example.spoot_taxi_front.network.dto.UserJoinedChatRoomDto;
 import com.example.spoot_taxi_front.network.dto.responses.UserJoinedChatRoomResponse;
 import com.example.spoot_taxi_front.network.retrofit.ApiManager;
+import com.example.spoot_taxi_front.network.socket.WebSocketViewModel;
 
 import org.greenrobot.eventbus.EventBus;
 

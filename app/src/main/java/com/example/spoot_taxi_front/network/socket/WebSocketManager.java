@@ -1,4 +1,4 @@
-package com.example.spoot_taxi_front.utils;
+package com.example.spoot_taxi_front.network.socket;
 
 import android.util.Log;
 
@@ -6,6 +6,9 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.spoot_taxi_front.models.ChatMessage;
+import com.example.spoot_taxi_front.utils.LocalChatRoomManager;
+import com.example.spoot_taxi_front.utils.NewMessageEvent;
+import com.example.spoot_taxi_front.utils.SessionManager;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
