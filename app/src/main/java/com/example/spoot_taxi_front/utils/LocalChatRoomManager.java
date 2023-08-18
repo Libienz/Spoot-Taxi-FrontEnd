@@ -1,18 +1,40 @@
 package com.example.spoot_taxi_front.utils;
 
+import android.util.Log;
+
 import com.example.spoot_taxi_front.models.ChatMessage;
 import com.example.spoot_taxi_front.models.ChatRoom;
+import com.example.spoot_taxi_front.models.User;
+import com.example.spoot_taxi_front.network.api.ChatApi;
+import com.example.spoot_taxi_front.network.dto.UserDto;
+import com.example.spoot_taxi_front.network.dto.UserJoinedChatRoomDto;
+import com.example.spoot_taxi_front.network.dto.responses.UserJoinedChatRoomResponse;
+import com.example.spoot_taxi_front.network.retrofit.ApiManager;
 
+import org.greenrobot.eventbus.EventBus;
+
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class LocalChatRoomManager {
 
     private static LocalChatRoomManager instance;
 
     private List<ChatRoom> chatRooms = new ArrayList<>();
+    private ChatApi chatApi;
+    private WebSocketViewModel webSocketViewModel;
 
-    private LocalChatRoomManager() {}
+    private LocalChatRoomManager() {
+        webSocketViewModel = WebSocketViewModel.getInstance();
+        webSocketViewModel.connectWebSocket();
+        chatApi = ApiManager.getInstance().createChatApi(SessionManager.getInstance().getJwtToken());
+    }
 
     public static LocalChatRoomManager getInstance() {
         if (instance == null) {
@@ -49,6 +71,8 @@ public class LocalChatRoomManager {
                 break;
             }
         }
+
+        EventBus.getDefault().post(new NonReadCountUpdateEvent());
     }
 
     public void nonReadCountZeroUpdate(Long chatRoomId) {
@@ -59,6 +83,8 @@ public class LocalChatRoomManager {
                 break;
             }
         }
+
+        EventBus.getDefault().post(new NonReadCountUpdateEvent());
     }
 
     public void exitChatRoom(Long chatRoomId) {
@@ -69,7 +95,74 @@ public class LocalChatRoomManager {
                 break;
             }
         }
+
+        EventBus.getDefault().post(new NonReadCountUpdateEvent());
     }
 
+    public int getTotalNonReadCount() {
+        int res = 0;
+        for (int i = 0; i < chatRooms.size(); i++) {
+            ChatRoom chatRoom = chatRooms.get(i);
+            res += chatRoom.getNonReadMessageCount();
+        }
+        return res;
+    }
+    public void loadChatRoomsFromServer() {
 
+        Call<UserJoinedChatRoomResponse> call = chatApi.getUserChatRooms(SessionManager.getInstance().getCurrentUser().getEmail());
+
+        call.enqueue(new Callback<UserJoinedChatRoomResponse>() {
+            @Override
+            public void onResponse(Call<UserJoinedChatRoomResponse> call, Response<UserJoinedChatRoomResponse> response) {
+                chatRooms = extractChatRoomListFromResponse(response.code(), response.body());
+            }
+
+            @Override
+            public void onFailure(Call<UserJoinedChatRoomResponse> call, Throwable t) {
+                Log.e("API Failure", "API 호출에 실패하였습니다.", t);
+            }
+        });
+
+    }
+
+    private List<ChatRoom> extractChatRoomListFromResponse(int statusCode, UserJoinedChatRoomResponse responseBody) {
+        switch (statusCode) {
+            case 200:
+                List<UserJoinedChatRoomDto> userJoinedChatRoomDtoList = responseBody.getUserJoinedChatRoomDtoList();
+                return parseDtoToChatRooms(userJoinedChatRoomDtoList);
+            default:
+                break;
+        }
+        return null;
+    }
+
+    private List<ChatRoom> parseDtoToChatRooms(List<UserJoinedChatRoomDto> userJoinedChatRoomDtoList) {
+        List<ChatRoom> chatRoomApiResponseList = new ArrayList<>();
+        for (UserJoinedChatRoomDto userJoinedChatRoomDto : userJoinedChatRoomDtoList) {
+            Long chatRoomId = userJoinedChatRoomDto.getChatRoomId();
+            String chatRoomName = userJoinedChatRoomDto.getChatRoomName();
+
+            List<User> userList = new ArrayList<>();
+            List<UserDto> participants = userJoinedChatRoomDto.getParticipants();
+            for (UserDto participant : participants) {
+                User user = new User(participant.getEmail(), participant.getPassword(), participant.getName(), participant.getImgUrl(), participant.getGender());
+                userList.add(user);
+            }
+
+            Optional<String> optionalLastMessage = Optional.ofNullable(userJoinedChatRoomDto.getLastMessage());
+            String lastMessage = optionalLastMessage.orElse("");
+
+            //LocalDateTime lastSentTime = userJoinedChatRoomDto.getLastSentTime();
+
+            Optional<LocalDateTime> optionalLastSentTime = Optional.ofNullable(userJoinedChatRoomDto.getLastSentTime());
+            String lastSentTimeString = optionalLastSentTime.map(LocalDateTime::toString).orElse("");
+            Integer nonReadMessageCount = userJoinedChatRoomDto.getNonReadMessageCount();
+            ChatRoom chatRoom = new ChatRoom(chatRoomId,chatRoomName,userList,lastMessage,lastSentTimeString,nonReadMessageCount);
+            Log.d("채팅방 목록",chatRoom.toString());
+            chatRoomApiResponseList.add(chatRoom);
+            // 특정 채널 구독
+            webSocketViewModel.subscribeToChannel(chatRoomId);
+        }
+        return chatRoomApiResponseList;
+    }
 }

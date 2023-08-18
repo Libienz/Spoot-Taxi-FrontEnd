@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -27,11 +28,18 @@ import com.example.spoot_taxi_front.fragments.SettingsFragment;
 
 
 import com.example.spoot_taxi_front.utils.LocalChatRoomManager;
+import com.example.spoot_taxi_front.utils.NewMessageEvent;
+import com.example.spoot_taxi_front.utils.NonReadCountUpdateEvent;
 import com.example.spoot_taxi_front.utils.SessionManager;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.badge.BadgeDrawable;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.kakao.util.maps.helper.Utility;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -43,20 +51,34 @@ public class MainActivity extends AppCompatActivity {
     private ChatFragment chatFragment;
     private SettingsFragment settingsFragment;
     private MatchingFragment matchingFragment;
-
+    private LocalChatRoomManager localChatRoomManager;
     private ActivityMainBinding binding;
-    Button matchingButton;
-
+    BadgeDrawable badgeDrawable;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        localChatRoomManager = LocalChatRoomManager.getInstance();
         binding = ActivityMainBinding.inflate(getLayoutInflater());
-
+        EventBus.getDefault().register(this);
         setContentView(binding.getRoot());
 
+        localChatRoomManager.loadChatRoomsFromServer();
+
+        // 채팅 아이템의 Badge 설정
+        MenuItem chatMenuItem = binding.navigationView.getMenu().findItem(R.id.chatFragment);
+        badgeDrawable = binding.navigationView.getOrCreateBadge(chatMenuItem.getItemId());
+        badgeDrawable.setVisible(true);
+        badgeDrawable.setNumber(10); // 안읽은 메시지 개수
+
+        int totalNonReadCount = localChatRoomManager.getTotalNonReadCount();
+        if (totalNonReadCount > 0) {
+            badgeDrawable.setVisible(true);
+            badgeDrawable.setNumber(totalNonReadCount);
+        } else {
+            badgeDrawable.setVisible(false);
+        }
 
         rallyFragment = new RallyFragment();
         chatFragment = new ChatFragment();
@@ -96,6 +118,28 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        // EventBus 해제
+        EventBus.getDefault().unregister(this);
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onNewMessageArrived(NonReadCountUpdateEvent event) {
+        Log.d("BadgeUpdate", "onNewMessageArrived: ");
+        int totalNonReadCount = localChatRoomManager.getTotalNonReadCount();
+        if (totalNonReadCount > 0) {
+            badgeDrawable.setVisible(true);
+            badgeDrawable.setNumber(totalNonReadCount);
+        } else {
+            badgeDrawable.setVisible(false);
+        }
+
+
+    }
     protected void setFragment(String tag, Fragment fragment) {
 
         FragmentManager fragmentManager = getSupportFragmentManager();
