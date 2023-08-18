@@ -50,18 +50,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
- * authController에 noreply 재학생 인증 api 추가 필요
- * authController에 이미 존재하는 아이디인지 확인하는 api 추가 필요
- * entity 속성 정립 해야 함 -> 근데 하면서 하게 될 듯
- */
 public class JoinActivity extends AppCompatActivity {
 
 
     private ActivityJoinBinding binding;
-    private static final int PICK_IMAGE_REQUEST_CODE = 1;
     private static final int ALBUM_PERMISSION_REQUEST_CODE = 1; // 앨범 접근 권한 요청 코드
-    private static final int ALBUM_REQUEST_CODE = 2; // 앨범 액티비티 호출 요청 코드
     private static final String DEFAULT_PROFILE_IMAGE_URL = "http://192.168.219.110:8080/api/images/profile-image/default-profile-image.jpg";
 
     //회원가입에 기입할 정보들
@@ -120,7 +113,6 @@ public class JoinActivity extends AppCompatActivity {
                     if (ContextCompat.checkSelfPermission(JoinActivity.this, Manifest.permission.READ_MEDIA_IMAGES) != PackageManager.PERMISSION_GRANTED) {
                         // 권한이 없는 경우 권한 요청
                         ActivityCompat.requestPermissions(JoinActivity.this, new String[]{Manifest.permission.READ_MEDIA_IMAGES}, ALBUM_PERMISSION_REQUEST_CODE);
-
                     } else {
                         // 이미 권한이 있는 경우 앨범 액티비티 호출
                         galleryLauncher.launch("image/*");
@@ -144,7 +136,6 @@ public class JoinActivity extends AppCompatActivity {
 
         // 회원가입 버튼 클릭
         binding.joinButton.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View view) {
                 // 모든 입력란(Edit Text)에 대해 작성란이 비어있거나 format이 올바른지 확인
@@ -159,7 +150,6 @@ public class JoinActivity extends AppCompatActivity {
         binding.cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 //로그인 화면으로 이동
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(intent);
