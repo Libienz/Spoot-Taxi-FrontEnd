@@ -71,7 +71,7 @@ public class LocalChatRoomManager {
             }
         }
 
-        EventBus.getDefault().post(new NonReadCountUpdateEvent());
+        EventBus.getDefault().post(new ChatRoomDataChange());
     }
 
     public void nonReadCountZeroUpdate(Long chatRoomId) {
@@ -83,7 +83,7 @@ public class LocalChatRoomManager {
             }
         }
 
-        EventBus.getDefault().post(new NonReadCountUpdateEvent());
+        EventBus.getDefault().post(new ChatRoomDataChange());
     }
 
     public void exitChatRoom(Long chatRoomId) {
@@ -95,7 +95,7 @@ public class LocalChatRoomManager {
             }
         }
 
-        EventBus.getDefault().post(new NonReadCountUpdateEvent());
+        EventBus.getDefault().post(new ChatRoomDataChange());
     }
 
     public int getTotalNonReadCount() {
@@ -114,7 +114,7 @@ public class LocalChatRoomManager {
             @Override
             public void onResponse(Call<UserJoinedChatRoomResponse> call, Response<UserJoinedChatRoomResponse> response) {
                 chatRooms = extractChatRoomListFromResponse(response.code(), response.body());
-                EventBus.getDefault().post(new NonReadCountUpdateEvent());
+                EventBus.getDefault().post(new ChatRoomDataChange());
             }
 
             @Override
