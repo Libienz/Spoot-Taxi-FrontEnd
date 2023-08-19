@@ -7,18 +7,23 @@
         android:layout_height="match_parent"
         android:background="#FFFFFF">
 
-        <LinearLayout
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center"
+            android:fillViewport="true">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:orientation="vertical"
             >
 
             <LinearLayout
+                android:id="@+id/linearLayout2"
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
                 android:orientation="horizontal"
-                android:background="@drawable/bg_top_bar">
+                android:background="@drawable/bg_top_bar"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
                     android:layout_marginTop="15dp"
@@ -40,10 +45,13 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/linearLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingTop="10dp">
+                android:paddingTop="10dp"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
+                app:layout_constraintBottom_toTopOf="@+id/joinButton">
 
                 <androidx.cardview.widget.CardView
                     android:layout_gravity="center"
@@ -315,7 +323,12 @@
                 android:background="@drawable/bg_button"
                 android:text="계정 만들기"
                 android:textColor="#FFFFFF"
-                android:textSize="16dp" />
+                android:textSize="16dp"
+                android:layout_marginBottom="10dp"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/cancelBtn"/>
 
             <android.widget.Button
                 android:fontFamily="@font/bmjua_ttf"
@@ -323,13 +336,17 @@
                 android:layout_width="300dp"
                 android:layout_height="40dp"
                 android:layout_gravity="center"
-                android:layout_marginTop="15dp"
                 android:background="@drawable/bg_button"
                 android:text="취소"
                 android:textColor="#FFFFFF"
-                android:textSize="16dp" />
+                android:textSize="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/joinButton"/>
 
 
-        </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
     </LinearLayout>
 </layout>
