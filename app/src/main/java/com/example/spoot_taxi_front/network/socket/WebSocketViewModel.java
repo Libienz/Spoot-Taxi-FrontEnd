@@ -1,4 +1,4 @@
-package com.example.spoot_taxi_front.utils;
+package com.example.spoot_taxi_front.network.socket;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
