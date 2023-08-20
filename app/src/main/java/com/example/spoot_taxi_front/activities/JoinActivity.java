@@ -54,7 +54,7 @@ public class JoinActivity extends AppCompatActivity {
 
 
     private ActivityJoinBinding binding;
-    private static final int ALBUM_PERMISSION_REQUEST_CODE = 1; // 앨범 접근 권한 요청 코드
+    private static final int ALBUM_PERMISSION_REQUEST_CODE = 123; // 앨범 접근 권한 요청 코드
     private static final String DEFAULT_PROFILE_IMAGE_URL = "http://192.168.219.110:8080/api/images/default-profile-image.jpg";
 
     //회원가입에 기입할 정보들
@@ -110,9 +110,10 @@ public class JoinActivity extends AppCompatActivity {
 
                 //sdk 33이상
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    if (ContextCompat.checkSelfPermission(JoinActivity.this, Manifest.permission.READ_MEDIA_IMAGES) != PackageManager.PERMISSION_GRANTED) {
+                    if (ContextCompat.checkSelfPermission(JoinActivity.this, Manifest.permission.READ_MEDIA_IMAGES) != PackageManager.PERMISSION_GRANTED ||
+                            ContextCompat.checkSelfPermission(JoinActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                         // 권한이 없는 경우 권한 요청
-                        ActivityCompat.requestPermissions(JoinActivity.this, new String[]{Manifest.permission.READ_MEDIA_IMAGES}, ALBUM_PERMISSION_REQUEST_CODE);
+                        ActivityCompat.requestPermissions(JoinActivity.this, new String[]{Manifest.permission.READ_MEDIA_IMAGES, Manifest.permission.WRITE_EXTERNAL_STORAGE}, ALBUM_PERMISSION_REQUEST_CODE);
                     } else {
                         // 이미 권한이 있는 경우 앨범 액티비티 호출
                         galleryLauncher.launch("image/*");
@@ -120,9 +121,10 @@ public class JoinActivity extends AppCompatActivity {
                 }
                 //sdk 32 이하
                 else {
-                    if (ContextCompat.checkSelfPermission(JoinActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    if (ContextCompat.checkSelfPermission(JoinActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED||
+                            ContextCompat.checkSelfPermission(JoinActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                         // 권한이 없는 경우 권한 요청
-                        ActivityCompat.requestPermissions(JoinActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, ALBUM_PERMISSION_REQUEST_CODE);
+                        ActivityCompat.requestPermissions(JoinActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, ALBUM_PERMISSION_REQUEST_CODE);
 
                     } else {
                         // 이미 권한이 있는 경우 앨범 액티비티 호출
