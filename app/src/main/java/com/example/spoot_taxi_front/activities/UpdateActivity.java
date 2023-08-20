@@ -241,6 +241,9 @@ public class UpdateActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<UploadImageResponse> call, Response<UploadImageResponse> response) {
                     //imgUrl을 가입할 회원정보에 넣고 회원가입 요청한다.
+                    if (response.code() != 200) {
+                        Log.d("ImageUpdateFailed", "code : " + response.code());
+                    }
                     imgUrl = response.body().getImageUrl();
                     userDto.setImgUrl(imgUrl);
                     //받아온 imgUrl정보까지 유저에 말아서 회원가입 api 호출!
