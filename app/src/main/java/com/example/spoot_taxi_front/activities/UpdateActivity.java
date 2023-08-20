@@ -3,6 +3,7 @@ package com.example.spoot_taxi_front.activities;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -53,8 +54,7 @@ import retrofit2.Response;
 public class UpdateActivity extends AppCompatActivity {
 
     private ActivityUpdateBinding binding;
-    private static final int ALBUM_PERMISSION_REQUEST_CODE = 1; // 앨범 접근 권한 요청 코드
-    private static final int ALBUM_REQUEST_CODE = 2; // 앨범 액티비티 호출 요청 코드
+    private static final int ALBUM_PERMISSION_REQUEST_CODE = 123; // 앨범 접근 권한 요청 코드
     private static final String DEFAULT_PROFILE_IMAGE_URL = "http://192.168.219.110:8080/api/images/default-profile-image.jpg";
 
     private String email;
@@ -190,16 +190,14 @@ public class UpdateActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == ALBUM_REQUEST_CODE && resultCode == RESULT_OK) {
-            // 앨범 액티비티로부터 이미지 선택 결과를 받아온 경우
-            if (data != null) {
-                Uri selectedImageUri = data.getData();
-                // 선택한 이미지를 처리하는 로직
-                imgUrl = selectedImageUri.toString();
-                binding.profileImageView.setImageURI(selectedImageUri);
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == ALBUM_PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // 권한이 허용된 경우 갤러리 액티비티 호출
+                galleryLauncher.launch("image/*");
+            } else {
+                // 권한이 거부된 경우 처리할 로직 작성
             }
         }
     }
