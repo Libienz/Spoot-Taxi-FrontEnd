@@ -100,6 +100,7 @@ public class UpdateActivity extends AppCompatActivity {
                     public void onActivityResult(Uri result) {
                         if (result != null) {
                             // 선택한 이미지 레이아웃에 배치
+                            Log.d("SetImageUri", "uri: " + result);
                             binding.profileImageView.setImageURI(result);
                             // 선택한 이미지를 File 객체로 변환
                             imageFile = new File(getFilePathFromUri(result));
@@ -114,10 +115,10 @@ public class UpdateActivity extends AppCompatActivity {
             public void onClick(View view) {
                 //sdk 33이상
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    if (ContextCompat.checkSelfPermission(UpdateActivity.this, Manifest.permission.READ_MEDIA_IMAGES) != PackageManager.PERMISSION_GRANTED) {
+                    if (ContextCompat.checkSelfPermission(UpdateActivity.this, Manifest.permission.READ_MEDIA_IMAGES) != PackageManager.PERMISSION_GRANTED ||
+                            ContextCompat.checkSelfPermission(UpdateActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                         // 권한이 없는 경우 권한 요청
-                        ActivityCompat.requestPermissions(UpdateActivity.this, new String[]{Manifest.permission.READ_MEDIA_IMAGES}, ALBUM_PERMISSION_REQUEST_CODE);
-
+                        ActivityCompat.requestPermissions(UpdateActivity.this, new String[]{Manifest.permission.READ_MEDIA_IMAGES, Manifest.permission.WRITE_EXTERNAL_STORAGE}, ALBUM_PERMISSION_REQUEST_CODE);
                     } else {
                         // 이미 권한이 있는 경우 앨범 액티비티 호출
                         galleryLauncher.launch("image/*");
@@ -125,15 +126,17 @@ public class UpdateActivity extends AppCompatActivity {
                 }
                 //sdk 32 이하
                 else {
-                    if (ContextCompat.checkSelfPermission(UpdateActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    if (ContextCompat.checkSelfPermission(UpdateActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED||
+                            ContextCompat.checkSelfPermission(UpdateActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                         // 권한이 없는 경우 권한 요청
-                        ActivityCompat.requestPermissions(UpdateActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, ALBUM_PERMISSION_REQUEST_CODE);
+                        ActivityCompat.requestPermissions(UpdateActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, ALBUM_PERMISSION_REQUEST_CODE);
 
                     } else {
                         // 이미 권한이 있는 경우 앨범 액티비티 호출
                         galleryLauncher.launch("image/*");
                     }
                 }
+
             }
         });
 
@@ -238,6 +241,9 @@ public class UpdateActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<UploadImageResponse> call, Response<UploadImageResponse> response) {
                     //imgUrl을 가입할 회원정보에 넣고 회원가입 요청한다.
+                    if (response.code() != 200) {
+                        Log.d("ImageUpdateFailed", "code : " + response.code());
+                    }
                     imgUrl = response.body().getImageUrl();
                     userDto.setImgUrl(imgUrl);
                     //받아온 imgUrl정보까지 유저에 말아서 회원가입 api 호출!
