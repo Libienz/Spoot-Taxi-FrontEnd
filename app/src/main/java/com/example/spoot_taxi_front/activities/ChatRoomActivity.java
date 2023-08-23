@@ -209,6 +209,14 @@ public class ChatRoomActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        if(webSocketViewModel.isConnected()){
+            Log.d("resumeConnect","연결되어있어요");
+        }
+        if(!webSocketViewModel.isConnected()){
+            Log.d("resumeDisConnect","비연결되어있어요");
+            webSocketViewModel.reconnect();
+            LocalChatRoomManager.getInstance().loadChatRoomsFromServer();
+        }
         scrollToBottom();
     }
 
