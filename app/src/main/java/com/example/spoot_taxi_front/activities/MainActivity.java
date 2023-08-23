@@ -2,12 +2,21 @@ package com.example.spoot_taxi_front.activities;
 
 import static android.app.PendingIntent.getActivity;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.Manifest;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -21,6 +30,7 @@ import com.example.spoot_taxi_front.fragments.RallyFragment;
 import com.example.spoot_taxi_front.fragments.SettingsFragment;
 
 
+import com.example.spoot_taxi_front.network.socket.WebSocketViewModel;
 import com.example.spoot_taxi_front.utils.LocalChatRoomManager;
 import com.example.spoot_taxi_front.utils.ChatRoomDataChange;
 import com.google.android.material.badge.BadgeDrawable;
@@ -42,12 +52,18 @@ public class MainActivity extends AppCompatActivity {
     private MatchingFragment matchingFragment;
     private LocalChatRoomManager localChatRoomManager;
     private ActivityMainBinding binding;
+    private WebSocketViewModel webSocketViewModel;
     BadgeDrawable badgeDrawable;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        webSocketViewModel = WebSocketViewModel.getInstance();
+        //알림 권한 설정
+        requestNotificationPermission();
+
         EventBus.getDefault().register(this);
         localChatRoomManager = LocalChatRoomManager.getInstance();
         binding = ActivityMainBinding.inflate(getLayoutInflater());
@@ -114,6 +130,19 @@ public class MainActivity extends AppCompatActivity {
         EventBus.getDefault().unregister(this);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if(webSocketViewModel.isConnected()){
+            Log.d("resumeConnect","연결되어있어요");
+        }
+        if(!webSocketViewModel.isConnected()){
+            Log.d("resumeDisConnect","비연결되어있어요");
+            webSocketViewModel.reconnect();
+            LocalChatRoomManager.getInstance().loadChatRoomsFromServer();
+        }
+    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNewMessageArrived(ChatRoomDataChange event) {
@@ -178,5 +207,68 @@ public class MainActivity extends AppCompatActivity {
         }
         fragmentTransaction.commitAllowingStateLoss();
     }
+
+    //알림 권한 설정
+    private void requestNotificationPermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                != PackageManager.PERMISSION_GRANTED) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                //해당 권한이 이전에 거부되었거나, 사용자에게 허용되지 않은 상태에서 다시 권한을 요청할 때 사용
+                if (shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)) {
+                    requestNotificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+                } else {
+                    //안드로이드 13이상부터는 런타임 퍼미션이 있음
+                    requestNotificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+                }
+            } else {
+                // 안드로이드 12 이하는 알림에 런타임 퍼미션 없으니, 설정 가서 켜보라고 권해볼 수 있겠다.
+                showNotificationSettingAlert();
+            }
+        }
+    }
+    // 알림 설정 화면으로 이동 안내 메시지 띄우기
+    private void showNotificationSettingAlert() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("알림 권한 설정");
+        builder.setMessage("매칭이 성사되는 경우 알림을 받기 위해 알림 권한을 허용해야 합니다. 설정 화면으로 이동하시겠습니까?");
+        builder.setPositiveButton("네", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                openNotificationSettings();
+            }
+        });
+        builder.setNegativeButton("아니오", null);
+        builder.show();
+    }
+    // 알림 설정 화면으로 이동하는 메서드(안드로이드 12이하는 원래도 설정되어있지만 혹시 끈사람들에게 설정으로 이동시켜주는 메서드)
+    private void openNotificationSettings() {
+        Intent intent = new Intent();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            intent.setAction(android.provider.Settings.ACTION_APP_NOTIFICATION_SETTINGS);
+            intent.putExtra(android.provider.Settings.EXTRA_APP_PACKAGE, getPackageName());
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            intent.setAction(android.provider.Settings.ACTION_APP_NOTIFICATION_SETTINGS);
+            intent.putExtra("app_package", getPackageName());
+            intent.putExtra("app_uid", getApplicationInfo().uid);
+        } else {
+            intent.setAction(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+            intent.addCategory(Intent.CATEGORY_DEFAULT);
+            intent.setData(android.net.Uri.parse("package:" + getPackageName()));
+        }
+        startActivity(intent);
+    }
+    //안드 13용 런타임 알림 퍼미션
+    private ActivityResultLauncher<String> requestNotificationPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(),
+                    new ActivityResultCallback<Boolean>() {
+                        @Override
+                        public void onActivityResult(Boolean ok) {
+                            if (ok) {
+                                // 알림 권한 허용됨
+                            } else {
+                                // 알림 권한 거부. 필요한 처리 수행
+                            }
+                        }
+                    });
 
 }

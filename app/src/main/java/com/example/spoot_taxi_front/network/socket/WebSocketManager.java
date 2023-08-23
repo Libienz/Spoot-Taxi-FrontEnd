@@ -31,6 +31,7 @@ public class WebSocketManager {
 
     // 구독한 주소와 해당 구독의 Disposable을 매핑하는 Map을 사용
     Map<String, Disposable> subscriptionMap = new HashMap<>();
+    private static final String WEBSOCKET_URL = "ws://192.168.219.106:8090/ws/websocket";
     private WebSocketManager() {
         // Private constructor to prevent external instantiation
     }
@@ -41,6 +42,17 @@ public class WebSocketManager {
         return instance;
     }
 
+    public StompClient getStompClient() {
+        return stompClient;
+    }
+
+    public void reconnect(){
+        connectWebSocket();
+        subscriptionMap.clear();
+    }
+    public boolean isConnected(){
+        return stompClient.isConnected();
+    }
     // 웹소켓 메시지를 받아오는 콜백을 처리하는 메서드
     private void handleMessage(ChatMessage chatMessage) {
         Log.d("핸들메세지","잘되나");
@@ -60,10 +72,15 @@ public class WebSocketManager {
     public StompClient connectWebSocket() {
         if (stompClient == null) {
 //            stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, "ws://10.0.2.2:8080/ws/websocket");
-            stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, "ws://192.168.219.110:8090/ws/websocket");
+            Log.d("stompClientNull", "null임");
+            stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, WEBSOCKET_URL);
             stompClient.connect();
         }
-
+        else if (stompClient != null && !stompClient.isConnected()) {
+            Log.d("stompClientNotNull", stompClient.toString());
+            stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, WEBSOCKET_URL);
+            stompClient.connect();
+        }
         return stompClient;
     }
 
