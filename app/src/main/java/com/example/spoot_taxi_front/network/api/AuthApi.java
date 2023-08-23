@@ -29,6 +29,7 @@ public interface AuthApi {
     //회원가입
     @POST("api/auth/join")
     Call<JoinResponse> join(@Body UserDto joinDto);
+
     //유저정보수정
     @PUT("api/users/{email}")
     Call<UserSaveResponse> updateUser(@Path("email") String email, @Body UserDto updateDto);
@@ -37,24 +38,14 @@ public interface AuthApi {
     @PUT("api/users/{email}/password")
     Call<UserSaveResponse> updateUserPassword(@Path("email") String email, @Body UserDto updateDto);
 
-    //이메일 중복 확인 (가입된 이메일인지 확인)
-    @GET("/api/auth/check-duplicate/{email}")
-    Call<Boolean> checkDuplicateEmail(@Path("email") String email);
-
-    //이메일 인증 for Join: 가입되어있지 않은 이메일이여도 인증메일 전송
+    //이메일 재학생 인증
     @GET("/api/auth/send/verification-email")
     Call<EmailVerificationResponse> sendVerificationEmailForJoin(@Query("email") String email, @Query("foundThenSend") boolean foundThenSend);
-
 
     //프로필 이미지 업로드
     @Multipart
     @POST("/api/images")
     Call<UploadImageResponse> uploadImage(@Part MultipartBody.Part imagePart);
 
-
-    //프로필 이미지 GET
-    @Multipart
-    @GET("/api/images/{fileName}")
-    Call<ResponseBody> getProfileImage(@Path("fileName") String fileName);
 
 }

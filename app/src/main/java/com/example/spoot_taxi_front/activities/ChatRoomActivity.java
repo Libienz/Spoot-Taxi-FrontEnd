@@ -6,6 +6,7 @@ import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -228,8 +229,12 @@ public class ChatRoomActivity extends AppCompatActivity {
             public void onResponse(Call<UpdateChatParticipantResponse> call, Response<UpdateChatParticipantResponse> response) {
                 if (response.code() != 200) {
                     Log.d("exitTimeUpdateApi", "fail");
-                    Log.d("exitTimeUpdateApi", response.code()+"");
-
+                    Log.d("exitTimeUpdateApi", response.code() + "");
+                    if (response.code() == 403) {
+                        Toast.makeText(getApplicationContext(), "서비스 이용을 위해 재로그인 해주세요", Toast.LENGTH_SHORT).show();
+                        Intent reAuthneticateIntent = new Intent(getApplicationContext(), LoginActivity.class);
+                        startActivity(reAuthneticateIntent);
+                    }
                 }
             }
 
@@ -252,6 +257,11 @@ public class ChatRoomActivity extends AppCompatActivity {
             stringCall.enqueue(new Callback<LeaveChatParticipantResponse>() {
                 @Override
                 public void onResponse(Call<LeaveChatParticipantResponse> call, Response<LeaveChatParticipantResponse> response) {
+                    if (response.code() == 403) {
+                        Toast.makeText(getApplicationContext(), "서비스 이용을 위해 재로그인 해주세요", Toast.LENGTH_SHORT).show();
+                        Intent reAuthneticateIntent = new Intent(getApplicationContext(), LoginActivity.class);
+                        startActivity(reAuthneticateIntent);
+                    }
                     Log.d("Leave API",response.body().getMessage());
                     webSocketViewModel.unsubscribeToChannel(chatRoomId);//채팅방 구독해제
                     sendExitMessage();
@@ -282,6 +292,10 @@ public class ChatRoomActivity extends AppCompatActivity {
                 Log.d("chatParticipantId는",chatParticipantId.toString());
                 messageAdapter.setChatMessages(setChatMessageList(messageDtoList));// 어댑터를 여기서 set해야하는 이유는 밑에 주석부분에서 실행할시 비동기적으로 onCreate가 작동하기때문
                 break;
+            case 403:
+                Toast.makeText(getApplicationContext(), "서비스 이용을 위해 재로그인 해주세요", Toast.LENGTH_SHORT).show();
+                Intent reAuthneticateIntent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(reAuthneticateIntent);
             default:
                 Toast.makeText(getApplicationContext(), "메시지 목록 정보를 받아올수 없습니다.", Toast.LENGTH_SHORT).show();
                 break;

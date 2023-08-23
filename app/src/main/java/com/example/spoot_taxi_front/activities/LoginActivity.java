@@ -48,6 +48,10 @@ public class LoginActivity extends AppCompatActivity {
         lostPWButton = findViewById(R.id.lost_pw);
         movingCarView = findViewById(R.id.gifImageView);
 
+        if (SessionManager.getInstance().getCurrentUser() != null) {
+            enterID.setText(SessionManager.getInstance().getCurrentUser().getEmail());
+            enterPW.setText(SessionManager.getInstance().getCurrentUser().getPassword());
+        }
         Glide.with(this).asGif().load(R.raw.moving_taxi).into(movingCarView);
 
         //Api Client 생성

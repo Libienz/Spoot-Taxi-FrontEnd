@@ -1,6 +1,7 @@
 package com.example.spoot_taxi_front.fragments;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -14,6 +15,7 @@ import android.view.ViewGroup;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 
 import android.view.Window;
@@ -23,6 +25,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.spoot_taxi_front.R;
+import com.example.spoot_taxi_front.activities.LoginActivity;
 import com.example.spoot_taxi_front.network.api.MatchingApi;
 import com.example.spoot_taxi_front.network.dto.requests.MatchCancelRequest;
 import com.example.spoot_taxi_front.network.dto.requests.MatchingRequest;
@@ -256,6 +259,10 @@ public class MatchingFragment extends Fragment implements CurrentLocationEventLi
                 waitingRoomId = matchingResponse.getWaitingRoomId();
                 waitingRoomUserId = matchingResponse.getWaitingRoomUserId();
                 break;
+            case 403:
+                Toast.makeText(getActivity(), "서비스 이용을 위해 재로그인 해주세요", Toast.LENGTH_SHORT).show();
+                Intent reAuthneticateIntent = new Intent(getActivity(), LoginActivity.class);
+                startActivity(reAuthneticateIntent);
             default:
                 Toast.makeText(requireContext(), "매칭 요청에 실패하였습니다.", Toast.LENGTH_SHORT).show();
                 Log.e("매칭 요청 실패", "statusCode: " + statusCode );
@@ -268,6 +275,10 @@ public class MatchingFragment extends Fragment implements CurrentLocationEventLi
         switch (statusCode) {
             case 200:
                 break;
+            case 403:
+                Toast.makeText(getActivity(), "서비스 이용을 위해 재로그인 해주세요", Toast.LENGTH_SHORT).show();
+                Intent reAuthneticateIntent = new Intent(getActivity(), LoginActivity.class);
+                startActivity(reAuthneticateIntent);
             default:
                 Toast.makeText(requireContext(), "매칭 취소 요청에 실패하였습니다.", Toast.LENGTH_SHORT).show();
                 Log.e("매칭 요청 실패", "statusCode: " + statusCode);
