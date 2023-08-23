@@ -7,6 +7,8 @@ import com.example.spoot_taxi_front.models.ChatMessage;
 
 import org.json.JSONObject;
 
+import ua.naiksoftware.stomp.StompClient;
+
 public class WebSocketViewModel extends ViewModel {
     private static WebSocketViewModel instance;
     private WebSocketManager webSocketManager = WebSocketManager.getInstance();
@@ -16,6 +18,16 @@ public class WebSocketViewModel extends ViewModel {
             instance = new WebSocketViewModel();
         }
         return instance;
+    }
+
+    public void reconnect(){
+        webSocketManager.reconnect();
+    }
+    public boolean isConnected(){
+        return webSocketManager.isConnected();
+    }
+    public StompClient getStompClient() {
+        return webSocketManager.getStompClient();
     }
 
     public void connectWebSocket() {
