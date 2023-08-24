@@ -1,5 +1,6 @@
 package com.example.spoot_taxi_front.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.spoot_taxi_front.R;
+import com.example.spoot_taxi_front.activities.LoginActivity;
 import com.example.spoot_taxi_front.adapters.RallyAdapter;
 import com.example.spoot_taxi_front.network.api.RallyApi;
 import com.example.spoot_taxi_front.network.dto.RallyInformationDto;
@@ -103,6 +105,10 @@ public class RallyFragment extends Fragment {
                 rallyDetailsDtoList = rallyInformationDto.getRallyDetailsDtoList();
                 rallyAdapter.setRallyDetails(rallyDetailsDtoList);
                 break;
+            case 403:
+                Toast.makeText(getActivity(), "서비스 이용을 위해 재로그인 해주세요", Toast.LENGTH_SHORT).show();
+                Intent reAuthneticateIntent = new Intent(getActivity(), LoginActivity.class);
+                startActivity(reAuthneticateIntent);
             default:
                 Toast.makeText(getContext(), "집회정보를 받아올수 없습니다.", Toast.LENGTH_SHORT).show();
                 break;

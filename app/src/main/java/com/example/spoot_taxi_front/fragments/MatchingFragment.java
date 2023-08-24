@@ -1,6 +1,7 @@
 package com.example.spoot_taxi_front.fragments;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -14,6 +15,7 @@ import android.view.ViewGroup;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 
 import android.view.Window;
@@ -23,12 +25,20 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.spoot_taxi_front.R;
+import com.example.spoot_taxi_front.activities.LoginActivity;
+import com.example.spoot_taxi_front.models.ChatRoom;
+import com.example.spoot_taxi_front.models.User;
+import com.example.spoot_taxi_front.network.api.ChatApi;
 import com.example.spoot_taxi_front.network.api.MatchingApi;
+import com.example.spoot_taxi_front.network.dto.UserDto;
+import com.example.spoot_taxi_front.network.dto.UserJoinedChatRoomDto;
 import com.example.spoot_taxi_front.network.dto.requests.MatchCancelRequest;
 import com.example.spoot_taxi_front.network.dto.requests.MatchingRequest;
 import com.example.spoot_taxi_front.network.dto.responses.MatchCancelResponse;
 import com.example.spoot_taxi_front.network.dto.responses.MatchingResponse;
+import com.example.spoot_taxi_front.network.dto.responses.UserJoinedChatRoomResponse;
 import com.example.spoot_taxi_front.network.retrofit.ApiManager;
+import com.example.spoot_taxi_front.utils.ChatRoomDataChange;
 import com.example.spoot_taxi_front.utils.LocalChatRoomManager;
 import com.example.spoot_taxi_front.utils.MatchingSuccessEvent;
 import com.example.spoot_taxi_front.utils.SessionManager;
@@ -43,6 +53,11 @@ import net.daum.mf.map.api.MapView.MapViewEventListener;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -104,7 +119,7 @@ public class MatchingFragment extends Fragment implements CurrentLocationEventLi
             public void run() {
                 // 참여 중인 채팅방 api 호출을 통해 갱신
 //                loadUserJoinedChatRoomToLocal();
-                LocalChatRoomManager.getInstance().loadChatRoomsFromServer();
+                loadChatRoomsFromServer();
                 showMatchingSuccessPopup();
             }
         });
@@ -256,6 +271,10 @@ public class MatchingFragment extends Fragment implements CurrentLocationEventLi
                 waitingRoomId = matchingResponse.getWaitingRoomId();
                 waitingRoomUserId = matchingResponse.getWaitingRoomUserId();
                 break;
+            case 403:
+                Toast.makeText(getActivity(), "서비스 이용을 위해 재로그인 해주세요", Toast.LENGTH_SHORT).show();
+                Intent reAuthneticateIntent = new Intent(getActivity(), LoginActivity.class);
+                startActivity(reAuthneticateIntent);
             default:
                 Toast.makeText(requireContext(), "매칭 요청에 실패하였습니다.", Toast.LENGTH_SHORT).show();
                 Log.e("매칭 요청 실패", "statusCode: " + statusCode );
@@ -268,6 +287,10 @@ public class MatchingFragment extends Fragment implements CurrentLocationEventLi
         switch (statusCode) {
             case 200:
                 break;
+            case 403:
+                Toast.makeText(getActivity(), "서비스 이용을 위해 재로그인 해주세요", Toast.LENGTH_SHORT).show();
+                Intent reAuthneticateIntent = new Intent(getActivity(), LoginActivity.class);
+                startActivity(reAuthneticateIntent);
             default:
                 Toast.makeText(requireContext(), "매칭 취소 요청에 실패하였습니다.", Toast.LENGTH_SHORT).show();
                 Log.e("매칭 요청 실패", "statusCode: " + statusCode);
@@ -380,6 +403,72 @@ public class MatchingFragment extends Fragment implements CurrentLocationEventLi
     @Override
     public void onMapViewMoveFinished(MapView mapView, MapPoint mapPoint) {
 
+    }
+
+    public void loadChatRoomsFromServer() {
+
+        ChatApi chatApi = ApiManager.getInstance().createChatApi(SessionManager.getInstance().getJwtToken());
+        Call<UserJoinedChatRoomResponse> call = chatApi.getUserChatRooms(SessionManager.getInstance().getCurrentUser().getEmail());
+        LocalChatRoomManager localChatRoomManager = LocalChatRoomManager.getInstance();
+        call.enqueue(new Callback<UserJoinedChatRoomResponse>() {
+            @Override
+            public void onResponse(Call<UserJoinedChatRoomResponse> call, Response<UserJoinedChatRoomResponse> response) {
+                localChatRoomManager.setChatRooms(extractChatRoomListFromResponse(response.code(), response.body()));
+                EventBus.getDefault().post(new ChatRoomDataChange());
+            }
+
+            @Override
+            public void onFailure(Call<UserJoinedChatRoomResponse> call, Throwable t) {
+                Log.e("API Failure", "API 호출에 실패하였습니다.", t);
+            }
+        });
+
+    }
+
+    private List<ChatRoom> extractChatRoomListFromResponse(int statusCode, UserJoinedChatRoomResponse responseBody) {
+        switch (statusCode) {
+            case 200:
+                List<UserJoinedChatRoomDto> userJoinedChatRoomDtoList = responseBody.getUserJoinedChatRoomDtoList();
+                return parseDtoToChatRooms(userJoinedChatRoomDtoList);
+            case 403:
+                Toast.makeText(getActivity(), "서비스 이용을 위해 재로그인 해주세요", Toast.LENGTH_SHORT).show();
+                Intent reAuthneticateIntent = new Intent(getActivity(), LoginActivity.class);
+                startActivity(reAuthneticateIntent);
+            default:
+                break;
+        }
+        return null;
+    }
+
+    private List<ChatRoom> parseDtoToChatRooms(List<UserJoinedChatRoomDto> userJoinedChatRoomDtoList) {
+        List<ChatRoom> chatRoomApiResponseList = new ArrayList<>();
+        for (UserJoinedChatRoomDto userJoinedChatRoomDto : userJoinedChatRoomDtoList) {
+            Long chatRoomId = userJoinedChatRoomDto.getChatRoomId();
+            String chatRoomName = userJoinedChatRoomDto.getChatRoomName();
+
+            List<User> userList = new ArrayList<>();
+            List<UserDto> participants = userJoinedChatRoomDto.getParticipants();
+            for (UserDto participant : participants) {
+                User user = new User(participant.getEmail(), participant.getPassword(), participant.getName(), participant.getImgUrl(), participant.getGender());
+                userList.add(user);
+            }
+
+            Optional<String> optionalLastMessage = Optional.ofNullable(userJoinedChatRoomDto.getLastMessage());
+            String lastMessage = optionalLastMessage.orElse("");
+
+            //LocalDateTime lastSentTime = userJoinedChatRoomDto.getLastSentTime();
+
+            Optional<LocalDateTime> optionalLastSentTime = Optional.ofNullable(userJoinedChatRoomDto.getLastSentTime());
+            String lastSentTimeString = optionalLastSentTime.map(LocalDateTime::toString).orElse("");
+            Integer nonReadMessageCount = userJoinedChatRoomDto.getNonReadMessageCount();
+            ChatRoom chatRoom = new ChatRoom(chatRoomId,chatRoomName,userList,lastMessage,lastSentTimeString,nonReadMessageCount);
+            Log.d("채팅방 목록",chatRoom.toString());
+            chatRoomApiResponseList.add(chatRoom);
+            // 특정 채널 구독
+            WebSocketViewModel webSocketViewModel = WebSocketViewModel.getInstance();
+            webSocketViewModel.subscribeToChannel(chatRoomId);
+        }
+        return chatRoomApiResponseList;
     }
 
 }

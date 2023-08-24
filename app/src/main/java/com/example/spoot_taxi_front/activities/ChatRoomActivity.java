@@ -6,6 +6,7 @@ import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -23,16 +24,23 @@ import androidx.appcompat.widget.Toolbar;
 import com.example.spoot_taxi_front.models.ChatMessage;
 import com.example.spoot_taxi_front.adapters.MessageAdapter;
 import com.example.spoot_taxi_front.R;
+import com.example.spoot_taxi_front.models.ChatRoom;
+import com.example.spoot_taxi_front.models.User;
 import com.example.spoot_taxi_front.network.api.ChatApi;
 import com.example.spoot_taxi_front.network.dto.MessageDto;
+import com.example.spoot_taxi_front.network.dto.UserDto;
+import com.example.spoot_taxi_front.network.dto.UserJoinedChatRoomDto;
 import com.example.spoot_taxi_front.network.dto.responses.ChatRoomMessageResponse;
 import com.example.spoot_taxi_front.network.dto.responses.LeaveChatParticipantResponse;
 import com.example.spoot_taxi_front.network.dto.responses.UpdateChatParticipantResponse;
+import com.example.spoot_taxi_front.network.dto.responses.UserJoinedChatRoomResponse;
 import com.example.spoot_taxi_front.network.retrofit.ApiManager;
+import com.example.spoot_taxi_front.utils.ChatRoomDataChange;
 import com.example.spoot_taxi_front.utils.LocalChatRoomManager;
 import com.example.spoot_taxi_front.utils.SessionManager;
 import com.example.spoot_taxi_front.network.socket.WebSocketViewModel;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -215,7 +223,7 @@ public class ChatRoomActivity extends AppCompatActivity {
         if(!webSocketViewModel.isConnected()){
             Log.d("resumeDisConnect","비연결되어있어요");
             webSocketViewModel.reconnect();
-            LocalChatRoomManager.getInstance().loadChatRoomsFromServer();
+            loadChatRoomsFromServer();
         }
         scrollToBottom();
     }
@@ -236,8 +244,12 @@ public class ChatRoomActivity extends AppCompatActivity {
             public void onResponse(Call<UpdateChatParticipantResponse> call, Response<UpdateChatParticipantResponse> response) {
                 if (response.code() != 200) {
                     Log.d("exitTimeUpdateApi", "fail");
-                    Log.d("exitTimeUpdateApi", response.code()+"");
-
+                    Log.d("exitTimeUpdateApi", response.code() + "");
+                    if (response.code() == 403) {
+                        Toast.makeText(getApplicationContext(), "서비스 이용을 위해 재로그인 해주세요", Toast.LENGTH_SHORT).show();
+                        Intent reAuthneticateIntent = new Intent(getApplicationContext(), LoginActivity.class);
+                        startActivity(reAuthneticateIntent);
+                    }
                 }
             }
 
@@ -260,6 +272,11 @@ public class ChatRoomActivity extends AppCompatActivity {
             stringCall.enqueue(new Callback<LeaveChatParticipantResponse>() {
                 @Override
                 public void onResponse(Call<LeaveChatParticipantResponse> call, Response<LeaveChatParticipantResponse> response) {
+                    if (response.code() == 403) {
+                        Toast.makeText(getApplicationContext(), "서비스 이용을 위해 재로그인 해주세요", Toast.LENGTH_SHORT).show();
+                        Intent reAuthneticateIntent = new Intent(getApplicationContext(), LoginActivity.class);
+                        startActivity(reAuthneticateIntent);
+                    }
                     Log.d("Leave API",response.body().getMessage());
                     webSocketViewModel.unsubscribeToChannel(chatRoomId);//채팅방 구독해제
                     sendExitMessage();
@@ -290,6 +307,10 @@ public class ChatRoomActivity extends AppCompatActivity {
                 Log.d("chatParticipantId는",chatParticipantId.toString());
                 messageAdapter.setChatMessages(setChatMessageList(messageDtoList));// 어댑터를 여기서 set해야하는 이유는 밑에 주석부분에서 실행할시 비동기적으로 onCreate가 작동하기때문
                 break;
+            case 403:
+                Toast.makeText(getApplicationContext(), "서비스 이용을 위해 재로그인 해주세요", Toast.LENGTH_SHORT).show();
+                Intent reAuthneticateIntent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(reAuthneticateIntent);
             default:
                 Toast.makeText(getApplicationContext(), "메시지 목록 정보를 받아올수 없습니다.", Toast.LENGTH_SHORT).show();
                 break;
@@ -402,5 +423,71 @@ public class ChatRoomActivity extends AppCompatActivity {
                 }
             }, 200);
         }
+    }
+
+
+    public void loadChatRoomsFromServer() {
+
+        ChatApi chatApi = ApiManager.getInstance().createChatApi(SessionManager.getInstance().getJwtToken());
+        Call<UserJoinedChatRoomResponse> call = chatApi.getUserChatRooms(SessionManager.getInstance().getCurrentUser().getEmail());
+        LocalChatRoomManager localChatRoomManager = LocalChatRoomManager.getInstance();
+        call.enqueue(new Callback<UserJoinedChatRoomResponse>() {
+            @Override
+            public void onResponse(Call<UserJoinedChatRoomResponse> call, Response<UserJoinedChatRoomResponse> response) {
+                localChatRoomManager.setChatRooms(extractChatRoomListFromResponse(response.code(), response.body()));
+                EventBus.getDefault().post(new ChatRoomDataChange());
+            }
+
+            @Override
+            public void onFailure(Call<UserJoinedChatRoomResponse> call, Throwable t) {
+                Log.e("API Failure", "API 호출에 실패하였습니다.", t);
+            }
+        });
+
+    }
+
+    private List<ChatRoom> extractChatRoomListFromResponse(int statusCode, UserJoinedChatRoomResponse responseBody) {
+        switch (statusCode) {
+            case 200:
+                List<UserJoinedChatRoomDto> userJoinedChatRoomDtoList = responseBody.getUserJoinedChatRoomDtoList();
+                return parseDtoToChatRooms(userJoinedChatRoomDtoList);
+            case 403:
+                Toast.makeText(getApplicationContext(), "서비스 이용을 위해 재로그인 해주세요", Toast.LENGTH_SHORT).show();
+                Intent reAuthneticateIntent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(reAuthneticateIntent);
+            default:
+                break;
+        }
+        return null;
+    }
+
+    private List<ChatRoom> parseDtoToChatRooms(List<UserJoinedChatRoomDto> userJoinedChatRoomDtoList) {
+        List<ChatRoom> chatRoomApiResponseList = new ArrayList<>();
+        for (UserJoinedChatRoomDto userJoinedChatRoomDto : userJoinedChatRoomDtoList) {
+            Long chatRoomId = userJoinedChatRoomDto.getChatRoomId();
+            String chatRoomName = userJoinedChatRoomDto.getChatRoomName();
+
+            List<User> userList = new ArrayList<>();
+            List<UserDto> participants = userJoinedChatRoomDto.getParticipants();
+            for (UserDto participant : participants) {
+                User user = new User(participant.getEmail(), participant.getPassword(), participant.getName(), participant.getImgUrl(), participant.getGender());
+                userList.add(user);
+            }
+
+            Optional<String> optionalLastMessage = Optional.ofNullable(userJoinedChatRoomDto.getLastMessage());
+            String lastMessage = optionalLastMessage.orElse("");
+
+            //LocalDateTime lastSentTime = userJoinedChatRoomDto.getLastSentTime();
+
+            Optional<LocalDateTime> optionalLastSentTime = Optional.ofNullable(userJoinedChatRoomDto.getLastSentTime());
+            String lastSentTimeString = optionalLastSentTime.map(LocalDateTime::toString).orElse("");
+            Integer nonReadMessageCount = userJoinedChatRoomDto.getNonReadMessageCount();
+            ChatRoom chatRoom = new ChatRoom(chatRoomId,chatRoomName,userList,lastMessage,lastSentTimeString,nonReadMessageCount);
+            Log.d("채팅방 목록",chatRoom.toString());
+            chatRoomApiResponseList.add(chatRoom);
+            // 특정 채널 구독
+            webSocketViewModel.subscribeToChannel(chatRoomId);
+        }
+        return chatRoomApiResponseList;
     }
 }

@@ -294,6 +294,10 @@ public class UpdateActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
                 break;
+            case 403:
+                Toast.makeText(getApplicationContext(), "서비스 이용을 위해 재로그인 해주세요", Toast.LENGTH_SHORT).show();
+                Intent reAuthneticateIntent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(reAuthneticateIntent);
             default:
                 Toast.makeText(getApplicationContext(), "유저 정보 수정에 실패하였습니다.", Toast.LENGTH_SHORT).show();
                 break;
