@@ -23,7 +23,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 
 public class SplashActivity extends AppCompatActivity {
 
-    private static final long SPLASH_DELAY = 3000;
+    private static final long SPLASH_DELAY = 5000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
