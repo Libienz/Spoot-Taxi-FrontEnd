@@ -52,7 +52,7 @@ public class LoginActivity extends AppCompatActivity {
             enterID.setText(SessionManager.getInstance().getCurrentUser().getEmail());
             enterPW.setText(SessionManager.getInstance().getCurrentUser().getPassword());
         }
-        Glide.with(this).asGif().load(R.raw.moving_taxi).into(movingCarView);
+        Glide.with(this).asGif().load(R.raw.moving_taxi_unscreen).into(movingCarView);
 
         //Api Client 생성
         AuthApi authApi = ApiManager.getInstance().createAuthApi(SessionManager.getInstance().getJwtToken());

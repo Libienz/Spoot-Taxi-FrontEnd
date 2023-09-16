@@ -23,7 +23,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 
 public class SplashActivity extends AppCompatActivity {
 
-    private static final long SPLASH_DELAY = 3000;
+    private static final long SPLASH_DELAY = 5000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +56,6 @@ public class SplashActivity extends AppCompatActivity {
         Glide.with(this)
                 .asGif()
                 .load(R.raw.town)
-                .apply(options)
                 .listener(new GifListener()) // GifDrawable 리스너 설정
                 .into(gifImageView);
 
