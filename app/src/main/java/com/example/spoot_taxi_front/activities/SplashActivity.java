@@ -32,8 +32,8 @@ public class SplashActivity extends AppCompatActivity {
 
         ImageView gifImageView = findViewById(R.id.gifImageView);
 
-/*        RequestOptions options = new RequestOptions()
-                .fitCenter();*/
+        RequestOptions options = new RequestOptions()
+                .fitCenter();
 
 
         //device Token
@@ -55,7 +55,7 @@ public class SplashActivity extends AppCompatActivity {
                 });
         Glide.with(this)
                 .asGif()
-                .load(R.raw.spoot_splash)
+                .load(R.raw.town)
                 .listener(new GifListener()) // GifDrawable 리스너 설정
                 .into(gifImageView);
 
