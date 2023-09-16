@@ -6,6 +6,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <ImageView
+        android:id="@+id/gifImageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:scaleType="centerCrop"
+        android:src="@drawable/transparent" />
 
     <!-- 요소들을 감싸는 레이아웃 -->
     <RelativeLayout
@@ -37,25 +44,30 @@
 
 
 
-        <ImageView
+<!--        <ImageView
             android:id="@+id/gifImageView"
             android:layout_marginTop="50dp"
             android:layout_width="match_parent"
             android:layout_height="150dp"
             android:layout_centerHorizontal="true"
             android:scaleType="centerCrop"
-            android:src="@drawable/transparent" />
+            android:src="@drawable/transparent" />-->
 
-        <TextView
+        <ImageView
+            android:id="@+id/img_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="300dp"
+            android:src="@drawable/img_logo" />
+
+<!--        <TextView
             android:id="@+id/nameImageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/gifImageView"
             android:text="SPOOT TAXI"
             android:layout_marginTop="10dp"
             android:fontFamily="@font/bmjua_ttf"
             android:textSize="50dp"
-            android:layout_centerHorizontal="true" />
+            android:layout_centerHorizontal="true" />-->
 
 
 
@@ -64,8 +76,8 @@
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_below="@id/nameImageView"
-            android:layout_marginTop="40dp"
+            android:layout_below="@id/img_logo"
+            android:layout_marginTop="10dp"
             android:background="@drawable/bg_edit"
             android:hint="Email@sangmyung.kr"
             android:inputType="textEmailAddress"
