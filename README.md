@@ -1,5 +1,5 @@
-
-![text-logo-ver2](https://github.com/Libienz/Spoot-Taxi-Server/assets/85234650/87329599-6b82-40a3-b892-3b1191950e55)
+<!--  ![text-logo-ver2](https://github.com/Libienz/Spoot-Taxi-Server/assets/85234650/87329599-6b82-40a3-b892-3b1191950e55) -->
+![image](https://github.com/Libienz/Spoot-Taxi-Server/assets/85234650/e9a9aab0-4a2e-40c1-8cf6-ec440922627b)
 
 
 # 🚕Spoot Taxi Android Client
