@@ -1,6 +1,7 @@
 package com.example.spoot_taxi_front.models;
 
 import com.example.spoot_taxi_front.R;
+import com.example.spoot_taxi_front.network.ServerConfig;
 
 import java.io.Serializable;
 
@@ -23,7 +24,7 @@ public class User implements Serializable {
         this.email = email;
         this.password = password;
         this.nickname = nickname;
-        this.imgUrl = "http://192.168.219.109:8080/images/default-profile-image";
+        this.imgUrl = ServerConfig.defaultImageUrlPath;
         this.gender = gender;
     }
     // Getter and Setter methods

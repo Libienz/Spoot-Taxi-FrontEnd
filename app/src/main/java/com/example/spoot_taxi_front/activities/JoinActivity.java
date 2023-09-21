@@ -22,6 +22,7 @@ import androidx.databinding.DataBindingUtil;
 import android.Manifest;
 
 import com.example.spoot_taxi_front.models.User;
+import com.example.spoot_taxi_front.network.ServerConfig;
 import com.example.spoot_taxi_front.network.api.AuthApi;
 import com.example.spoot_taxi_front.network.dto.UserDto;
 import com.example.spoot_taxi_front.network.dto.responses.JoinResponse;
@@ -55,7 +56,7 @@ public class JoinActivity extends AppCompatActivity {
 
     private ActivityJoinBinding binding;
     private static final int ALBUM_PERMISSION_REQUEST_CODE = 123; // 앨범 접근 권한 요청 코드
-    private static final String DEFAULT_PROFILE_IMAGE_URL = "http://192.168.219.110:8080/api/images/default-profile-image.jpg";
+    private static final String DEFAULT_PROFILE_IMAGE_URL = ServerConfig.defaultImageUrlPath;
 
     //회원가입에 기입할 정보들
     private String email;

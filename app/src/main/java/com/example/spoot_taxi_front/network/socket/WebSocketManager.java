@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.spoot_taxi_front.models.ChatMessage;
+import com.example.spoot_taxi_front.network.ServerConfig;
 import com.example.spoot_taxi_front.utils.LocalChatRoomManager;
 import com.example.spoot_taxi_front.utils.NewMessageEvent;
 import com.example.spoot_taxi_front.utils.SessionManager;
@@ -31,8 +32,7 @@ public class WebSocketManager {
 
     // 구독한 주소와 해당 구독의 Disposable을 매핑하는 Map을 사용
     Map<String, Disposable> subscriptionMap = new HashMap<>();
-//    private static final String WEBSOCKET_URL = "ws://192.168.219.106:8090/ws/websocket";
-    private static final String WEBSOCKET_URL = "ws://192.168.219.110:8090/ws/websocket";
+    private static final String WEBSOCKET_URL = ServerConfig.sokcetServerBaseUrl;
 
     private WebSocketManager() {
         // Private constructor to prevent external instantiation

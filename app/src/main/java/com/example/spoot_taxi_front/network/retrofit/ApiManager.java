@@ -1,5 +1,6 @@
 package com.example.spoot_taxi_front.network.retrofit;
 
+import com.example.spoot_taxi_front.network.ServerConfig;
 import com.example.spoot_taxi_front.network.api.AuthApi;
 import com.example.spoot_taxi_front.network.api.ChatApi;
 import com.example.spoot_taxi_front.network.api.MatchingApi;
@@ -22,8 +23,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiManager {
 
-    private static final String BASE_URL = "http://192.168.219.110:8080/";
-//    private static final String BASE_URL = "http://192.168.123.100:8080/";
+    private static final String BASE_URL = ServerConfig.apiServerBaseUrl;
 
     private static ApiManager instance;
 

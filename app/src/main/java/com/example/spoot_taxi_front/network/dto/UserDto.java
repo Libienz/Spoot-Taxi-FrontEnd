@@ -1,6 +1,7 @@
 package com.example.spoot_taxi_front.network.dto;
 
 import com.example.spoot_taxi_front.models.Gender;
+import com.example.spoot_taxi_front.network.ServerConfig;
 
 import java.io.Serializable;
 
@@ -24,7 +25,7 @@ public class UserDto implements Serializable {
         this.email = email;
         this.password = password;
         this.name = name;
-        this.imgUrl = "http://192.168.219.109:8080/api/images/profile-image/default-profile-image.jpg";
+        this.imgUrl = ServerConfig.defaultImageUrlPath;
         this.gender = gender;
     }
 

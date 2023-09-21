@@ -29,6 +29,7 @@ import com.example.spoot_taxi_front.R;
 import com.example.spoot_taxi_front.databinding.ActivityUpdateBinding;
 import com.example.spoot_taxi_front.models.Gender;
 import com.example.spoot_taxi_front.models.User;
+import com.example.spoot_taxi_front.network.ServerConfig;
 import com.example.spoot_taxi_front.network.api.AuthApi;
 import com.example.spoot_taxi_front.network.dto.UserDto;
 import com.example.spoot_taxi_front.network.dto.responses.JoinResponse;
@@ -55,7 +56,7 @@ public class UpdateActivity extends AppCompatActivity {
 
     private ActivityUpdateBinding binding;
     private static final int ALBUM_PERMISSION_REQUEST_CODE = 123; // 앨범 접근 권한 요청 코드
-    private static final String DEFAULT_PROFILE_IMAGE_URL = "http://192.168.219.110:8080/api/images/default-profile-image.jpg";
+    private static final String DEFAULT_PROFILE_IMAGE_URL = ServerConfig.defaultImageUrlPath;
 
     private String email;
     private String password;
